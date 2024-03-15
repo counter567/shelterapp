@@ -1,16 +1,15 @@
 <?php
-require_once(__DIR__ . '/vendor/autoload.php');
+/*
+Plugin Name: Shelterapp
+Plugin URI: 
+Description: 
+Version: 0.0.1
+Requires at least: 
+Requires PHP: 
+Author: 
+Author URI: 
+License: 
+Text Domain: 
+*/
 
-
-$apiInstance = new OpenAPI\Client\Api\AnimalEventResourceApi(
-    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
-    // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
-);
-
-try {
-    $result = $apiInstance->animalEventsCountGet();
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling AnimalEventResourceApi->animalEventsCountGet: ', $e->getMessage(), PHP_EOL;
-}
+include_once(__DIR__ . '/includes/config.php');
