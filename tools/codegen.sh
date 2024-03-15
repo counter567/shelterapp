@@ -24,3 +24,4 @@ php -r "unlink('composer.phar');"
 
 cd -
 cp -r ./tools/.generate/php/vendor ./wp-plugin/shelterapp/
+cp -r ./tools/.generate/php/lib ./wp-plugin/shelterapp/
