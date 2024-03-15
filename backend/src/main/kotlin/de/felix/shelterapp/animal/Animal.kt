@@ -1,4 +1,4 @@
-package de.felix.animal
+package de.felix.shelterapp.animal
 
 import io.quarkus.hibernate.reactive.panache.PanacheEntity
 import jakarta.persistence.ElementCollection
@@ -62,14 +62,3 @@ class AnimalProcedure {
     lateinit var date: LocalDate
 }
 
-@Entity
-class PetEvent: PanacheEntity() {
-    var animalId: Long = 0
-    var date: LocalDate? = null
-    @ElementCollection(fetch = FetchType.EAGER)
-    var tags: List<String>? = null
-    @ElementCollection(fetch = FetchType.EAGER)
-    var pictureFileUrls: List<String>? = null
-    lateinit var title: String
-    var comment: String? = null
-}

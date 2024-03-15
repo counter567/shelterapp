@@ -24,3 +24,5 @@ hs_err_pid*
 replay_pid*
 /backend/docs/
 /.idea/
+/backend/src/main/resources/privateKey.pem
+/backend/src/main/resources/publicKey.pem
