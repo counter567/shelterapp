@@ -6,7 +6,7 @@
     "private": true,
     "license": "UNLICENSED",
     "scripts": {
-        "dev": "./mvnw compile quarkus:dev",
+        "dev": "docker compose up",
         "build": "zip -rq ./shelterapp.zip ./shelterapp"
     }
 }

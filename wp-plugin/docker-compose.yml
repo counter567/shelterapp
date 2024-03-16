@@ -20,7 +20,6 @@ services:
     volumes:
       - wordpress:/var/www/html
       - ./shelterapp:/var/www/html/wp-content/plugins/shelterapp
-      - ./blocks/shelter-block-view:/var/www/html/wp-content/plugins/shelter-block-view
     networks:
       - shelterapp-wp-plugin
 
