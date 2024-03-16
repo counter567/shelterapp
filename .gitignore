@@ -26,3 +26,19 @@ replay_pid*
 /.idea/
 /backend/src/main/resources/privateKey.pem
 /backend/src/main/resources/publicKey.pem
+
+# dependencies
+node_modules
+
+# local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# turbo
+.turbo
+
+# vercel
+.vercel

@@ -1,0 +1,12 @@
+{
+  "name": "backend",
+  "version": "0.0.1",
+  "description": "",
+  "author": "Felix Specht",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "./mvnw compile quarkus:dev",
+    "build": "./mvnw package"
+  }
+}
