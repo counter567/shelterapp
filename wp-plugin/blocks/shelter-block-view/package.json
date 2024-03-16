@@ -6,7 +6,8 @@
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
 	"scripts": {
-		"build": "wp-scripts build --webpack-copy-php; cp -rf ./build ../shelterapp/blocks/shelter-block-view; cp -rf ./shelter-block-view.php ../shelterapp/blocks/shelter-block-view",
+		"dev": "nodemon --watch src --exec \"npm run build > /dev/null; echo Build\"",
+		"build": "wp-scripts build --webpack-copy-php; cp -rf ./build/* ../../shelterapp/blocks/shelter-block-view",
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style",
 		"lint:js": "wp-scripts lint-js",
@@ -16,5 +17,8 @@
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^27.4.0"
+	},
+	"dependencies": {
+		"nodemon": "^3.1.0"
 	}
 }

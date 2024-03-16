@@ -9,7 +9,8 @@ Requires PHP:
 Author: 
 Author URI: 
 License: 
-Text Domain: 
+Text Domain: shelterapp
 */
 
 include_once(__DIR__ . '/includes/config.php');
+include_once(__DIR__ . '/blocks/index.php');
