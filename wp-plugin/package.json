@@ -6,7 +6,6 @@
     "private": true,
     "license": "UNLICENSED",
     "scripts": {
-        "dev": "./mvnw compile quarkus:dev",
         "build": "zip -rq ./shelterapp.zip ./shelterapp"
     }
 }
