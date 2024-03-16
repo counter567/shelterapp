@@ -13,7 +13,8 @@
     "packageManager": "npm@8.19.4",
     "workspaces": [
         "wp-plugin/",
-        "backend/"
+        "backend/",
+        "wp-plugin/blocks/*"
     ],
     "dependencies": {
         "dotenv-cli": "^7.3.0"
