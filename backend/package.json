@@ -7,6 +7,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "dev": "./mvnw compile quarkus:dev",
-    "build": "./mvnw package"
+    "build": "./mvnw compile quarkus:build",
+    "build-image": "./mvnw compile quarkus:build -Dquarkus.container-image.build=true",
+    "build-native-image": "./mvnw package -Pnative -Dquarkus.native.container-build=true"
   }
 }
