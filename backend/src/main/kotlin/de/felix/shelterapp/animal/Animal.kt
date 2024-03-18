@@ -5,9 +5,11 @@ import jakarta.persistence.ElementCollection
 import jakarta.persistence.Embeddable
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
+import jakarta.persistence.NamedQuery
 import java.time.LocalDate
 
 @Entity
+@NamedQuery(name = "Animal.containsInName", query = "from Animal where name like CONCAT('%', CONCAT(:name, '%'))")
 class Animal: PanacheEntity() {
     lateinit var name: String
     var dateOfBirth: LocalDate? = null
