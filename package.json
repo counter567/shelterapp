@@ -7,6 +7,7 @@
         "generate": "./tools/codegen.sh"
     },
     "devDependencies": {
+        "concurrently": "^8.2.2",
         "turbo": "latest"
     },
     "name": "shelterapp",

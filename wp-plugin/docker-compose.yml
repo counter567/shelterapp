@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  wordpress:
+    image: wordpress
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: wp-db
+      WORDPRESS_DB_USER: shelterapp
+      WORDPRESS_DB_PASSWORD: shelterapp
+      WORDPRESS_DB_NAME: shelterapp
+      WORDPRESS_DEBUG: 1
+    volumes:
+      - ./shelterapp:/var/www/html/wp-content/plugins/shelterapp
+  wp-db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: shelterapp
+      MYSQL_USER: shelterapp
+      MYSQL_PASSWORD: shelterapp
+      MYSQL_RANDOM_ROOT_PASSWORD: "1"
