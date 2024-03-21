@@ -12,5 +12,5 @@ License:
 Text Domain: shelterapp
 */
 
-include_once(__DIR__ . '/includes/config.php');
+include_once(__DIR__ . '/includes/index.php');
 include_once(__DIR__ . '/blocks/index.php');
