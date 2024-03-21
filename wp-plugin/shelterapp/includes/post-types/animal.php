@@ -30,6 +30,18 @@ class ShelterappAnimals
                 'schema'            => null
             )
         );
+        register_rest_route('sa/v1', '/restData', array(
+            'methods' => 'GET',
+            'callback' => function ($data) {
+                return array(
+                    'root' => esc_url_raw(rest_url()),
+                    'nonce' => wp_create_nonce('wp_rest')
+                );
+            },
+            'permission_callback' => function () {
+                return true;
+            }
+        ));
     }
 
     function set_meta_rest($value, $object)

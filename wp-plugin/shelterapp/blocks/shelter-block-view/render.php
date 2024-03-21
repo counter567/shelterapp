@@ -4,7 +4,7 @@
 	/**
 	 * @see https://github.com/WordPress/gutenberg/blob/trunk/docs/reference-guides/block-api/block-metadata.md#render
 	 */
-	wp_enqueue_script('shelter-app-react', plugins_url('js/static/js/main.3ec43104.js', SHELTERAPP_PATH), array(), '1.0', true);
+	wp_enqueue_script('shelter-app-react', plugins_url('js/static/js/main.3c518f98.js', SHELTERAPP_PATH), array(), '1.0', true);
 	wp_enqueue_style('shelter-app-react', plugins_url('js/static/css/main.f5247212.css', SHELTERAPP_PATH), array(), '1.0', 'all');
 	wp_localize_script('create-block-shelter-block-view-view-script', 'sa_app_data', array(
 		'root' => esc_url_raw(rest_url()),

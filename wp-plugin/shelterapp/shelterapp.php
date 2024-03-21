@@ -31,3 +31,5 @@ function sa_deactivate()
     $SHELTERAPP_GLOBAL_ANIMAL->deactivate_plugin();
 }
 register_deactivation_hook(__FILE__, 'sa_deactivate');
+
+header("Access-Control-Allow-Origin: *");
