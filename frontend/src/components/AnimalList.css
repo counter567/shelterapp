@@ -1,0 +1,31 @@
+@media screen and (max-width: 690px) {
+  .animals {
+    justify-items: center;
+  }
+
+  .animals li {
+    min-width: 280px;
+    width: auto;
+  }
+}
+
+.animals {
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  margin: 2rem;
+}
+
+.card-green .card-bottom {
+  background-color: #5cb85c;
+}
+
+.card-red {
+  border: #d9534f 1px solid;
+}
+
+.card-red .card-bottom {
+  background-color: #d9534f;
+}
+
+.card-orange .card-bottom {
+  background-color: #f0ad4e;
+}

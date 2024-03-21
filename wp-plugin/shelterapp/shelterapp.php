@@ -11,7 +11,7 @@ Author URI:
 License: 
 Text Domain: shelterapp
 */
-
+define('SHELTERAPP_PATH', __FILE__);
 include_once(__DIR__ . '/includes/index.php');
 include_once(__DIR__ . '/blocks/index.php');
 

@@ -1,23 +1,24 @@
 {
-    "private": true,
-    "scripts": {
-        "build": "dotenv -- turbo run build",
-        "prebuild": "npm run generate",
-        "dev": "dotenv -- turbo run dev",
-        "generate": "./tools/codegen.sh"
-    },
-    "devDependencies": {
-        "concurrently": "^8.2.2",
-        "turbo": "latest"
-    },
-    "name": "shelterapp",
-    "packageManager": "npm@8.19.4",
-    "workspaces": [
-        "wp-plugin/",
-        "backend/",
-        "wp-plugin/blocks/*"
-    ],
-    "dependencies": {
-        "dotenv-cli": "^7.3.0"
-    }
+  "private": true,
+  "scripts": {
+    "build": "dotenv -- turbo run build",
+    "prebuild": "npm run generate",
+    "dev": "dotenv -- turbo run dev",
+    "generate": "./tools/codegen.sh"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "turbo": "latest"
+  },
+  "name": "shelterapp",
+  "packageManager": "npm@8.19.4",
+  "workspaces": [
+    "wp-plugin/",
+    "backend/",
+    "wp-plugin/blocks/*",
+    "frontend/"
+  ],
+  "dependencies": {
+    "dotenv-cli": "^7.3.0"
+  }
 }

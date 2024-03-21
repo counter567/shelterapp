@@ -1,0 +1,15 @@
+@import "~react-image-gallery/styles/css/image-gallery.css";
+
+.image {
+  margin: 0 4px;
+  width: 100%;
+  aspect-ratio: 1/1;
+  max-width: 578px;
+}
+
+.image img {
+  top: 14px;
+  width: 100%;
+  aspect-ratio: 1/1;
+  max-width: 550px;
+}
