@@ -11,9 +11,9 @@ export async function requestData(
   const headers = new Headers(initOptions.headers);
   delete initOptions.headers;
   const options = {
-    mode: "cors",
-    credentials: "include",
-    referrerPolicy: "strict-origin-when-cross-origin",
+    // mode: "cors",
+    // credentials: "include",
+    // referrerPolicy: "strict-origin-when-cross-origin",
     ...initOptions,
     headers,
   } as RequestInit;

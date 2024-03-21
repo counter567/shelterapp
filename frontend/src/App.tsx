@@ -9,9 +9,21 @@ function App() {
 
   useEffect(() => {
     console.log("App component mounted");
-    requestData("wp/v2").then((data) => {
-      console.log(data);
-    });
+    requestData("/wp/v2")
+      .then((data) => {
+        console.log("all routes: ", data.routes);
+      })
+      .catch((error) => {
+        console.error("error is: ", error);
+      });
+
+    requestData("/wp/v2/shelterapp_animals")
+      .then((data) => {
+        console.log("animals: ", data);
+      })
+      .catch((error) => {
+        console.error("error is: ", error);
+      });
   }, []);
 
   return (

@@ -19,7 +19,7 @@ const first = {
   need: "Notfall",
   hints: ["Schlachtfreies Zuhause", "keine Einzelhaltung"],
   found: true,
-  donators: ["Hans Peter", "Hans Peter", "Hans Peter"],
+  donators: ["Hans Peter", "Hans Peter 2", "Hans Peter 3"],
   properties: ["Freigänger", "kastriert", "gechipt", "geimpft"],
   image:
     "https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8fA%3D%3D",

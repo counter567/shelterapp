@@ -5,14 +5,14 @@ const getNonce = async () => {
   if (!nonce || !root) {
     if (window["sa_app_data" as any] && sa_app_data?.nonce) {
       nonce = sa_app_data?.nonce;
-      root = sa_app_data?.root;
+      root = sa_app_data?.root.slice(0, -1);
     } else {
       const result = await fetch(
         "http://localhost:8080/index.php?rest_route=/sa/v1/restData"
       );
       const data = await result.json();
       nonce = data.nonce;
-      root = data.root;
+      root = data.root.slice(0, -1);
     }
   }
   return { nonce, root };
