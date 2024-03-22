@@ -1,8 +1,10 @@
 import getNonce from "./nonce-helper";
 
+type RequestData = FormData | { [key: string]: any };
+
 export async function requestData(
   path: string | URL,
-  data?: any,
+  data?: RequestData,
   initOptions: RequestInit = {}
 ) {
   if (path instanceof URL) {
@@ -11,9 +13,6 @@ export async function requestData(
   const headers = new Headers(initOptions.headers);
   delete initOptions.headers;
   const options = {
-    // mode: "cors",
-    // credentials: "include",
-    // referrerPolicy: "strict-origin-when-cross-origin",
     ...initOptions,
     headers,
   } as RequestInit;
@@ -29,7 +28,17 @@ export async function requestData(
     }
   }
 
-  return fetch(root + path, options).then((response) => {
+  try {
+    const url = new URL(path, root);
+    const response = await fetch(url.toString(), options);
+    if (!response.ok) {
+      throw new Error(`Fehler beim Abrufen der Daten: ${response.statusText}`);
+    }
     return response.json();
-  });
+  } catch (error) {
+    console.error("Fehler beim Abrufen der Daten:", error);
+    throw new Error(
+      `Fehler beim Abrufen der Daten: ${(error as Error).message}`
+    );
+  }
 }
