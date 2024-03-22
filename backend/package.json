@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "dev_old": "./mvnw compile quarkus:dev",
+    "dev": "./mvnw compile quarkus:dev",
     "build": "./mvnw compile quarkus:build",
     "build-image": "./mvnw compile quarkus:build -Dquarkus.container-image.build=true",
     "build-native-image": "./mvnw package -Pnative -Dquarkus.native.container-build=true",
