@@ -3,12 +3,12 @@ import "./App.css";
 import AnimalDetail from "./components/AnimalDetail";
 import AnimalList from "./components/AnimalList";
 import { requestData } from "./service/requestData";
+import { animalTypes, animals } from "./service/animalapi";
 
 function App() {
   const [showDetail, setShowDetail] = useState(true);
 
   useEffect(() => {
-    console.log("App component mounted");
     requestData("/wp/v2")
       .then((data) => {
         console.log("all routes: ", data.routes);
@@ -17,13 +17,12 @@ function App() {
         console.error("error is: ", error);
       });
 
-    requestData("/wp/v2/shelterapp_animals")
-      .then((data) => {
-        console.log("animals: ", data);
-      })
-      .catch((error) => {
-        console.error("error is: ", error);
-      });
+    (async () => {
+      const res2 = await animalTypes();
+      console.log("types: ", res2);
+      const res = await animals();
+      console.log("animals: ", res);
+    })();
   }, []);
 
   return (
