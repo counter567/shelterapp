@@ -4,7 +4,8 @@
         "build": "dotenv -- turbo run build",
         "prebuild": "npm run generate",
         "dev": "dotenv -- turbo run dev",
-        "generate": "./tools/codegen.sh"
+        "predev": "npm run generate",
+        "generate": "dotenv -- turbo run generate"
     },
     "devDependencies": {
         "concurrently": "^8.2.2",
