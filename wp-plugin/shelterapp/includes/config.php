@@ -17,6 +17,10 @@ function shelterapp_add_settings_page()
 add_action('admin_menu', 'shelterapp_add_settings_page');
 
 
+function sa_get_config(){
+    return get_option('shelterapp_plugin_options', shelterapp_plugin_setting_get_default_congig());
+}
+
 // Layout
 
 function shelterapp_render_plugin_settings_page()
@@ -42,19 +46,19 @@ function shelterapp_plugin_setting_shelterapp_text()
 function shelterapp_plugin_setting_get_default_congig()
 {
     return array(
-        'shelterapp_host' => 'http://test/',
+        'shelterapp_host' => 'http://backend:8080',
         'shelterapp_token' => '',
     );
 }
 
 function shelterapp_plugin_setting_shelterapp_host()
 {
-    $options = get_option('shelterapp_plugin_options', shelterapp_plugin_setting_get_default_congig());
+    $options = sa_get_config();
     echo "<input autocomplete='off' id='shelterapp_plugin_setting_shelterapp_host' name='shelterapp_plugin_options[shelterapp_host]' type='text' value='" . esc_attr($options['shelterapp_host']) . "' placeholder='Host' />";
 }
 function shelterapp_plugin_setting_shelterapp_token()
 {
-    $options = get_option('shelterapp_plugin_options', shelterapp_plugin_setting_get_default_congig());
+    $options = sa_get_config();
     echo "<input autocomplete='off' id='shelterapp_plugin_setting_shelterapp_token' name='shelterapp_plugin_options[shelterapp_token]' type='text' value='" . esc_attr($options['shelterapp_token']) . "' placeholder='Token' />";
 }
 

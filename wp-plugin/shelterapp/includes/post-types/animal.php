@@ -78,6 +78,15 @@ class ShelterappAnimals
 
     function register_post_type()
     {
+        $client = sa_get_animal_resource_client();
+        try{
+            $count = $client->animalsCountGet();
+            error_log($count);
+        } catch(Exception $e) {
+            error_log('Error');
+            error_log(print_r($e, true));
+        }
+
         // Set UI labels for Custom Post Type animals
         $labels_type = array(
             'name'                => _x('Tiere', 'Post Type General Name', 'shelterapp'),
