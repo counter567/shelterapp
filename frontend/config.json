@@ -3,21 +3,21 @@
     "browserslist"
   ],
   "stats": "errors-warnings",
-  "mode": "development",
-  "bail": false,
-  "devtool": "cheap-module-source-map",
+  "mode": "production",
+  "bail": true,
+  "devtool": "source-map",
   "entry": "C:\\Git\\shelterapp\\frontend\\src\\index.tsx",
   "output": {
     "path": "C:\\Git\\shelterapp\\frontend\\build",
-    "pathinfo": true,
-    "filename": "static/js/bundle.js",
+    "pathinfo": false,
+    "filename": "static/js/[name].js",
     "chunkFilename": "static/js/[name].chunk.js",
     "assetModuleFilename": "static/media/[name].[hash][ext]",
     "publicPath": "/"
   },
   "cache": {
     "type": "filesystem",
-    "version": "56e655ab29e15739b04e5da711108e4f",
+    "version": "fd29815a896a0fa4412eb36034ff2cae",
     "cacheDirectory": "C:\\Git\\shelterapp\\frontend\\node_modules\\.cache",
     "store": "pack",
     "buildDependencies": {
@@ -36,7 +36,7 @@
     "level": "none"
   },
   "optimization": {
-    "minimize": false,
+    "minimize": true,
     "minimizer": [
       {
         "options": {
@@ -207,13 +207,11 @@
               ],
               "babelrc": false,
               "configFile": false,
-              "cacheIdentifier": "development:babel-plugin-named-asset-import@0.3.8:babel-preset-react-app@10.0.1:react-dev-utils@12.0.1:react-scripts@5.0.1",
-              "plugins": [
-                "C:\\Git\\shelterapp\\node_modules\\react-scripts\\node_modules\\react-refresh\\babel.js"
-              ],
+              "cacheIdentifier": "production:babel-plugin-named-asset-import@0.3.8:babel-preset-react-app@10.0.1:react-dev-utils@12.0.1:react-scripts@5.0.1",
+              "plugins": [],
               "cacheDirectory": true,
               "cacheCompression": false,
-              "compact": false
+              "compact": true
             }
           },
           {
@@ -234,7 +232,7 @@
               ],
               "cacheDirectory": true,
               "cacheCompression": false,
-              "cacheIdentifier": "development:babel-plugin-named-asset-import@0.3.8:babel-preset-react-app@10.0.1:react-dev-utils@12.0.1:react-scripts@5.0.1",
+              "cacheIdentifier": "production:babel-plugin-named-asset-import@0.3.8:babel-preset-react-app@10.0.1:react-dev-utils@12.0.1:react-scripts@5.0.1",
               "sourceMaps": true,
               "inputSourceMap": true
             }
@@ -243,7 +241,10 @@
             "test": {},
             "exclude": {},
             "use": [
-              "C:\\Git\\shelterapp\\node_modules\\style-loader\\dist\\cjs.js",
+              {
+                "loader": "C:\\Git\\shelterapp\\node_modules\\mini-css-extract-plugin\\dist\\loader.js",
+                "options": {}
+              },
               {
                 "loader": "C:\\Git\\shelterapp\\node_modules\\css-loader\\dist\\cjs.js",
                 "options": {
@@ -283,7 +284,10 @@
           {
             "test": {},
             "use": [
-              "C:\\Git\\shelterapp\\node_modules\\style-loader\\dist\\cjs.js",
+              {
+                "loader": "C:\\Git\\shelterapp\\node_modules\\mini-css-extract-plugin\\dist\\loader.js",
+                "options": {}
+              },
               {
                 "loader": "C:\\Git\\shelterapp\\node_modules\\css-loader\\dist\\cjs.js",
                 "options": {
@@ -323,7 +327,10 @@
             "test": {},
             "exclude": {},
             "use": [
-              "C:\\Git\\shelterapp\\node_modules\\style-loader\\dist\\cjs.js",
+              {
+                "loader": "C:\\Git\\shelterapp\\node_modules\\mini-css-extract-plugin\\dist\\loader.js",
+                "options": {}
+              },
               {
                 "loader": "C:\\Git\\shelterapp\\node_modules\\css-loader\\dist\\cjs.js",
                 "options": {
@@ -376,7 +383,10 @@
           {
             "test": {},
             "use": [
-              "C:\\Git\\shelterapp\\node_modules\\style-loader\\dist\\cjs.js",
+              {
+                "loader": "C:\\Git\\shelterapp\\node_modules\\mini-css-extract-plugin\\dist\\loader.js",
+                "options": {}
+              },
               {
                 "loader": "C:\\Git\\shelterapp\\node_modules\\css-loader\\dist\\cjs.js",
                 "options": {
@@ -442,7 +452,19 @@
     {
       "userOptions": {
         "inject": true,
-        "template": "C:\\Git\\shelterapp\\frontend\\public\\index.html"
+        "template": "C:\\Git\\shelterapp\\frontend\\public\\index.html",
+        "minify": {
+          "removeComments": true,
+          "collapseWhitespace": true,
+          "removeRedundantAttributes": true,
+          "useShortDoctype": true,
+          "removeEmptyAttributes": true,
+          "removeStyleLinkTypeAttributes": true,
+          "keepClosingSlash": true,
+          "minifyJS": true,
+          "minifyCSS": true,
+          "minifyURLs": true
+        }
       },
       "version": 5,
       "options": {
@@ -455,7 +477,18 @@
         "scriptLoading": "defer",
         "compile": true,
         "favicon": false,
-        "minify": "auto",
+        "minify": {
+          "removeComments": true,
+          "collapseWhitespace": true,
+          "removeRedundantAttributes": true,
+          "useShortDoctype": true,
+          "removeEmptyAttributes": true,
+          "removeStyleLinkTypeAttributes": true,
+          "keepClosingSlash": true,
+          "minifyJS": true,
+          "minifyCSS": true,
+          "minifyURLs": true
+        },
         "cache": true,
         "showErrors": true,
         "chunks": "all",
@@ -468,8 +501,13 @@
       }
     },
     {
+      "tests": [
+        {}
+      ]
+    },
+    {
       "replacements": {
-        "NODE_ENV": "development",
+        "NODE_ENV": "production",
         "PUBLIC_URL": "",
         "FAST_REFRESH": true
       }
@@ -480,25 +518,23 @@
     {
       "definitions": {
         "process.env": {
-          "NODE_ENV": "\"development\"",
+          "NODE_ENV": "\"production\"",
           "PUBLIC_URL": "\"\"",
           "FAST_REFRESH": "true"
         }
       }
     },
     {
+      "_sortedModulesCache": {},
       "options": {
-        "overlay": false,
-        "exclude": {},
-        "include": {}
+        "filename": "static/css/[name].[contenthash:8].css",
+        "ignoreOrder": false,
+        "runtime": true,
+        "chunkFilename": "static/css/[name].[contenthash:8].chunk.css"
+      },
+      "runtimeOptions": {
+        "linkType": "text/css"
       }
-    },
-    {
-      "options": {},
-      "logger": {},
-      "pathCache": {},
-      "fsOperations": 0,
-      "primed": false
     },
     {
       "options": {
@@ -524,7 +560,7 @@
     },
     {
       "options": {
-        "async": true,
+        "async": false,
         "typescript": {
           "typescriptPath": "C:\\Git\\shelterapp\\node_modules\\typescript\\lib\\typescript.js",
           "configOverwrite": {
