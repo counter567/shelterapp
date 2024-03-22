@@ -9,6 +9,9 @@
     "dev_old": "./mvnw compile quarkus:dev",
     "build": "./mvnw compile quarkus:build",
     "build-image": "./mvnw compile quarkus:build -Dquarkus.container-image.build=true",
-    "build-native-image": "./mvnw package -Pnative -Dquarkus.native.container-build=true"
+    "build-native-image": "./mvnw package -Pnative -Dquarkus.native.container-build=true",
+    "generate": "npm run build-image",
+    "pregenerate": "./tools/generate-cert.sh",
+    "postgenerate": "./tools/codegen.sh"
   }
 }
