@@ -12,6 +12,8 @@ import { __ } from '@wordpress/i18n';
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
 import { useBlockProps } from '@wordpress/block-editor';
+import { useSelect } from '@wordpress/data';
+import { store as coreDataStore } from '@wordpress/core-data';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -21,6 +23,11 @@ import { useBlockProps } from '@wordpress/block-editor';
  */
 import './editor.scss';
 
+const options = [
+	'dog',
+	'cat',
+]
+
 /**
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
@@ -29,13 +36,37 @@ import './editor.scss';
  *
  * @return {Element} Element to render.
  */
-export default function Edit() {
+export default function Edit({ attributes, setAttributes, isSelected }) {
+	const { type } = attributes;
+	const onSetType = (ev) => {
+		setAttributes({ type: ev.nativeEvent.target.value });
+	}
+
+	const types = useSelect(
+		select =>
+			select(coreDataStore).getEntityRecords('taxonomy', 'shelterapp_animal_type'),
+		[]
+	);
+
 	return (
-		<p {...useBlockProps()}>
-			{__(
-				'Shelter Block View',
-				'shelter-block-view'
-			)}
-		</p>
+		<div {...useBlockProps()}>
+			<p>
+				{__(
+					'Shelter Block View',
+					'shelter-block-view'
+				)}
+			</p>
+
+			<div class="option-row">
+				<span>{__('Type')}</span>
+				{types && <select defaultValue={type} onChange={onSetType}>
+					<option value={''}>{__('All')}</option>
+					{types.map((typeOption) => {
+						return <option value={typeOption.id}>{__(typeOption.name)}</option>;
+					})}
+				</select>}
+
+			</div>
+		</div>
 	);
 }

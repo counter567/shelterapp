@@ -6,6 +6,7 @@
     "private": true,
     "license": "UNLICENSED",
     "scripts": {
+        "dev": "docker compose up",
         "build": "zip -rq ./shelterapp.zip ./shelterapp"
     }
 }

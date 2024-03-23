@@ -12,5 +12,22 @@ License:
 Text Domain: shelterapp
 */
 
-include_once(__DIR__ . '/includes/config.php');
+include_once(__DIR__ . '/includes/index.php');
 include_once(__DIR__ . '/blocks/index.php');
+
+
+
+/* Main Plugin File */
+function sa_activate()
+{
+    global $SHELTERAPP_GLOBAL_ANIMAL;
+    $SHELTERAPP_GLOBAL_ANIMAL->activate_plugin();
+}
+register_activation_hook(__FILE__, 'sa_activate');
+
+function sa_deactivate()
+{
+    global $SHELTERAPP_GLOBAL_ANIMAL;
+    $SHELTERAPP_GLOBAL_ANIMAL->deactivate_plugin();
+}
+register_deactivation_hook(__FILE__, 'sa_deactivate');

@@ -25,9 +25,7 @@ services:
       WORDPRESS_DB_NAME: shelterapp
       WORDPRESS_DEBUG: 1
     volumes:
-#      - wordpress:/var/www/html
       - ./wp-plugin/shelterapp:/var/www/html/wp-content/plugins/shelterapp
-      - ./wp-plugin/blocks/shelter-block-view:/var/www/html/wp-content/plugins/shelter-block-view
   wp-db:
     image: mysql:8.0
     restart: always
@@ -36,13 +34,13 @@ services:
       MYSQL_USER: shelterapp
       MYSQL_PASSWORD: shelterapp
       MYSQL_RANDOM_ROOT_PASSWORD: "1"
-#    volumes:
-#      - wp-db:/var/lib/mysql
+  #    volumes:
+  #      - wp-db:/var/lib/mysql
   backend-db:
     image: postgres:latest
     restart: always
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready" ]
+      test: ["CMD-SHELL", "pg_isready"]
       interval: 10s
       timeout: 5s
       retries: 5
