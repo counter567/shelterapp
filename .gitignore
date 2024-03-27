@@ -41,3 +41,6 @@ node_modules
 
 # vercel
 .vercel
+
+# vs code
+.vscode
