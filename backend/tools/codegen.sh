@@ -8,10 +8,10 @@ then
     export PATH=$PATH:~/bin/openapitools/
 fi
 
+openapi-generator-cli generate -i ./docs/openapi/openapi.yaml -g php -o ./tools/.generate/php/ --skip-validate-spec > /dev/null
+openapi-generator-cli generate -i ./docs/openapi/openapi.yaml -g typescript-fetch -o ./tools/.generate/ts/ --skip-validate-spec > /dev/null
 
-
-openapi-generator-cli generate -i ./backend/docs/openapi/openapi.yaml -g php -o ./tools/.generate/php/ --skip-validate-spec
-openapi-generator-cli generate -i ./backend/docs/openapi/openapi.yaml -g typescript-fetch -o ./tools/.generate/ts/ --skip-validate-spec
+# compile and copy php stuff
 
 cd ./tools/.generate/php/;
 
@@ -23,5 +23,5 @@ php composer.phar install
 php -r "unlink('composer.phar');"
 
 cd -
-cp -r ./tools/.generate/php/vendor ./wp-plugin/shelterapp/
-cp -r ./tools/.generate/php/lib ./wp-plugin/shelterapp/
+cp -r ./tools/.generate/php/vendor ../wp-plugin/shelterapp/
+cp -r ./tools/.generate/php/lib ../wp-plugin/shelterapp/

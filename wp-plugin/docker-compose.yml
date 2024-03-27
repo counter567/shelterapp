@@ -1,6 +1,8 @@
 version: "3.8"
 
 services:
+  # Wordpress
+
   wordpress:
     image: wordpress
     restart: always
@@ -14,6 +16,7 @@ services:
       WORDPRESS_DEBUG: 1
     volumes:
       - ./shelterapp:/var/www/html/wp-content/plugins/shelterapp
+
   wp-db:
     image: mysql:8.0
     restart: always
@@ -22,3 +25,24 @@ services:
       MYSQL_USER: shelterapp
       MYSQL_PASSWORD: shelterapp
       MYSQL_RANDOM_ROOT_PASSWORD: "1"
+
+  # Backend
+
+  backend:
+    image: counbellian7/shelterapp-backend:latest
+    environment:
+      QUARKUS_DATASOURCE_REACTIVE_URL: "postgresql://backend-db:5432/shelterapp"
+      QUARKUS_DATASOURCE_USERNAME: shelterapp
+      QUARKUS_DATASOURCE_PASSWORD: shelterapp
+      QUARKUS_PROFILE: dev
+      QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION: "drop-and-create" # drop-and-create or update. Update is for when you want to keep your data
+    depends_on:
+      - backend-db
+
+  backend-db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: shelterapp
+      POSTGRES_USER: shelterapp
+      POSTGRES_PASSWORD: shelterapp

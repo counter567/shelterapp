@@ -1,19 +1,34 @@
 <?php
-require_once(__DIR__ . '/vendor/autoload.php');
+require_once(__DIR__ . '/../vendor/autoload.php');
 
-$config = new OpenAPI\Client\Configuration();
-// $config->setHost('http://test');
+$sa_animal_resouce_client = null;
+function sa_get_animal_resource_client(){
+    global $sa_animal_resouce_client;
+    if(!$sa_animal_resouce_client){
+        $options = sa_get_config();
+        $config = new OpenAPI\Client\Configuration();
+        $config->setHost($options['shelterapp_host']);
 
-$apiInstance = new OpenAPI\Client\Api\AnimalEventResourceApi(
-    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
-    // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client(),
-    $config,
-);
+        $sa_animal_resouce_client = new OpenAPI\Client\Api\AnimalResourceApi(
+            new GuzzleHttp\Client(),
+            $config,
+        );
+    }
+    return $sa_animal_resouce_client;
+}
 
-try {
-    $result = $apiInstance->animalEventsCountGet();
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling AnimalEventResourceApi->animalEventsCountGet: ', $e->getMessage(), PHP_EOL;
+$sa_animal_event_client = null;
+function sa_get_animal_event_client(){
+    global $sa_animal_event_client;
+    if(!$sa_animal_event_client){
+        $options = sa_get_config();
+        $config = new OpenAPI\Client\Configuration();
+        $config->setHost($options['shelterapp_host']);
+
+        $sa_animal_event_client = new OpenAPI\Client\Api\AnimalEventResourceApi(
+            new GuzzleHttp\Client(),
+            $config,
+        );
+    }
+    return $sa_animal_event_client;
 }

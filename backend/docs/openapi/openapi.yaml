@@ -1,0 +1,596 @@
+---
+openapi: 3.0.3
+info:
+  title: shelterapp-backend API
+  version: "1.0"
+servers:
+- url: http://localhost:8080
+  description: Auto generated value
+- url: http://0.0.0.0:8080
+  description: Auto generated value
+tags:
+- name: AnimalEventResource
+- name: AnimalResource
+paths:
+  /animal-events:
+    get:
+      tags:
+      - AnimalEventResource
+      parameters:
+      - name: animalId
+        in: query
+        schema:
+          format: int64
+          type: integer
+      - name: comment
+        in: query
+        schema:
+          type: string
+      - name: id
+        in: query
+        schema:
+          format: int64
+          type: integer
+      - name: namedQuery
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        schema:
+          format: int32
+          default: 0
+          type: integer
+      - name: size
+        in: query
+        schema:
+          format: int32
+          default: 20
+          type: integer
+      - name: sort
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+      - name: title
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AnimalEvent'
+    post:
+      tags:
+      - AnimalEventResource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnimalEvent'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimalEvent'
+  /animal-events/count:
+    get:
+      tags:
+      - AnimalEventResource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                format: int64
+                type: integer
+  /animal-events/{id}:
+    get:
+      tags:
+      - AnimalEventResource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimalEvent'
+    put:
+      tags:
+      - AnimalEventResource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnimalEvent'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimalEvent'
+    delete:
+      tags:
+      - AnimalEventResource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "204": {}
+  /animals:
+    get:
+      tags:
+      - AnimalResource
+      parameters:
+      - name: bloodType
+        in: query
+        schema:
+          type: string
+      - name: breedOne
+        in: query
+        schema:
+          type: string
+      - name: breedTwo
+        in: query
+        schema:
+          type: string
+      - name: chipNumber
+        in: query
+        schema:
+          type: string
+      - name: circumferenceOfChest
+        in: query
+        schema:
+          format: int32
+          type: integer
+      - name: circumferenceOfNeck
+        in: query
+        schema:
+          format: int32
+          type: integer
+      - name: color
+        in: query
+        schema:
+          type: string
+      - name: description
+        in: query
+        schema:
+          type: string
+      - name: donationCall
+        in: query
+        schema:
+          type: boolean
+      - name: heightAtWithers
+        in: query
+        schema:
+          format: int32
+          type: integer
+      - name: id
+        in: query
+        schema:
+          format: int64
+          type: integer
+      - name: internalNotes
+        in: query
+        schema:
+          type: string
+      - name: isCastrated
+        in: query
+        schema:
+          type: boolean
+      - name: isMissing
+        in: query
+        schema:
+          type: boolean
+      - name: isPrivateAdoption
+        in: query
+        schema:
+          type: boolean
+      - name: isPublic
+        in: query
+        schema:
+          type: boolean
+      - name: isSuccessStory
+        in: query
+        schema:
+          type: boolean
+      - name: lengthOfBack
+        in: query
+        schema:
+          format: int32
+          type: integer
+      - name: mainPictureFileUrl
+        in: query
+        schema:
+          type: string
+      - name: name
+        in: query
+        schema:
+          type: string
+      - name: namedQuery
+        in: query
+        schema:
+          type: string
+      - name: notes
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        schema:
+          format: int32
+          default: 0
+          type: integer
+      - name: size
+        in: query
+        schema:
+          format: int32
+          default: 20
+          type: integer
+      - name: sort
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+      - name: type
+        in: query
+        schema:
+          type: string
+      - name: wasFound
+        in: query
+        schema:
+          type: boolean
+      - name: weight
+        in: query
+        schema:
+          format: float
+          type: number
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Animal'
+    post:
+      tags:
+      - AnimalResource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Animal'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Animal'
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme: []
+  /animals/count:
+    get:
+      tags:
+      - AnimalResource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                format: int64
+                type: integer
+  /animals/{id}:
+    get:
+      tags:
+      - AnimalResource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Animal'
+    put:
+      tags:
+      - AnimalResource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Animal'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Animal'
+    delete:
+      tags:
+      - AnimalResource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "204": {}
+  /auth/login:
+    get:
+      tags:
+      - Auth Resource Impl
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+  /auth/logout:
+    get:
+      tags:
+      - Auth Resource Impl
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+components:
+  schemas:
+    Animal:
+      required:
+      - name
+      - dateOfAdmission
+      - type
+      - breedOne
+      - sex
+      - status
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        name:
+          type: string
+        dateOfBirth:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/LocalDate'
+          nullable: true
+        dateOfAdmission:
+          $ref: '#/components/schemas/LocalDate'
+        type:
+          type: string
+        breedOne:
+          type: string
+        breedTwo:
+          type: string
+          nullable: true
+        sex:
+          $ref: '#/components/schemas/AnimalSex'
+        color:
+          type: string
+          nullable: true
+        mainPictureFileUrl:
+          type: string
+          nullable: true
+        otherPictureFileUrls:
+          type: array
+          items:
+            type: string
+          nullable: true
+        weight:
+          format: float
+          type: number
+          nullable: true
+        heightAtWithers:
+          format: int32
+          type: integer
+          nullable: true
+        circumferenceOfNeck:
+          format: int32
+          type: integer
+          nullable: true
+        lengthOfBack:
+          format: int32
+          type: integer
+          nullable: true
+        circumferenceOfChest:
+          format: int32
+          type: integer
+          nullable: true
+        isCastrated:
+          type: boolean
+          nullable: true
+        bloodType:
+          type: string
+          nullable: true
+        illnesses:
+          type: array
+          items:
+            type: string
+          nullable: true
+        allergies:
+          type: array
+          items:
+            type: string
+          nullable: true
+        procedures:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnimalProcedure'
+          nullable: true
+        chipNumber:
+          type: string
+          nullable: true
+        isPublic:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/AnimalStatus'
+        wasFound:
+          type: boolean
+          nullable: true
+        isSuccessStory:
+          type: boolean
+        isMissing:
+          type: boolean
+        isPrivateAdoption:
+          type: boolean
+        notes:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        donationCall:
+          type: boolean
+        internalNotes:
+          type: string
+          nullable: true
+        dateOfLeave:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/LocalDate'
+          nullable: true
+        dateOfDeath:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/LocalDate'
+          nullable: true
+        castrated:
+          type: boolean
+          nullable: true
+        public:
+          type: boolean
+        successStory:
+          type: boolean
+        missing:
+          type: boolean
+        privateAdoption:
+          type: boolean
+    AnimalEvent:
+      required:
+      - title
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        animalId:
+          format: int64
+          type: integer
+        date:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/LocalDate'
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+        pictureFileUrls:
+          type: array
+          items:
+            type: string
+          nullable: true
+        title:
+          type: string
+        comment:
+          type: string
+          nullable: true
+    AnimalProcedure:
+      required:
+      - title
+      - date
+      type: object
+      properties:
+        title:
+          type: string
+        date:
+          $ref: '#/components/schemas/LocalDate'
+    AnimalSex:
+      enum:
+      - MALE
+      - FEMALE
+      type: string
+    AnimalStatus:
+      enum:
+      - NEW
+      - SEARCHING
+      - REQUEST_STOP
+      - EMERGENCY
+      - RESERVED
+      - ADOPTED
+      - FINAL_CARE
+      - COURT_OF_GRACE
+      - DECEASED
+      type: string
+    LocalDate:
+      format: date
+      type: string
+      example: 2022-03-10
+    TokenResponse:
+      required:
+      - token
+      type: object
+      properties:
+        token:
+          type: string
+  securitySchemes:
+    SecurityScheme:
+      type: http
+      description: Authentication
+      scheme: bearer
+      bearerFormat: JWT
