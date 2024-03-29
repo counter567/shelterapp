@@ -295,10 +295,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Animal'
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
   /animals/count:
