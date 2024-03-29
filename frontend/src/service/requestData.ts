@@ -29,7 +29,7 @@ export async function requestData(
   }
 
   try {
-    const url = new URL(path, root);
+    const url = new URL(root + path, root);
     const response = await fetch(url.toString(), options);
     if (!response.ok) {
       throw new Error(`Fehler beim Abrufen der Daten: ${response.statusText}`);
