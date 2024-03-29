@@ -3,7 +3,7 @@
   "scripts": {
     "build": "dotenv -- turbo run build",
     "prebuild": "npm run generate",
-    "dev": "dotenv -- turbo run dev",
+    "dev": "dotenv -- concurrently 'turbo run dev' 'cd frontend && npm run dev'",
     "predev": "npm run generate",
     "generate": "dotenv -- turbo run generate"
   },
@@ -16,8 +16,7 @@
   "workspaces": [
     "wp-plugin/",
     "backend/",
-    "wp-plugin/blocks/*",
-    "frontend/"
+    "wp-plugin/blocks/*"
   ],
   "dependencies": {
     "dotenv-cli": "^7.3.0"

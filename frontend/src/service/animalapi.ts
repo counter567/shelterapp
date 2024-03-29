@@ -14,6 +14,7 @@ const animals = async () => {
 };
 
 const animalTypes = async () => {
+  console.log("animalTypes");
   const allTypes = await requestData("/wp/v2/shelterapp_animal_type");
   allTypes.forEach((type: { id: number; name: string }) => {
     animalTypeMap.set(type.id, type.name);

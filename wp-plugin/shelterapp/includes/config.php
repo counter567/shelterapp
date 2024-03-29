@@ -17,8 +17,9 @@ function shelterapp_add_settings_page()
 add_action('admin_menu', 'shelterapp_add_settings_page');
 
 
-function sa_get_config(){
-    return get_option('shelterapp_plugin_options', shelterapp_plugin_setting_get_default_congig());
+function sa_get_config()
+{
+    return get_option('shelterapp_plugin_options', shelterapp_plugin_setting_get_default_config());
 }
 
 // Layout
@@ -43,7 +44,7 @@ function shelterapp_plugin_setting_shelterapp_text()
 
 // Config
 
-function shelterapp_plugin_setting_get_default_congig()
+function shelterapp_plugin_setting_get_default_config()
 {
     return array(
         'shelterapp_host' => 'http://backend:8080',
