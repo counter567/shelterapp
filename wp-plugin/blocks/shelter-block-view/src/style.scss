@@ -6,7 +6,13 @@
  */
 
 .wp-block-create-block-shelter-block-view {
-	background-color: #21759b;
-	color: #fff;
+	width: 100% !important;
+	max-width: unset !important;
 	padding: 2px;
+
+	.iframe-preview {
+		width: 100%;
+		border: none;
+		height: 100vh;
+	}
 }

@@ -9,7 +9,10 @@
   "description": "Example block scaffolded with Create Block tool.",
   "example": {},
   "supports": {
-    "html": false
+    "html": false,
+    "alignWide": true,
+    "allowCustomContentAndWideSize": true,
+    "allowSizingOnChildren": true
   },
   "textdomain": "shelter-block-view",
   "editorScript": "file:./index.js",
