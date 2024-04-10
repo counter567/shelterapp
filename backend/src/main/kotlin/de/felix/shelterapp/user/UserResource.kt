@@ -33,7 +33,7 @@ class UserResource {
     @Inject
     @field: Default
     lateinit var emailService: EmailService
-    @field: ConfigProperty(name = "ortify.baseUrl")
+    @field: ConfigProperty(name = "shelterapp.baseUrl")
     lateinit var baseUrl: String
     @Inject
     @field: Default

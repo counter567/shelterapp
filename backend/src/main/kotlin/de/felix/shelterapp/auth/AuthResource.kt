@@ -138,7 +138,7 @@ class AuthResource {
     @GET
     fun loginAnonymous(@QueryParam("tenantId") tenantId: UUID) = withPanacheSession {
         val tenant = Tenant.findById(tenantId).awaitSuspending() ?: throw NotFoundException("Tenant not found")
-        val token = createAnonymousToken(tenantId)
+        val token = createAnonymousToken(tenant.id)
         return@withPanacheSession token
     }
 }
