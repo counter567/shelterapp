@@ -106,6 +106,103 @@ paths:
           description: Not Authorized
       security:
       - SecurityScheme: []
+  /animal-procedures:
+    get:
+      tags:
+      - Animal Procedure Resource
+      parameters:
+      - name: animalId
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      - name: page
+        in: query
+        schema:
+          format: int32
+          type: integer
+          nullable: true
+      - name: pageSize
+        in: query
+        schema:
+          format: int32
+          type: integer
+          nullable: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AnimalProcedure'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+    put:
+      tags:
+      - Animal Procedure Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnimalProcedure'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimalProcedure'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+    post:
+      tags:
+      - Animal Procedure Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnimalProcedure'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimalProcedure'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+    delete:
+      tags:
+      - Animal Procedure Resource
+      parameters:
+      - name: id
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        "204":
+          description: No Content
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
   /animals:
     get:
       tags:
@@ -465,7 +562,26 @@ paths:
         "200":
           description: OK
           content:
-            application/json: {}
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshResponse'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+  /auth/token/validate:
+    get:
+      tags:
+      - Auth Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
         "403":
           description: Not Allowed
         "401":
@@ -925,6 +1041,8 @@ components:
       - breedOne
       - sex
       - status
+      - createdAt
+      - updatedAt
       type: object
       properties:
         id:
@@ -997,11 +1115,6 @@ components:
           items:
             type: string
           nullable: true
-        procedures:
-          type: array
-          items:
-            $ref: '#/components/schemas/AnimalProcedure'
-          nullable: true
         chipNumber:
           type: string
           nullable: true
@@ -1039,6 +1152,10 @@ components:
           allOf:
           - $ref: '#/components/schemas/LocalDate'
           nullable: true
+        createdAt:
+          $ref: '#/components/schemas/LocalDateTime'
+        updatedAt:
+          $ref: '#/components/schemas/LocalDateTime'
         castrated:
           type: boolean
           nullable: true
@@ -1086,14 +1203,24 @@ components:
           nullable: true
     AnimalProcedure:
       required:
+      - id
       - title
       - date
+      - animalId
       type: object
       properties:
+        id:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          readOnly: true
         title:
+          pattern: \S
           type: string
         date:
           $ref: '#/components/schemas/LocalDate'
+        animalId:
+          $ref: '#/components/schemas/UUID'
     AnimalSex:
       enum:
       - MALE
@@ -1140,6 +1267,13 @@ components:
       properties:
         refreshToken:
           type: string
+        accessToken:
+          type: string
+    RefreshResponse:
+      required:
+      - accessToken
+      type: object
+      properties:
         accessToken:
           type: string
     Tenant:
