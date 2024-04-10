@@ -1,6 +1,6 @@
 <?php
 /**
- * AnimalEvent
+ * User
  *
  * PHP version 7.4
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * AnimalEvent Class Doc Comment
+ * User Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
+class User implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'AnimalEvent';
+    protected static $openAPIModelName = 'User';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -58,12 +58,14 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPITypes = [
         'id' => 'string',
-        'animal_id' => 'string',
-        'date' => '\DateTime',
-        'tags' => 'string[]',
-        'picture_file_urls' => 'string[]',
-        'title' => 'string',
-        'comment' => 'string'
+        'username' => 'string',
+        'email' => 'string',
+        'password' => 'string',
+        'created_at' => '\DateTime',
+        'last_login' => '\DateTime',
+        'first_name' => 'string',
+        'last_name' => 'string',
+        'role' => '\OpenAPI\Client\Model\UserRole'
     ];
 
     /**
@@ -75,12 +77,14 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPIFormats = [
         'id' => 'uuid',
-        'animal_id' => 'uuid',
-        'date' => 'date',
-        'tags' => null,
-        'picture_file_urls' => null,
-        'title' => null,
-        'comment' => null
+        'username' => null,
+        'email' => null,
+        'password' => null,
+        'created_at' => 'date-time',
+        'last_login' => 'date-time',
+        'first_name' => null,
+        'last_name' => null,
+        'role' => null
     ];
 
     /**
@@ -90,12 +94,14 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static array $openAPINullables = [
         'id' => false,
-        'animal_id' => false,
-        'date' => true,
-        'tags' => true,
-        'picture_file_urls' => true,
-        'title' => false,
-        'comment' => true
+        'username' => false,
+        'email' => false,
+        'password' => false,
+        'created_at' => false,
+        'last_login' => true,
+        'first_name' => true,
+        'last_name' => true,
+        'role' => false
     ];
 
     /**
@@ -185,12 +191,14 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $attributeMap = [
         'id' => 'id',
-        'animal_id' => 'animalId',
-        'date' => 'date',
-        'tags' => 'tags',
-        'picture_file_urls' => 'pictureFileUrls',
-        'title' => 'title',
-        'comment' => 'comment'
+        'username' => 'username',
+        'email' => 'email',
+        'password' => 'password',
+        'created_at' => 'createdAt',
+        'last_login' => 'lastLogin',
+        'first_name' => 'firstName',
+        'last_name' => 'lastName',
+        'role' => 'role'
     ];
 
     /**
@@ -200,12 +208,14 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $setters = [
         'id' => 'setId',
-        'animal_id' => 'setAnimalId',
-        'date' => 'setDate',
-        'tags' => 'setTags',
-        'picture_file_urls' => 'setPictureFileUrls',
-        'title' => 'setTitle',
-        'comment' => 'setComment'
+        'username' => 'setUsername',
+        'email' => 'setEmail',
+        'password' => 'setPassword',
+        'created_at' => 'setCreatedAt',
+        'last_login' => 'setLastLogin',
+        'first_name' => 'setFirstName',
+        'last_name' => 'setLastName',
+        'role' => 'setRole'
     ];
 
     /**
@@ -215,12 +225,14 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $getters = [
         'id' => 'getId',
-        'animal_id' => 'getAnimalId',
-        'date' => 'getDate',
-        'tags' => 'getTags',
-        'picture_file_urls' => 'getPictureFileUrls',
-        'title' => 'getTitle',
-        'comment' => 'getComment'
+        'username' => 'getUsername',
+        'email' => 'getEmail',
+        'password' => 'getPassword',
+        'created_at' => 'getCreatedAt',
+        'last_login' => 'getLastLogin',
+        'first_name' => 'getFirstName',
+        'last_name' => 'getLastName',
+        'role' => 'getRole'
     ];
 
     /**
@@ -281,12 +293,14 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
     public function __construct(array $data = null)
     {
         $this->setIfExists('id', $data ?? [], null);
-        $this->setIfExists('animal_id', $data ?? [], null);
-        $this->setIfExists('date', $data ?? [], null);
-        $this->setIfExists('tags', $data ?? [], null);
-        $this->setIfExists('picture_file_urls', $data ?? [], null);
-        $this->setIfExists('title', $data ?? [], null);
-        $this->setIfExists('comment', $data ?? [], null);
+        $this->setIfExists('username', $data ?? [], null);
+        $this->setIfExists('email', $data ?? [], null);
+        $this->setIfExists('password', $data ?? [], null);
+        $this->setIfExists('created_at', $data ?? [], null);
+        $this->setIfExists('last_login', $data ?? [], null);
+        $this->setIfExists('first_name', $data ?? [], null);
+        $this->setIfExists('last_name', $data ?? [], null);
+        $this->setIfExists('role', $data ?? [], null);
     }
 
     /**
@@ -323,15 +337,28 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
             $invalidProperties[] = "invalid value for 'id', must be conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.";
         }
 
-        if ($this->container['animal_id'] === null) {
-            $invalidProperties[] = "'animal_id' can't be null";
+        if ($this->container['username'] === null) {
+            $invalidProperties[] = "'username' can't be null";
         }
-        if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $this->container['animal_id'])) {
-            $invalidProperties[] = "invalid value for 'animal_id', must be conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.";
+        if ((mb_strlen($this->container['username']) < 1)) {
+            $invalidProperties[] = "invalid value for 'username', the character length must be bigger than or equal to 1.";
         }
 
-        if ($this->container['title'] === null) {
-            $invalidProperties[] = "'title' can't be null";
+        if ($this->container['email'] === null) {
+            $invalidProperties[] = "'email' can't be null";
+        }
+        if ($this->container['password'] === null) {
+            $invalidProperties[] = "'password' can't be null";
+        }
+        if ((mb_strlen($this->container['password']) < 1)) {
+            $invalidProperties[] = "invalid value for 'password', the character length must be bigger than or equal to 1.";
+        }
+
+        if ($this->container['created_at'] === null) {
+            $invalidProperties[] = "'created_at' can't be null";
+        }
+        if ($this->container['role'] === null) {
+            $invalidProperties[] = "'role' can't be null";
         }
         return $invalidProperties;
     }
@@ -372,7 +399,7 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
         }
 
         if ((!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", ObjectSerializer::toString($id)))) {
-            throw new \InvalidArgumentException("invalid value for \$id when calling AnimalEvent., must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
+            throw new \InvalidArgumentException("invalid value for \$id when calling User., must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
         }
 
         $this->container['id'] = $id;
@@ -381,196 +408,248 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Gets animal_id
+     * Gets username
      *
      * @return string
      */
-    public function getAnimalId()
+    public function getUsername()
     {
-        return $this->container['animal_id'];
+        return $this->container['username'];
     }
 
     /**
-     * Sets animal_id
+     * Sets username
      *
-     * @param string $animal_id animal_id
+     * @param string $username username
      *
      * @return self
      */
-    public function setAnimalId($animal_id)
+    public function setUsername($username)
     {
-        if (is_null($animal_id)) {
-            throw new \InvalidArgumentException('non-nullable animal_id cannot be null');
+        if (is_null($username)) {
+            throw new \InvalidArgumentException('non-nullable username cannot be null');
         }
 
-        if ((!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", ObjectSerializer::toString($animal_id)))) {
-            throw new \InvalidArgumentException("invalid value for \$animal_id when calling AnimalEvent., must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
+        if ((mb_strlen($username) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $username when calling User., must be bigger than or equal to 1.');
         }
 
-        $this->container['animal_id'] = $animal_id;
+        $this->container['username'] = $username;
 
         return $this;
     }
 
     /**
-     * Gets date
+     * Gets email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->container['email'];
+    }
+
+    /**
+     * Sets email
+     *
+     * @param string $email email
+     *
+     * @return self
+     */
+    public function setEmail($email)
+    {
+        if (is_null($email)) {
+            throw new \InvalidArgumentException('non-nullable email cannot be null');
+        }
+        $this->container['email'] = $email;
+
+        return $this;
+    }
+
+    /**
+     * Gets password
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->container['password'];
+    }
+
+    /**
+     * Sets password
+     *
+     * @param string $password password
+     *
+     * @return self
+     */
+    public function setPassword($password)
+    {
+        if (is_null($password)) {
+            throw new \InvalidArgumentException('non-nullable password cannot be null');
+        }
+
+        if ((mb_strlen($password) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $password when calling User., must be bigger than or equal to 1.');
+        }
+
+        $this->container['password'] = $password;
+
+        return $this;
+    }
+
+    /**
+     * Gets created_at
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->container['created_at'];
+    }
+
+    /**
+     * Sets created_at
+     *
+     * @param \DateTime $created_at created_at
+     *
+     * @return self
+     */
+    public function setCreatedAt($created_at)
+    {
+        if (is_null($created_at)) {
+            throw new \InvalidArgumentException('non-nullable created_at cannot be null');
+        }
+        $this->container['created_at'] = $created_at;
+
+        return $this;
+    }
+
+    /**
+     * Gets last_login
      *
      * @return \DateTime|null
      */
-    public function getDate()
+    public function getLastLogin()
     {
-        return $this->container['date'];
+        return $this->container['last_login'];
     }
 
     /**
-     * Sets date
+     * Sets last_login
      *
-     * @param \DateTime|null $date date
+     * @param \DateTime|null $last_login last_login
      *
      * @return self
      */
-    public function setDate($date)
+    public function setLastLogin($last_login)
     {
-        if (is_null($date)) {
-            array_push($this->openAPINullablesSetToNull, 'date');
+        if (is_null($last_login)) {
+            array_push($this->openAPINullablesSetToNull, 'last_login');
         } else {
             $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
-            $index = array_search('date', $nullablesSetToNull);
+            $index = array_search('last_login', $nullablesSetToNull);
             if ($index !== FALSE) {
                 unset($nullablesSetToNull[$index]);
                 $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
             }
         }
-        $this->container['date'] = $date;
+        $this->container['last_login'] = $last_login;
 
         return $this;
     }
 
     /**
-     * Gets tags
-     *
-     * @return string[]|null
-     */
-    public function getTags()
-    {
-        return $this->container['tags'];
-    }
-
-    /**
-     * Sets tags
-     *
-     * @param string[]|null $tags tags
-     *
-     * @return self
-     */
-    public function setTags($tags)
-    {
-        if (is_null($tags)) {
-            array_push($this->openAPINullablesSetToNull, 'tags');
-        } else {
-            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
-            $index = array_search('tags', $nullablesSetToNull);
-            if ($index !== FALSE) {
-                unset($nullablesSetToNull[$index]);
-                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
-            }
-        }
-        $this->container['tags'] = $tags;
-
-        return $this;
-    }
-
-    /**
-     * Gets picture_file_urls
-     *
-     * @return string[]|null
-     */
-    public function getPictureFileUrls()
-    {
-        return $this->container['picture_file_urls'];
-    }
-
-    /**
-     * Sets picture_file_urls
-     *
-     * @param string[]|null $picture_file_urls picture_file_urls
-     *
-     * @return self
-     */
-    public function setPictureFileUrls($picture_file_urls)
-    {
-        if (is_null($picture_file_urls)) {
-            array_push($this->openAPINullablesSetToNull, 'picture_file_urls');
-        } else {
-            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
-            $index = array_search('picture_file_urls', $nullablesSetToNull);
-            if ($index !== FALSE) {
-                unset($nullablesSetToNull[$index]);
-                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
-            }
-        }
-        $this->container['picture_file_urls'] = $picture_file_urls;
-
-        return $this;
-    }
-
-    /**
-     * Gets title
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->container['title'];
-    }
-
-    /**
-     * Sets title
-     *
-     * @param string $title title
-     *
-     * @return self
-     */
-    public function setTitle($title)
-    {
-        if (is_null($title)) {
-            throw new \InvalidArgumentException('non-nullable title cannot be null');
-        }
-        $this->container['title'] = $title;
-
-        return $this;
-    }
-
-    /**
-     * Gets comment
+     * Gets first_name
      *
      * @return string|null
      */
-    public function getComment()
+    public function getFirstName()
     {
-        return $this->container['comment'];
+        return $this->container['first_name'];
     }
 
     /**
-     * Sets comment
+     * Sets first_name
      *
-     * @param string|null $comment comment
+     * @param string|null $first_name first_name
      *
      * @return self
      */
-    public function setComment($comment)
+    public function setFirstName($first_name)
     {
-        if (is_null($comment)) {
-            array_push($this->openAPINullablesSetToNull, 'comment');
+        if (is_null($first_name)) {
+            array_push($this->openAPINullablesSetToNull, 'first_name');
         } else {
             $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
-            $index = array_search('comment', $nullablesSetToNull);
+            $index = array_search('first_name', $nullablesSetToNull);
             if ($index !== FALSE) {
                 unset($nullablesSetToNull[$index]);
                 $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
             }
         }
-        $this->container['comment'] = $comment;
+        $this->container['first_name'] = $first_name;
+
+        return $this;
+    }
+
+    /**
+     * Gets last_name
+     *
+     * @return string|null
+     */
+    public function getLastName()
+    {
+        return $this->container['last_name'];
+    }
+
+    /**
+     * Sets last_name
+     *
+     * @param string|null $last_name last_name
+     *
+     * @return self
+     */
+    public function setLastName($last_name)
+    {
+        if (is_null($last_name)) {
+            array_push($this->openAPINullablesSetToNull, 'last_name');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('last_name', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['last_name'] = $last_name;
+
+        return $this;
+    }
+
+    /**
+     * Gets role
+     *
+     * @return \OpenAPI\Client\Model\UserRole
+     */
+    public function getRole()
+    {
+        return $this->container['role'];
+    }
+
+    /**
+     * Sets role
+     *
+     * @param \OpenAPI\Client\Model\UserRole $role role
+     *
+     * @return self
+     */
+    public function setRole($role)
+    {
+        if (is_null($role)) {
+            throw new \InvalidArgumentException('non-nullable role cannot be null');
+        }
+        $this->container['role'] = $role;
 
         return $this;
     }
