@@ -6,7 +6,8 @@
     "private": true,
     "license": "UNLICENSED",
     "scripts": {
-        "dev": "docker compose up",
+        "dev": "npm run copy-schema; docker compose up",
+        "copy-schema": "cp ../backend/docs/openapi/openapi.json ./shelterapp/openapi.json",
         "build": "zip -rq ./shelterapp.zip ./shelterapp"
     }
 }
