@@ -40,10 +40,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/AnimalEvent'
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
     put:
@@ -61,10 +61,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AnimalEvent'
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
     post:
@@ -82,10 +82,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AnimalEvent'
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
     delete:
@@ -100,10 +100,10 @@ paths:
       responses:
         "204":
           description: No Content
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
   /animals:
@@ -328,10 +328,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Animal'
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
     put:
@@ -349,10 +349,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Animal'
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
     post:
@@ -370,10 +370,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Animal'
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
     delete:
@@ -388,10 +388,10 @@ paths:
       responses:
         "204":
           description: No Content
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
   /auth/login:
@@ -436,10 +436,10 @@ paths:
           description: OK
           content:
             application/json: {}
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
   /auth/logoutAll:
@@ -451,10 +451,10 @@ paths:
           description: OK
           content:
             application/json: {}
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
   /auth/refresh:
@@ -466,10 +466,10 @@ paths:
           description: OK
           content:
             application/json: {}
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
   /tenants:
@@ -518,10 +518,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Tenant'
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
     post:
@@ -539,10 +539,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Tenant'
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
     delete:
@@ -557,10 +557,10 @@ paths:
       responses:
         "204":
           description: No Content
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
   /users:
@@ -645,10 +645,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
     put:
@@ -671,10 +671,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
     post:
@@ -692,10 +692,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
     delete:
@@ -712,10 +712,10 @@ paths:
           description: OK
           content:
             application/json: {}
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
   /users/email/change:
@@ -734,10 +734,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Unit'
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
   /users/email/change/confirm:
@@ -757,10 +757,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Unit'
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
   /users/emailTaken:
@@ -801,10 +801,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Unit'
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
   /users/password/reset:
@@ -867,10 +867,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Unit'
-        "401":
-          description: Not Authorized
         "403":
           description: Not Allowed
+        "401":
+          description: Not Authorized
       security:
       - SecurityScheme: []
   /users/register/{id}:
