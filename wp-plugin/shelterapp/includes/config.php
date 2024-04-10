@@ -52,7 +52,7 @@ function shelterapp_plugin_setting_shelterapp_user_data()
         update_option('shelterapp_plugin_options', $config);
     }
 
-    if (isset($config["shelterapp_token"])) {
+    if (isset($config["shelterapp_token"]) && isset($config["shelterapp_refresh"])) {
         ?>
         <table class="form-table" role="presentation">
             <tbody>
@@ -81,11 +81,6 @@ function shelterapp_plugin_setting_shelterapp_user_data()
                 </tr>
             </tbody>
         </table>
-        <script>
-            function deleteConfig() {
-
-            }
-        </script>
         <?php
     } else {
 
