@@ -25,9 +25,9 @@ class ShelterappAnimals
             'shelterapp_animals',
             'shelterapp_meta',
             array(
-                'get_callback'      => array($this, 'get_meta_rest'),
-                'update_callback'   => array($this, 'set_meta_rest'),
-                'schema'            => null
+                'get_callback' => array($this, 'get_meta_rest'),
+                'update_callback' => array($this, 'set_meta_rest'),
+                'schema' => null
             )
         );
     }
@@ -79,54 +79,56 @@ class ShelterappAnimals
     function register_post_type()
     {
         $client = sa_get_animal_resource_client();
-        try{
-            $count = $client->animalsCountGet();
-            error_log($count);
-        } catch(Exception $e) {
+        try {
+            $animals = $client->animalsGet();
+            out($animals);
+
+        } catch (Exception $e) {
             error_log('Error');
             error_log(print_r($e, true));
+            out($e);
         }
 
         // Set UI labels for Custom Post Type animals
         $labels_type = array(
-            'name'                => _x('Tiere', 'Post Type General Name', 'shelterapp'),
-            'singular_name'       => _x('Tier', 'Post Type Singular Name', 'shelterapp'),
-            'menu_name'           => __('Tiere', 'shelterapp'),
-            'parent_item_colon'   => __('Übergeordnetes Tier', 'shelterapp'),
-            'all_items'           => __('Alle Tiere', 'shelterapp'),
-            'view_item'           => __('Zeige Tier', 'shelterapp'),
-            'add_new_item'        => __('Tier hinzufügen', 'shelterapp'),
-            'add_new'             => __('Tier hinzufügen', 'shelterapp'),
-            'edit_item'           => __('Tier bearbeiten', 'shelterapp'),
-            'update_item'         => __('Tier aktualisieren', 'shelterapp'),
-            'search_items'        => __('Tier suchen', 'shelterapp'),
-            'not_found'           => __('Tier nicht gefunden', 'shelterapp'),
-            'not_found_in_trash'  => __('Tier im Papierkorb nicht gefunden', 'shelterapp')
+            'name' => _x('Tiere', 'Post Type General Name', 'shelterapp'),
+            'singular_name' => _x('Tier', 'Post Type Singular Name', 'shelterapp'),
+            'menu_name' => __('Tiere', 'shelterapp'),
+            'parent_item_colon' => __('Übergeordnetes Tier', 'shelterapp'),
+            'all_items' => __('Alle Tiere', 'shelterapp'),
+            'view_item' => __('Zeige Tier', 'shelterapp'),
+            'add_new_item' => __('Tier hinzufügen', 'shelterapp'),
+            'add_new' => __('Tier hinzufügen', 'shelterapp'),
+            'edit_item' => __('Tier bearbeiten', 'shelterapp'),
+            'update_item' => __('Tier aktualisieren', 'shelterapp'),
+            'search_items' => __('Tier suchen', 'shelterapp'),
+            'not_found' => __('Tier nicht gefunden', 'shelterapp'),
+            'not_found_in_trash' => __('Tier im Papierkorb nicht gefunden', 'shelterapp')
         );
 
         // Set other options for Custom Post Type animals
         $args_type = array(
-            'label'                 => __('Tier', 'shelterapp'),
-            'description'           => __('Shelterapp Tierekatalog', 'shelterapp'),
-            'labels'                => $labels_type,
-            'supports'              => array('title', 'author', 'thumbnail', 'revisions', 'custom-fields'),
-            'show_in_rest'          => true,
-            'taxonomies'            => array('shelterapp_animal_type'),
-            'hierarchical'          => false,
-            'public'                => true,
-            'show_ui'               => true,
-            'show_in_menu'          => true,
-            'show_in_nav_menus'     => false,
-            'show_in_admin_bar'     => false,
-            'menu_position'         => 35,
-            'can_export'            => true,
-            'has_archive'           => false,
-            'exclude_from_search'   => true,
-            'publicly_queryable'    => true,
-            'rewrite'               => array('slug' => 'animal'), // my custom slug
-            'menu_icon'             => 'dashicons-buddicons-replies',
-            'capability_type'       => 'animal',
-            'capabilities'          => sa_compile_post_type_capabilities('animal', 'animals')
+            'label' => __('Tier', 'shelterapp'),
+            'description' => __('Shelterapp Tierekatalog', 'shelterapp'),
+            'labels' => $labels_type,
+            'supports' => array('title', 'author', 'thumbnail', 'revisions', 'custom-fields'),
+            'show_in_rest' => true,
+            'taxonomies' => array('shelterapp_animal_type'),
+            'hierarchical' => false,
+            'public' => true,
+            'show_ui' => true,
+            'show_in_menu' => true,
+            'show_in_nav_menus' => false,
+            'show_in_admin_bar' => false,
+            'menu_position' => 35,
+            'can_export' => true,
+            'has_archive' => false,
+            'exclude_from_search' => true,
+            'publicly_queryable' => true,
+            'rewrite' => array('slug' => 'animal'), // my custom slug
+            'menu_icon' => 'dashicons-buddicons-replies',
+            'capability_type' => 'animal',
+            'capabilities' => sa_compile_post_type_capabilities('animal', 'animals')
         );
 
         register_post_type('shelterapp_animals', $args_type);
@@ -172,139 +174,141 @@ class ShelterappAnimals
             return;
         }
 
-        acf_add_local_field_group(array(
-            'key' => 'group_65fc4ecf8ebee',
-            'title' => 'Animal fields',
-            'fields' => array(
-                array(
-                    'key' => 'field_65fc4ecff8d1e',
-                    'label' => 'Geburtstag',
-                    'name' => 'dateOfBirth',
-                    'aria-label' => '',
-                    'type' => 'date_picker',
-                    'instructions' => '',
-                    'required' => 0,
-                    'conditional_logic' => 0,
-                    'wrapper' => array(
-                        'width' => '',
-                        'class' => '',
-                        'id' => '',
+        acf_add_local_field_group(
+            array(
+                'key' => 'group_65fc4ecf8ebee',
+                'title' => 'Animal fields',
+                'fields' => array(
+                    array(
+                        'key' => 'field_65fc4ecff8d1e',
+                        'label' => 'Geburtstag',
+                        'name' => 'dateOfBirth',
+                        'aria-label' => '',
+                        'type' => 'date_picker',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'display_format' => 'Y-m-d',
+                        'return_format' => 'Y-m-d',
+                        'first_day' => 1,
                     ),
-                    'display_format' => 'Y-m-d',
-                    'return_format' => 'Y-m-d',
-                    'first_day' => 1,
-                ),
-                array(
-                    'key' => 'field_65fc5054f8d1f',
-                    'label' => 'Datum der Aufnahme',
-                    'name' => 'dateOfAdmission',
-                    'aria-label' => '',
-                    'type' => 'date_picker',
-                    'instructions' => '',
-                    'required' => 0,
-                    'conditional_logic' => 0,
-                    'wrapper' => array(
-                        'width' => '',
-                        'class' => '',
-                        'id' => '',
+                    array(
+                        'key' => 'field_65fc5054f8d1f',
+                        'label' => 'Datum der Aufnahme',
+                        'name' => 'dateOfAdmission',
+                        'aria-label' => '',
+                        'type' => 'date_picker',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'display_format' => 'Y-m-d',
+                        'return_format' => 'Y-m-d',
+                        'first_day' => 1,
                     ),
-                    'display_format' => 'Y-m-d',
-                    'return_format' => 'Y-m-d',
-                    'first_day' => 1,
-                ),
-                array(
-                    'key' => 'field_65fc509ff8d20',
-                    'label' => 'breedOne',
-                    'name' => 'breedOne',
-                    'aria-label' => '',
-                    'type' => 'text',
-                    'instructions' => '',
-                    'required' => 0,
-                    'conditional_logic' => 0,
-                    'wrapper' => array(
-                        'width' => '',
-                        'class' => '',
-                        'id' => '',
+                    array(
+                        'key' => 'field_65fc509ff8d20',
+                        'label' => 'breedOne',
+                        'name' => 'breedOne',
+                        'aria-label' => '',
+                        'type' => 'text',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'default_value' => '',
+                        'maxlength' => '',
+                        'placeholder' => '',
+                        'prepend' => '',
+                        'append' => '',
                     ),
-                    'default_value' => '',
-                    'maxlength' => '',
-                    'placeholder' => '',
-                    'prepend' => '',
-                    'append' => '',
-                ),
-                array(
-                    'key' => 'field_65fc50b3f8d21',
-                    'label' => 'breedTwo',
-                    'name' => 'breedTwo',
-                    'aria-label' => '',
-                    'type' => 'text',
-                    'instructions' => '',
-                    'required' => 0,
-                    'conditional_logic' => array(
-                        array(
+                    array(
+                        'key' => 'field_65fc50b3f8d21',
+                        'label' => 'breedTwo',
+                        'name' => 'breedTwo',
+                        'aria-label' => '',
+                        'type' => 'text',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => array(
                             array(
-                                'field' => 'field_65fc509ff8d20',
-                                'operator' => '!=empty',
+                                array(
+                                    'field' => 'field_65fc509ff8d20',
+                                    'operator' => '!=empty',
+                                ),
                             ),
                         ),
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'default_value' => '',
+                        'maxlength' => '',
+                        'placeholder' => '',
+                        'prepend' => '',
+                        'append' => '',
                     ),
-                    'wrapper' => array(
-                        'width' => '',
-                        'class' => '',
-                        'id' => '',
-                    ),
-                    'default_value' => '',
-                    'maxlength' => '',
-                    'placeholder' => '',
-                    'prepend' => '',
-                    'append' => '',
-                ),
-                array(
-                    'key' => 'field_65fc50c9f8d22',
-                    'label' => 'sex',
-                    'name' => 'sex',
-                    'aria-label' => '',
-                    'type' => 'select',
-                    'instructions' => '',
-                    'required' => 0,
-                    'conditional_logic' => 0,
-                    'wrapper' => array(
-                        'width' => '',
-                        'class' => '',
-                        'id' => '',
-                    ),
-                    'choices' => array(
-                        'MALE' => 'Männlich',
-                        'FEMALE' => 'Weiblich',
-                    ),
-                    'default_value' => 'MALE',
-                    'return_format' => 'value',
-                    'multiple' => 0,
-                    'allow_null' => 0,
-                    'ui' => 0,
-                    'ajax' => 0,
-                    'placeholder' => '',
-                ),
-            ),
-            'location' => array(
-                array(
                     array(
-                        'param' => 'post_type',
-                        'operator' => '==',
-                        'value' => 'shelterapp_animals',
+                        'key' => 'field_65fc50c9f8d22',
+                        'label' => 'sex',
+                        'name' => 'sex',
+                        'aria-label' => '',
+                        'type' => 'select',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'choices' => array(
+                            'MALE' => 'Männlich',
+                            'FEMALE' => 'Weiblich',
+                        ),
+                        'default_value' => 'MALE',
+                        'return_format' => 'value',
+                        'multiple' => 0,
+                        'allow_null' => 0,
+                        'ui' => 0,
+                        'ajax' => 0,
+                        'placeholder' => '',
                     ),
                 ),
-            ),
-            'menu_order' => 0,
-            'position' => 'normal',
-            'style' => 'default',
-            'label_placement' => 'top',
-            'instruction_placement' => 'label',
-            'hide_on_screen' => '',
-            'active' => true,
-            'description' => '',
-            'show_in_rest' => 0,
-        ));
+                'location' => array(
+                    array(
+                        array(
+                            'param' => 'post_type',
+                            'operator' => '==',
+                            'value' => 'shelterapp_animals',
+                        ),
+                    ),
+                ),
+                'menu_order' => 0,
+                'position' => 'normal',
+                'style' => 'default',
+                'label_placement' => 'top',
+                'instruction_placement' => 'label',
+                'hide_on_screen' => '',
+                'active' => true,
+                'description' => '',
+                'show_in_rest' => 0,
+            )
+        );
     }
 }
 

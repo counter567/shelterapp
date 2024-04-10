@@ -1,6 +1,6 @@
 <?php
 /**
- * AnimalEventResourceApi
+ * TenantResourceApi
  * PHP version 7.4
  *
  * @category Class
@@ -40,14 +40,14 @@ use OpenAPI\Client\HeaderSelector;
 use OpenAPI\Client\ObjectSerializer;
 
 /**
- * AnimalEventResourceApi Class Doc Comment
+ * TenantResourceApi Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */
-class AnimalEventResourceApi
+class TenantResourceApi
 {
     /**
      * @var ClientInterface
@@ -71,16 +71,16 @@ class AnimalEventResourceApi
 
     /** @var string[] $contentTypes **/
     public const contentTypes = [
-        'animalEventsDelete' => [
+        'tenantsDelete' => [
             'application/json',
         ],
-        'animalEventsGet' => [
+        'tenantsGet' => [
             'application/json',
         ],
-        'animalEventsPost' => [
+        'tenantsPost' => [
             'application/json',
         ],
-        'animalEventsPut' => [
+        'tenantsPut' => [
             'application/json',
         ],
     ];
@@ -132,33 +132,33 @@ class AnimalEventResourceApi
     }
 
     /**
-     * Operation animalEventsDelete
+     * Operation tenantsDelete
      *
      * @param  string $id id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsDelete'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsDelete'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function animalEventsDelete($id, string $contentType = self::contentTypes['animalEventsDelete'][0])
+    public function tenantsDelete($id, string $contentType = self::contentTypes['tenantsDelete'][0])
     {
-        $this->animalEventsDeleteWithHttpInfo($id, $contentType);
+        $this->tenantsDeleteWithHttpInfo($id, $contentType);
     }
 
     /**
-     * Operation animalEventsDeleteWithHttpInfo
+     * Operation tenantsDeleteWithHttpInfo
      *
      * @param  string $id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsDelete'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsDelete'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function animalEventsDeleteWithHttpInfo($id, string $contentType = self::contentTypes['animalEventsDelete'][0])
+    public function tenantsDeleteWithHttpInfo($id, string $contentType = self::contentTypes['tenantsDelete'][0])
     {
-        $request = $this->animalEventsDeleteRequest($id, $contentType);
+        $request = $this->tenantsDeleteRequest($id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -205,17 +205,17 @@ class AnimalEventResourceApi
     }
 
     /**
-     * Operation animalEventsDeleteAsync
+     * Operation tenantsDeleteAsync
      *
      * @param  string $id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsDelete'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsDelete'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function animalEventsDeleteAsync($id, string $contentType = self::contentTypes['animalEventsDelete'][0])
+    public function tenantsDeleteAsync($id, string $contentType = self::contentTypes['tenantsDelete'][0])
     {
-        return $this->animalEventsDeleteAsyncWithHttpInfo($id, $contentType)
+        return $this->tenantsDeleteAsyncWithHttpInfo($id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -224,18 +224,18 @@ class AnimalEventResourceApi
     }
 
     /**
-     * Operation animalEventsDeleteAsyncWithHttpInfo
+     * Operation tenantsDeleteAsyncWithHttpInfo
      *
      * @param  string $id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsDelete'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsDelete'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function animalEventsDeleteAsyncWithHttpInfo($id, string $contentType = self::contentTypes['animalEventsDelete'][0])
+    public function tenantsDeleteAsyncWithHttpInfo($id, string $contentType = self::contentTypes['tenantsDelete'][0])
     {
         $returnType = '';
-        $request = $this->animalEventsDeleteRequest($id, $contentType);
+        $request = $this->tenantsDeleteRequest($id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -261,29 +261,29 @@ class AnimalEventResourceApi
     }
 
     /**
-     * Create request for operation 'animalEventsDelete'
+     * Create request for operation 'tenantsDelete'
      *
      * @param  string $id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsDelete'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsDelete'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function animalEventsDeleteRequest($id, string $contentType = self::contentTypes['animalEventsDelete'][0])
+    public function tenantsDeleteRequest($id, string $contentType = self::contentTypes['tenantsDelete'][0])
     {
 
         // verify the required parameter 'id' is set
         if ($id === null || (is_array($id) && count($id) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $id when calling animalEventsDelete'
+                'Missing the required parameter $id when calling tenantsDelete'
             );
         }
         if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $id)) {
-            throw new \InvalidArgumentException("invalid value for \"id\" when calling AnimalEventResourceApi.animalEventsDelete, must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
+            throw new \InvalidArgumentException("invalid value for \"id\" when calling TenantResourceApi.tenantsDelete, must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
         }
         
 
-        $resourcePath = '/animal-events';
+        $resourcePath = '/tenants';
         $formParams = [];
         $queryParams = [];
         $headerParams = [];
@@ -361,38 +361,38 @@ class AnimalEventResourceApi
     }
 
     /**
-     * Operation animalEventsGet
+     * Operation tenantsGet
      *
-     * @param  string $id id (required)
+     * @param  string $name_contains name_contains (optional)
      * @param  int $page page (optional)
      * @param  int $page_size page_size (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsGet'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsGet'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Client\Model\AnimalEvent[]
+     * @return \OpenAPI\Client\Model\Tenant[]
      */
-    public function animalEventsGet($id, $page = null, $page_size = null, string $contentType = self::contentTypes['animalEventsGet'][0])
+    public function tenantsGet($name_contains = null, $page = null, $page_size = null, string $contentType = self::contentTypes['tenantsGet'][0])
     {
-        list($response) = $this->animalEventsGetWithHttpInfo($id, $page, $page_size, $contentType);
+        list($response) = $this->tenantsGetWithHttpInfo($name_contains, $page, $page_size, $contentType);
         return $response;
     }
 
     /**
-     * Operation animalEventsGetWithHttpInfo
+     * Operation tenantsGetWithHttpInfo
      *
-     * @param  string $id (required)
+     * @param  string $name_contains (optional)
      * @param  int $page (optional)
      * @param  int $page_size (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsGet'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsGet'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Client\Model\AnimalEvent[], HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Client\Model\Tenant[], HTTP status code, HTTP response headers (array of strings)
      */
-    public function animalEventsGetWithHttpInfo($id, $page = null, $page_size = null, string $contentType = self::contentTypes['animalEventsGet'][0])
+    public function tenantsGetWithHttpInfo($name_contains = null, $page = null, $page_size = null, string $contentType = self::contentTypes['tenantsGet'][0])
     {
-        $request = $this->animalEventsGetRequest($id, $page, $page_size, $contentType);
+        $request = $this->tenantsGetRequest($name_contains, $page, $page_size, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -431,11 +431,11 @@ class AnimalEventResourceApi
 
             switch($statusCode) {
                 case 200:
-                    if ('\OpenAPI\Client\Model\AnimalEvent[]' === '\SplFileObject') {
+                    if ('\OpenAPI\Client\Model\Tenant[]' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
                         $content = (string) $response->getBody();
-                        if ('\OpenAPI\Client\Model\AnimalEvent[]' !== 'string') {
+                        if ('\OpenAPI\Client\Model\Tenant[]' !== 'string') {
                             try {
                                 $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
                             } catch (\JsonException $exception) {
@@ -453,13 +453,13 @@ class AnimalEventResourceApi
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, '\OpenAPI\Client\Model\AnimalEvent[]', []),
+                        ObjectSerializer::deserialize($content, '\OpenAPI\Client\Model\Tenant[]', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
             }
 
-            $returnType = '\OpenAPI\Client\Model\AnimalEvent[]';
+            $returnType = '\OpenAPI\Client\Model\Tenant[]';
             if ($returnType === '\SplFileObject') {
                 $content = $response->getBody(); //stream goes to serializer
             } else {
@@ -492,7 +492,7 @@ class AnimalEventResourceApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\OpenAPI\Client\Model\AnimalEvent[]',
+                        '\OpenAPI\Client\Model\Tenant[]',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -503,19 +503,19 @@ class AnimalEventResourceApi
     }
 
     /**
-     * Operation animalEventsGetAsync
+     * Operation tenantsGetAsync
      *
-     * @param  string $id (required)
+     * @param  string $name_contains (optional)
      * @param  int $page (optional)
      * @param  int $page_size (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsGet'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsGet'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function animalEventsGetAsync($id, $page = null, $page_size = null, string $contentType = self::contentTypes['animalEventsGet'][0])
+    public function tenantsGetAsync($name_contains = null, $page = null, $page_size = null, string $contentType = self::contentTypes['tenantsGet'][0])
     {
-        return $this->animalEventsGetAsyncWithHttpInfo($id, $page, $page_size, $contentType)
+        return $this->tenantsGetAsyncWithHttpInfo($name_contains, $page, $page_size, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -524,20 +524,20 @@ class AnimalEventResourceApi
     }
 
     /**
-     * Operation animalEventsGetAsyncWithHttpInfo
+     * Operation tenantsGetAsyncWithHttpInfo
      *
-     * @param  string $id (required)
+     * @param  string $name_contains (optional)
      * @param  int $page (optional)
      * @param  int $page_size (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsGet'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsGet'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function animalEventsGetAsyncWithHttpInfo($id, $page = null, $page_size = null, string $contentType = self::contentTypes['animalEventsGet'][0])
+    public function tenantsGetAsyncWithHttpInfo($name_contains = null, $page = null, $page_size = null, string $contentType = self::contentTypes['tenantsGet'][0])
     {
-        $returnType = '\OpenAPI\Client\Model\AnimalEvent[]';
-        $request = $this->animalEventsGetRequest($id, $page, $page_size, $contentType);
+        $returnType = '\OpenAPI\Client\Model\Tenant[]';
+        $request = $this->tenantsGetRequest($name_contains, $page, $page_size, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -576,33 +576,24 @@ class AnimalEventResourceApi
     }
 
     /**
-     * Create request for operation 'animalEventsGet'
+     * Create request for operation 'tenantsGet'
      *
-     * @param  string $id (required)
+     * @param  string $name_contains (optional)
      * @param  int $page (optional)
      * @param  int $page_size (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsGet'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsGet'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function animalEventsGetRequest($id, $page = null, $page_size = null, string $contentType = self::contentTypes['animalEventsGet'][0])
+    public function tenantsGetRequest($name_contains = null, $page = null, $page_size = null, string $contentType = self::contentTypes['tenantsGet'][0])
     {
 
-        // verify the required parameter 'id' is set
-        if ($id === null || (is_array($id) && count($id) === 0)) {
-            throw new \InvalidArgumentException(
-                'Missing the required parameter $id when calling animalEventsGet'
-            );
-        }
-        if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $id)) {
-            throw new \InvalidArgumentException("invalid value for \"id\" when calling AnimalEventResourceApi.animalEventsGet, must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
-        }
-        
 
 
 
-        $resourcePath = '/animal-events';
+
+        $resourcePath = '/tenants';
         $formParams = [];
         $queryParams = [];
         $headerParams = [];
@@ -611,12 +602,12 @@ class AnimalEventResourceApi
 
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $id,
-            'id', // param base name
+            $name_contains,
+            'nameContains', // param base name
             'string', // openApiType
             'form', // style
             true, // explode
-            true // required
+            false // required
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
@@ -671,10 +662,6 @@ class AnimalEventResourceApi
             }
         }
 
-        // this endpoint requires Bearer (JWT) authentication (access token)
-        if (!empty($this->config->getAccessToken())) {
-            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
-        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -698,34 +685,34 @@ class AnimalEventResourceApi
     }
 
     /**
-     * Operation animalEventsPost
+     * Operation tenantsPost
      *
-     * @param  \OpenAPI\Client\Model\AnimalEvent $animal_event animal_event (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsPost'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\Tenant $tenant tenant (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsPost'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Client\Model\AnimalEvent
+     * @return \OpenAPI\Client\Model\Tenant
      */
-    public function animalEventsPost($animal_event = null, string $contentType = self::contentTypes['animalEventsPost'][0])
+    public function tenantsPost($tenant = null, string $contentType = self::contentTypes['tenantsPost'][0])
     {
-        list($response) = $this->animalEventsPostWithHttpInfo($animal_event, $contentType);
+        list($response) = $this->tenantsPostWithHttpInfo($tenant, $contentType);
         return $response;
     }
 
     /**
-     * Operation animalEventsPostWithHttpInfo
+     * Operation tenantsPostWithHttpInfo
      *
-     * @param  \OpenAPI\Client\Model\AnimalEvent $animal_event (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsPost'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\Tenant $tenant (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsPost'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Client\Model\AnimalEvent, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Client\Model\Tenant, HTTP status code, HTTP response headers (array of strings)
      */
-    public function animalEventsPostWithHttpInfo($animal_event = null, string $contentType = self::contentTypes['animalEventsPost'][0])
+    public function tenantsPostWithHttpInfo($tenant = null, string $contentType = self::contentTypes['tenantsPost'][0])
     {
-        $request = $this->animalEventsPostRequest($animal_event, $contentType);
+        $request = $this->tenantsPostRequest($tenant, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -764,11 +751,11 @@ class AnimalEventResourceApi
 
             switch($statusCode) {
                 case 200:
-                    if ('\OpenAPI\Client\Model\AnimalEvent' === '\SplFileObject') {
+                    if ('\OpenAPI\Client\Model\Tenant' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
                         $content = (string) $response->getBody();
-                        if ('\OpenAPI\Client\Model\AnimalEvent' !== 'string') {
+                        if ('\OpenAPI\Client\Model\Tenant' !== 'string') {
                             try {
                                 $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
                             } catch (\JsonException $exception) {
@@ -786,13 +773,13 @@ class AnimalEventResourceApi
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, '\OpenAPI\Client\Model\AnimalEvent', []),
+                        ObjectSerializer::deserialize($content, '\OpenAPI\Client\Model\Tenant', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
             }
 
-            $returnType = '\OpenAPI\Client\Model\AnimalEvent';
+            $returnType = '\OpenAPI\Client\Model\Tenant';
             if ($returnType === '\SplFileObject') {
                 $content = $response->getBody(); //stream goes to serializer
             } else {
@@ -825,7 +812,7 @@ class AnimalEventResourceApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\OpenAPI\Client\Model\AnimalEvent',
+                        '\OpenAPI\Client\Model\Tenant',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -836,17 +823,17 @@ class AnimalEventResourceApi
     }
 
     /**
-     * Operation animalEventsPostAsync
+     * Operation tenantsPostAsync
      *
-     * @param  \OpenAPI\Client\Model\AnimalEvent $animal_event (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsPost'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\Tenant $tenant (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsPost'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function animalEventsPostAsync($animal_event = null, string $contentType = self::contentTypes['animalEventsPost'][0])
+    public function tenantsPostAsync($tenant = null, string $contentType = self::contentTypes['tenantsPost'][0])
     {
-        return $this->animalEventsPostAsyncWithHttpInfo($animal_event, $contentType)
+        return $this->tenantsPostAsyncWithHttpInfo($tenant, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -855,18 +842,18 @@ class AnimalEventResourceApi
     }
 
     /**
-     * Operation animalEventsPostAsyncWithHttpInfo
+     * Operation tenantsPostAsyncWithHttpInfo
      *
-     * @param  \OpenAPI\Client\Model\AnimalEvent $animal_event (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsPost'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\Tenant $tenant (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsPost'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function animalEventsPostAsyncWithHttpInfo($animal_event = null, string $contentType = self::contentTypes['animalEventsPost'][0])
+    public function tenantsPostAsyncWithHttpInfo($tenant = null, string $contentType = self::contentTypes['tenantsPost'][0])
     {
-        $returnType = '\OpenAPI\Client\Model\AnimalEvent';
-        $request = $this->animalEventsPostRequest($animal_event, $contentType);
+        $returnType = '\OpenAPI\Client\Model\Tenant';
+        $request = $this->tenantsPostRequest($tenant, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -905,20 +892,20 @@ class AnimalEventResourceApi
     }
 
     /**
-     * Create request for operation 'animalEventsPost'
+     * Create request for operation 'tenantsPost'
      *
-     * @param  \OpenAPI\Client\Model\AnimalEvent $animal_event (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsPost'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\Tenant $tenant (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsPost'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function animalEventsPostRequest($animal_event = null, string $contentType = self::contentTypes['animalEventsPost'][0])
+    public function tenantsPostRequest($tenant = null, string $contentType = self::contentTypes['tenantsPost'][0])
     {
 
 
 
-        $resourcePath = '/animal-events';
+        $resourcePath = '/tenants';
         $formParams = [];
         $queryParams = [];
         $headerParams = [];
@@ -936,12 +923,12 @@ class AnimalEventResourceApi
         );
 
         // for model (json/xml)
-        if (isset($animal_event)) {
+        if (isset($tenant)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($animal_event));
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($tenant));
             } else {
-                $httpBody = $animal_event;
+                $httpBody = $tenant;
             }
         } elseif (count($formParams) > 0) {
             if ($multipart) {
@@ -994,34 +981,34 @@ class AnimalEventResourceApi
     }
 
     /**
-     * Operation animalEventsPut
+     * Operation tenantsPut
      *
-     * @param  \OpenAPI\Client\Model\AnimalEvent $animal_event animal_event (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsPut'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\Tenant $tenant tenant (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsPut'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Client\Model\AnimalEvent
+     * @return \OpenAPI\Client\Model\Tenant
      */
-    public function animalEventsPut($animal_event = null, string $contentType = self::contentTypes['animalEventsPut'][0])
+    public function tenantsPut($tenant = null, string $contentType = self::contentTypes['tenantsPut'][0])
     {
-        list($response) = $this->animalEventsPutWithHttpInfo($animal_event, $contentType);
+        list($response) = $this->tenantsPutWithHttpInfo($tenant, $contentType);
         return $response;
     }
 
     /**
-     * Operation animalEventsPutWithHttpInfo
+     * Operation tenantsPutWithHttpInfo
      *
-     * @param  \OpenAPI\Client\Model\AnimalEvent $animal_event (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsPut'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\Tenant $tenant (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsPut'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Client\Model\AnimalEvent, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Client\Model\Tenant, HTTP status code, HTTP response headers (array of strings)
      */
-    public function animalEventsPutWithHttpInfo($animal_event = null, string $contentType = self::contentTypes['animalEventsPut'][0])
+    public function tenantsPutWithHttpInfo($tenant = null, string $contentType = self::contentTypes['tenantsPut'][0])
     {
-        $request = $this->animalEventsPutRequest($animal_event, $contentType);
+        $request = $this->tenantsPutRequest($tenant, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1060,11 +1047,11 @@ class AnimalEventResourceApi
 
             switch($statusCode) {
                 case 200:
-                    if ('\OpenAPI\Client\Model\AnimalEvent' === '\SplFileObject') {
+                    if ('\OpenAPI\Client\Model\Tenant' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
                         $content = (string) $response->getBody();
-                        if ('\OpenAPI\Client\Model\AnimalEvent' !== 'string') {
+                        if ('\OpenAPI\Client\Model\Tenant' !== 'string') {
                             try {
                                 $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
                             } catch (\JsonException $exception) {
@@ -1082,13 +1069,13 @@ class AnimalEventResourceApi
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, '\OpenAPI\Client\Model\AnimalEvent', []),
+                        ObjectSerializer::deserialize($content, '\OpenAPI\Client\Model\Tenant', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
             }
 
-            $returnType = '\OpenAPI\Client\Model\AnimalEvent';
+            $returnType = '\OpenAPI\Client\Model\Tenant';
             if ($returnType === '\SplFileObject') {
                 $content = $response->getBody(); //stream goes to serializer
             } else {
@@ -1121,7 +1108,7 @@ class AnimalEventResourceApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\OpenAPI\Client\Model\AnimalEvent',
+                        '\OpenAPI\Client\Model\Tenant',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -1132,17 +1119,17 @@ class AnimalEventResourceApi
     }
 
     /**
-     * Operation animalEventsPutAsync
+     * Operation tenantsPutAsync
      *
-     * @param  \OpenAPI\Client\Model\AnimalEvent $animal_event (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsPut'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\Tenant $tenant (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsPut'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function animalEventsPutAsync($animal_event = null, string $contentType = self::contentTypes['animalEventsPut'][0])
+    public function tenantsPutAsync($tenant = null, string $contentType = self::contentTypes['tenantsPut'][0])
     {
-        return $this->animalEventsPutAsyncWithHttpInfo($animal_event, $contentType)
+        return $this->tenantsPutAsyncWithHttpInfo($tenant, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1151,18 +1138,18 @@ class AnimalEventResourceApi
     }
 
     /**
-     * Operation animalEventsPutAsyncWithHttpInfo
+     * Operation tenantsPutAsyncWithHttpInfo
      *
-     * @param  \OpenAPI\Client\Model\AnimalEvent $animal_event (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsPut'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\Tenant $tenant (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsPut'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function animalEventsPutAsyncWithHttpInfo($animal_event = null, string $contentType = self::contentTypes['animalEventsPut'][0])
+    public function tenantsPutAsyncWithHttpInfo($tenant = null, string $contentType = self::contentTypes['tenantsPut'][0])
     {
-        $returnType = '\OpenAPI\Client\Model\AnimalEvent';
-        $request = $this->animalEventsPutRequest($animal_event, $contentType);
+        $returnType = '\OpenAPI\Client\Model\Tenant';
+        $request = $this->tenantsPutRequest($tenant, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1201,20 +1188,20 @@ class AnimalEventResourceApi
     }
 
     /**
-     * Create request for operation 'animalEventsPut'
+     * Create request for operation 'tenantsPut'
      *
-     * @param  \OpenAPI\Client\Model\AnimalEvent $animal_event (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalEventsPut'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\Tenant $tenant (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['tenantsPut'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function animalEventsPutRequest($animal_event = null, string $contentType = self::contentTypes['animalEventsPut'][0])
+    public function tenantsPutRequest($tenant = null, string $contentType = self::contentTypes['tenantsPut'][0])
     {
 
 
 
-        $resourcePath = '/animal-events';
+        $resourcePath = '/tenants';
         $formParams = [];
         $queryParams = [];
         $headerParams = [];
@@ -1232,12 +1219,12 @@ class AnimalEventResourceApi
         );
 
         // for model (json/xml)
-        if (isset($animal_event)) {
+        if (isset($tenant)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($animal_event));
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($tenant));
             } else {
-                $httpBody = $animal_event;
+                $httpBody = $tenant;
             }
         } elseif (count($formParams) > 0) {
             if ($multipart) {
