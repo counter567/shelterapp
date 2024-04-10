@@ -12,6 +12,7 @@ import io.smallrye.mutiny.coroutines.awaitSuspending
 import io.vertx.ext.web.RoutingContext
 import jakarta.enterprise.inject.Default
 import jakarta.inject.Inject
+import jakarta.persistence.Access
 import jakarta.ws.rs.*
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
@@ -65,25 +66,25 @@ class AuthResource {
     fun refresh() = withPanacheSession {
         val type = jwt.getType()
         if(type != TokenType.REFRESH) {
-            return@withPanacheSession Response.status(Response.Status.UNAUTHORIZED).build()
+            throw UnauthorizedException()
         }
         val refreshTokenId = jwt.getId()
-            ?: return@withPanacheSession Response.status(Response.Status.UNAUTHORIZED).build()
+            ?: throw UnauthorizedException()
         val username = jwt.getUsername()
-            ?: return@withPanacheSession Response.status(Response.Status.UNAUTHORIZED).build()
+            ?: throw UnauthorizedException()
 
         val parameters = PanacheQueryParameters(mutableListOf(
             PanacheQueryParameter(User::username.name, username)
         ))
         val usersResult = User.query(parameters)
         if(usersResult.isEmpty())
-            return@withPanacheSession Response.status(Response.Status.UNAUTHORIZED).build()
+            throw UnauthorizedException()
         val user = usersResult[0]
         if(!user.refreshTokens.containsToken(refreshTokenId)) {
-            return@withPanacheSession Response.status(Response.Status.UNAUTHORIZED).build()
+            throw UnauthorizedException()
         }
         val newAccessToken = createAccessToken(refreshTokenId, user.username, user.role, user.tenantId, context.request().remoteAddress().host(), user.id)
-        return@withPanacheSession Response.ok(RefreshResponse(newAccessToken)).build()
+        return@withPanacheSession RefreshResponse(newAccessToken)
     }
 
     @Path("logout")
@@ -141,4 +142,10 @@ class AuthResource {
         val token = createAnonymousToken(tenant.id)
         return@withPanacheSession token
     }
+
+    @Path("token/validate")
+    @GET
+    @Authenticated
+    fun validateToken() = true
+
 }
