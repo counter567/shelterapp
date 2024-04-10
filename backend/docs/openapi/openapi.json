@@ -11,71 +11,32 @@
     "url" : "http://0.0.0.0:8080",
     "description" : "Auto generated value"
   } ],
-  "tags" : [ {
-    "name" : "AnimalEventResource"
-  }, {
-    "name" : "AnimalResource"
-  } ],
   "paths" : {
     "/animal-events" : {
       "get" : {
-        "tags" : [ "AnimalEventResource" ],
+        "tags" : [ "Animal Event Resource" ],
         "parameters" : [ {
-          "name" : "animalId",
-          "in" : "query",
-          "schema" : {
-            "format" : "int64",
-            "type" : "integer"
-          }
-        }, {
-          "name" : "comment",
-          "in" : "query",
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
           "name" : "id",
           "in" : "query",
+          "required" : true,
           "schema" : {
-            "format" : "int64",
-            "type" : "integer"
-          }
-        }, {
-          "name" : "namedQuery",
-          "in" : "query",
-          "schema" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/UUID"
           }
         }, {
           "name" : "page",
           "in" : "query",
           "schema" : {
             "format" : "int32",
-            "default" : 0,
-            "type" : "integer"
+            "type" : "integer",
+            "nullable" : true
           }
         }, {
-          "name" : "size",
+          "name" : "pageSize",
           "in" : "query",
           "schema" : {
             "format" : "int32",
-            "default" : 20,
-            "type" : "integer"
-          }
-        }, {
-          "name" : "sort",
-          "in" : "query",
-          "schema" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
-          }
-        }, {
-          "name" : "title",
-          "in" : "query",
-          "schema" : {
-            "type" : "string"
+            "type" : "integer",
+            "nullable" : true
           }
         } ],
         "responses" : {
@@ -91,87 +52,20 @@
                 }
               }
             }
-          }
-        }
-      },
-      "post" : {
-        "tags" : [ "AnimalEventResource" ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/AnimalEvent"
-              }
-            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
-        "responses" : {
-          "201" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/AnimalEvent"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/animal-events/count" : {
-      "get" : {
-        "tags" : [ "AnimalEventResource" ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "format" : "int64",
-                  "type" : "integer"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/animal-events/{id}" : {
-      "get" : {
-        "tags" : [ "AnimalEventResource" ],
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "format" : "int64",
-            "type" : "integer"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/AnimalEvent"
-                }
-              }
-            }
-          }
-        }
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
       },
       "put" : {
-        "tags" : [ "AnimalEventResource" ],
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "format" : "int64",
-            "type" : "integer"
-          }
-        } ],
+        "tags" : [ "Animal Event Resource" ],
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -182,7 +76,8 @@
           }
         },
         "responses" : {
-          "201" : {
+          "200" : {
+            "description" : "OK",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -190,208 +85,383 @@
                 }
               }
             }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
-        }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "Animal Event Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AnimalEvent"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AnimalEvent"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
       },
       "delete" : {
-        "tags" : [ "AnimalEventResource" ],
+        "tags" : [ "Animal Event Resource" ],
         "parameters" : [ {
           "name" : "id",
-          "in" : "path",
+          "in" : "query",
           "required" : true,
           "schema" : {
-            "format" : "int64",
-            "type" : "integer"
+            "$ref" : "#/components/schemas/UUID"
           }
         } ],
         "responses" : {
-          "204" : { }
-        }
+          "204" : {
+            "description" : "No Content"
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
       }
     },
     "/animals" : {
       "get" : {
-        "tags" : [ "AnimalResource" ],
+        "tags" : [ "Animal Resource" ],
         "parameters" : [ {
-          "name" : "bloodType",
+          "name" : "bloodTypeContains",
           "in" : "query",
           "schema" : {
-            "type" : "string"
+            "type" : "string",
+            "nullable" : true
           }
         }, {
-          "name" : "breedOne",
+          "name" : "breedOneContains",
           "in" : "query",
           "schema" : {
-            "type" : "string"
+            "type" : "string",
+            "nullable" : true
           }
         }, {
-          "name" : "breedTwo",
+          "name" : "breedTwoContains",
           "in" : "query",
           "schema" : {
-            "type" : "string"
+            "type" : "string",
+            "nullable" : true
           }
         }, {
-          "name" : "chipNumber",
+          "name" : "chipNumberContains",
           "in" : "query",
           "schema" : {
-            "type" : "string"
+            "type" : "string",
+            "nullable" : true
           }
         }, {
-          "name" : "circumferenceOfChest",
+          "name" : "circumferenceOfChestAbove",
           "in" : "query",
           "schema" : {
             "format" : "int32",
-            "type" : "integer"
+            "type" : "integer",
+            "nullable" : true
           }
         }, {
-          "name" : "circumferenceOfNeck",
+          "name" : "circumferenceOfChestBelow",
           "in" : "query",
           "schema" : {
             "format" : "int32",
-            "type" : "integer"
+            "type" : "integer",
+            "nullable" : true
           }
         }, {
-          "name" : "color",
-          "in" : "query",
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "description",
-          "in" : "query",
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "donationCall",
-          "in" : "query",
-          "schema" : {
-            "type" : "boolean"
-          }
-        }, {
-          "name" : "heightAtWithers",
+          "name" : "circumferenceOfNeckAbove",
           "in" : "query",
           "schema" : {
             "format" : "int32",
-            "type" : "integer"
+            "type" : "integer",
+            "nullable" : true
+          }
+        }, {
+          "name" : "circumferenceOfNeckBelow",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer",
+            "nullable" : true
+          }
+        }, {
+          "name" : "colorContains",
+          "in" : "query",
+          "schema" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        }, {
+          "name" : "dateOfAdmissionAfter",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/LocalDate"
+            }, {
+              "nullable" : true
+            } ]
+          }
+        }, {
+          "name" : "dateOfAdmissionBefore",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/LocalDate"
+            }, {
+              "nullable" : true
+            } ]
+          }
+        }, {
+          "name" : "dateOfBirthAfter",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/LocalDate"
+            }, {
+              "nullable" : true
+            } ]
+          }
+        }, {
+          "name" : "dateOfBirthBefore",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/LocalDate"
+            }, {
+              "nullable" : true
+            } ]
+          }
+        }, {
+          "name" : "dateOfDeathAfter",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/LocalDate"
+            }, {
+              "nullable" : true
+            } ]
+          }
+        }, {
+          "name" : "dateOfDeathBefore",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/LocalDate"
+            }, {
+              "nullable" : true
+            } ]
+          }
+        }, {
+          "name" : "dateOfLeaveAfter",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/LocalDate"
+            }, {
+              "nullable" : true
+            } ]
+          }
+        }, {
+          "name" : "dateOfLeaveBefore",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/LocalDate"
+            }, {
+              "nullable" : true
+            } ]
+          }
+        }, {
+          "name" : "hasDonationCall",
+          "in" : "query",
+          "schema" : {
+            "type" : "boolean",
+            "nullable" : true
+          }
+        }, {
+          "name" : "heightAtWithersAbove",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer",
+            "nullable" : true
+          }
+        }, {
+          "name" : "heightAtWithersBelow",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer",
+            "nullable" : true
           }
         }, {
           "name" : "id",
           "in" : "query",
           "schema" : {
-            "format" : "int64",
-            "type" : "integer"
-          }
-        }, {
-          "name" : "internalNotes",
-          "in" : "query",
-          "schema" : {
-            "type" : "string"
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/UUID"
+            }, {
+              "nullable" : true
+            } ]
           }
         }, {
           "name" : "isCastrated",
           "in" : "query",
           "schema" : {
-            "type" : "boolean"
+            "type" : "boolean",
+            "nullable" : true
           }
         }, {
           "name" : "isMissing",
           "in" : "query",
           "schema" : {
-            "type" : "boolean"
+            "type" : "boolean",
+            "nullable" : true
           }
         }, {
           "name" : "isPrivateAdoption",
           "in" : "query",
           "schema" : {
-            "type" : "boolean"
+            "type" : "boolean",
+            "nullable" : true
           }
         }, {
           "name" : "isPublic",
           "in" : "query",
           "schema" : {
-            "type" : "boolean"
+            "type" : "boolean",
+            "nullable" : true
           }
         }, {
           "name" : "isSuccessStory",
           "in" : "query",
           "schema" : {
-            "type" : "boolean"
+            "type" : "boolean",
+            "nullable" : true
           }
         }, {
-          "name" : "lengthOfBack",
+          "name" : "lengthOfBackAbove",
           "in" : "query",
           "schema" : {
             "format" : "int32",
-            "type" : "integer"
+            "type" : "integer",
+            "nullable" : true
           }
         }, {
-          "name" : "mainPictureFileUrl",
+          "name" : "lengthOfBackBelow",
           "in" : "query",
           "schema" : {
-            "type" : "string"
+            "format" : "int32",
+            "type" : "integer",
+            "nullable" : true
           }
         }, {
-          "name" : "name",
+          "name" : "nameContains",
           "in" : "query",
           "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "namedQuery",
-          "in" : "query",
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "notes",
-          "in" : "query",
-          "schema" : {
-            "type" : "string"
+            "type" : "string",
+            "nullable" : true
           }
         }, {
           "name" : "page",
           "in" : "query",
           "schema" : {
             "format" : "int32",
-            "default" : 0,
-            "type" : "integer"
+            "type" : "integer",
+            "nullable" : true
           }
         }, {
-          "name" : "size",
+          "name" : "pageSize",
           "in" : "query",
           "schema" : {
             "format" : "int32",
-            "default" : 20,
-            "type" : "integer"
+            "type" : "integer",
+            "nullable" : true
           }
         }, {
-          "name" : "sort",
+          "name" : "sex",
           "in" : "query",
           "schema" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/AnimalSex"
+            }, {
+              "nullable" : true
+            } ]
           }
         }, {
-          "name" : "type",
+          "name" : "status",
           "in" : "query",
           "schema" : {
-            "type" : "string"
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/AnimalStatus"
+            }, {
+              "nullable" : true
+            } ]
+          }
+        }, {
+          "name" : "typeContains",
+          "in" : "query",
+          "schema" : {
+            "type" : "string",
+            "nullable" : true
           }
         }, {
           "name" : "wasFound",
           "in" : "query",
           "schema" : {
-            "type" : "boolean"
+            "type" : "boolean",
+            "nullable" : true
           }
         }, {
-          "name" : "weight",
+          "name" : "weightAbove",
           "in" : "query",
           "schema" : {
             "format" : "float",
-            "type" : "number"
+            "type" : "number",
+            "nullable" : true
+          }
+        }, {
+          "name" : "weightBelow",
+          "in" : "query",
+          "schema" : {
+            "format" : "float",
+            "type" : "number",
+            "nullable" : true
           }
         } ],
         "responses" : {
@@ -407,11 +477,20 @@
                 }
               }
             }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
-        }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
       },
-      "post" : {
-        "tags" : [ "AnimalResource" ],
+      "put" : {
+        "tags" : [ "Animal Resource" ],
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -422,7 +501,8 @@
           }
         },
         "responses" : {
-          "201" : {
+          "200" : {
+            "description" : "OK",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -431,11 +511,69 @@
               }
             }
           },
+          "401" : {
+            "description" : "Not Authorized"
+          },
           "403" : {
             "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "Animal Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Animal"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Animal"
+                }
+              }
+            }
           },
           "401" : {
             "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "Animal Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content"
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
         "security" : [ {
@@ -443,107 +581,50 @@
         } ]
       }
     },
-    "/animals/count" : {
-      "get" : {
-        "tags" : [ "AnimalResource" ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "format" : "int64",
-                  "type" : "integer"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/animals/{id}" : {
-      "get" : {
-        "tags" : [ "AnimalResource" ],
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "format" : "int64",
-            "type" : "integer"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Animal"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put" : {
-        "tags" : [ "AnimalResource" ],
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "format" : "int64",
-            "type" : "integer"
-          }
-        } ],
+    "/auth/login" : {
+      "post" : {
+        "tags" : [ "Auth Resource" ],
         "requestBody" : {
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/Animal"
+                "$ref" : "#/components/schemas/LoginRequest"
               }
             }
           }
         },
         "responses" : {
-          "201" : {
+          "200" : {
+            "description" : "OK",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Animal"
+                  "$ref" : "#/components/schemas/LoginResponse"
                 }
               }
             }
           }
         }
-      },
-      "delete" : {
-        "tags" : [ "AnimalResource" ],
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "format" : "int64",
-            "type" : "integer"
-          }
-        } ],
-        "responses" : {
-          "204" : { }
-        }
       }
     },
-    "/auth/login" : {
+    "/auth/login/anonymous" : {
       "get" : {
-        "tags" : [ "Auth Resource Impl" ],
+        "tags" : [ "Auth Resource" ],
+        "parameters" : [ {
+          "name" : "tenantId",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
         "responses" : {
           "200" : {
             "description" : "OK",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/TokenResponse"
+                  "type" : "string"
                 }
               }
             }
@@ -553,12 +634,728 @@
     },
     "/auth/logout" : {
       "get" : {
-        "tags" : [ "Auth Resource Impl" ],
+        "tags" : [ "Auth Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/auth/logoutAll" : {
+      "get" : {
+        "tags" : [ "Auth Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/auth/refresh" : {
+      "get" : {
+        "tags" : [ "Auth Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/tenants" : {
+      "get" : {
+        "tags" : [ "Tenant Resource" ],
+        "parameters" : [ {
+          "name" : "nameContains",
+          "in" : "query",
+          "schema" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer",
+            "nullable" : true
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer",
+            "nullable" : true
+          }
+        } ],
         "responses" : {
           "200" : {
             "description" : "OK",
             "content" : {
               "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Tenant"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Tenant Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Tenant"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Tenant"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "Tenant Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Tenant"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Tenant"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "Tenant Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content"
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/users" : {
+      "get" : {
+        "tags" : [ "User Resource" ],
+        "parameters" : [ {
+          "name" : "createdAfter",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/LocalDateTime"
+            }, {
+              "nullable" : true
+            } ]
+          }
+        }, {
+          "name" : "createdBefore",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/LocalDateTime"
+            }, {
+              "nullable" : true
+            } ]
+          }
+        }, {
+          "name" : "emailContains",
+          "in" : "query",
+          "schema" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        }, {
+          "name" : "fistNameContains",
+          "in" : "query",
+          "schema" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        }, {
+          "name" : "idIs",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/UUID"
+            }, {
+              "nullable" : true
+            } ]
+          }
+        }, {
+          "name" : "lastLoginAfter",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/LocalDateTime"
+            }, {
+              "nullable" : true
+            } ]
+          }
+        }, {
+          "name" : "lastLoginBefore",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/LocalDateTime"
+            }, {
+              "nullable" : true
+            } ]
+          }
+        }, {
+          "name" : "lastNameContains",
+          "in" : "query",
+          "schema" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer",
+            "nullable" : true
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer",
+            "nullable" : true
+          }
+        }, {
+          "name" : "roleIs",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/UserRole"
+            }, {
+              "nullable" : true
+            } ]
+          }
+        }, {
+          "name" : "usernameContains",
+          "in" : "query",
+          "schema" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "User Resource" ],
+        "parameters" : [ {
+          "name" : "updatePassword",
+          "in" : "query",
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "User Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "User Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/users/email/change" : {
+      "post" : {
+        "tags" : [ "User Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserEmailChangeRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Unit"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/users/email/change/confirm" : {
+      "get" : {
+        "tags" : [ "User Resource" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Unit"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/users/emailTaken" : {
+      "get" : {
+        "tags" : [ "User Resource" ],
+        "parameters" : [ {
+          "name" : "email",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "tenantId",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "text/plain" : {
+                "schema" : {
+                  "type" : "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/password/change" : {
+      "post" : {
+        "tags" : [ "User Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserPasswordChangeRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Unit"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/users/password/reset" : {
+      "get" : {
+        "tags" : [ "User Resource" ],
+        "parameters" : [ {
+          "name" : "email",
+          "in" : "query",
+          "schema" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        }, {
+          "name" : "username",
+          "in" : "query",
+          "schema" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/password/reset/{id}" : {
+      "post" : {
+        "tags" : [ "User Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserPasswordResetConfirmationRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/register" : {
+      "post" : {
+        "tags" : [ "User Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserRegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Unit"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/users/register/{id}" : {
+      "post" : {
+        "tags" : [ "User Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserFinishRegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          }
+        }
+      }
+    },
+    "/users/usernameTaken" : {
+      "get" : {
+        "tags" : [ "User Resource" ],
+        "parameters" : [ {
+          "name" : "tenantId",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        }, {
+          "name" : "username",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "minLength" : 1,
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "text/plain" : {
                 "schema" : {
                   "type" : "boolean"
                 }
@@ -572,12 +1369,15 @@
   "components" : {
     "schemas" : {
       "Animal" : {
-        "required" : [ "name", "dateOfAdmission", "type", "breedOne", "sex", "status" ],
+        "required" : [ "id", "name", "dateOfAdmission", "type", "breedOne", "sex", "status" ],
         "type" : "object",
         "properties" : {
           "id" : {
-            "format" : "int64",
-            "type" : "integer"
+            "type" : "string",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/UUID"
+            } ],
+            "readOnly" : true
           },
           "name" : {
             "type" : "string"
@@ -745,16 +1545,18 @@
         }
       },
       "AnimalEvent" : {
-        "required" : [ "title" ],
+        "required" : [ "id", "animalId", "title" ],
         "type" : "object",
         "properties" : {
           "id" : {
-            "format" : "int64",
-            "type" : "integer"
+            "type" : "string",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/UUID"
+            } ],
+            "readOnly" : true
           },
           "animalId" : {
-            "format" : "int64",
-            "type" : "integer"
+            "$ref" : "#/components/schemas/UUID"
           },
           "date" : {
             "type" : "string",
@@ -811,14 +1613,178 @@
         "type" : "string",
         "example" : "2022-03-10"
       },
-      "TokenResponse" : {
-        "required" : [ "token" ],
+      "LocalDateTime" : {
+        "format" : "date-time",
+        "type" : "string",
+        "example" : "2022-03-10T12:15:50"
+      },
+      "LoginRequest" : {
+        "required" : [ "password" ],
         "type" : "object",
         "properties" : {
-          "token" : {
+          "username" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "email" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "password" : {
             "type" : "string"
           }
         }
+      },
+      "LoginResponse" : {
+        "required" : [ "refreshToken", "accessToken" ],
+        "type" : "object",
+        "properties" : {
+          "refreshToken" : {
+            "type" : "string"
+          },
+          "accessToken" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Tenant" : {
+        "required" : [ "id", "name", "ownerId" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/UUID"
+            } ],
+            "readOnly" : true
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "ownerId" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        }
+      },
+      "UUID" : {
+        "format" : "uuid",
+        "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+        "type" : "string"
+      },
+      "Unit" : {
+        "type" : "object"
+      },
+      "User" : {
+        "required" : [ "id", "username", "email", "password", "createdAt", "role" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/UUID"
+            } ],
+            "readOnly" : true
+          },
+          "username" : {
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "password" : {
+            "minLength" : 1,
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "createdAt" : {
+            "type" : "string",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/LocalDateTime"
+            } ],
+            "readOnly" : true
+          },
+          "lastLogin" : {
+            "type" : "string",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/LocalDateTime"
+            } ],
+            "readOnly" : true,
+            "nullable" : true
+          },
+          "firstName" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "lastName" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "role" : {
+            "$ref" : "#/components/schemas/UserRole"
+          }
+        }
+      },
+      "UserEmailChangeRequest" : {
+        "required" : [ "email", "password" ],
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string"
+          },
+          "password" : {
+            "type" : "string"
+          }
+        }
+      },
+      "UserFinishRegistrationRequest" : {
+        "required" : [ "password", "username" ],
+        "type" : "object",
+        "properties" : {
+          "password" : {
+            "type" : "string"
+          },
+          "username" : {
+            "type" : "string"
+          }
+        }
+      },
+      "UserPasswordChangeRequest" : {
+        "required" : [ "oldPassword", "newPassword" ],
+        "type" : "object",
+        "properties" : {
+          "oldPassword" : {
+            "type" : "string"
+          },
+          "newPassword" : {
+            "type" : "string"
+          }
+        }
+      },
+      "UserPasswordResetConfirmationRequest" : {
+        "required" : [ "newPassword" ],
+        "type" : "object",
+        "properties" : {
+          "newPassword" : {
+            "type" : "string"
+          }
+        }
+      },
+      "UserRegistrationRequest" : {
+        "required" : [ "email", "userRole" ],
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string"
+          },
+          "userRole" : {
+            "$ref" : "#/components/schemas/UserRole"
+          }
+        }
+      },
+      "UserRole" : {
+        "enum" : [ "USER", "CARETAKER", "ADMIN", "SUPER_ADMIN", "SUPER_DUPER_ADMIN" ],
+        "type" : "string"
       }
     },
     "securitySchemes" : {
