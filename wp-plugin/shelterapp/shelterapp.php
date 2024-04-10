@@ -12,8 +12,8 @@ License:
 Text Domain: shelterapp
 */
 
-include_once(__DIR__ . '/includes/index.php');
-include_once(__DIR__ . '/blocks/index.php');
+include_once (__DIR__ . '/includes/index.php');
+include_once (__DIR__ . '/blocks/index.php');
 
 
 
@@ -31,3 +31,13 @@ function sa_deactivate()
     $SHELTERAPP_GLOBAL_ANIMAL->deactivate_plugin();
 }
 register_deactivation_hook(__FILE__, 'sa_deactivate');
+
+
+function out(...$print)
+{
+    echo '<pre>';
+    foreach ($print as $key => $value) {
+        print_r($value);
+    }
+    echo '</pre>';
+}
