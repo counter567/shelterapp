@@ -76,18 +76,15 @@ class ShelterappAnimals
     {
     }
 
-    function register_post_type()
+    function getAnimals()
     {
         $client = sa_get_animal_resource_client();
-        try {
-            $animals = $client->animalsGet();
-            out($animals);
+        // $animals = $client->animalsGet();
+    }
 
-        } catch (Exception $e) {
-            error_log('Error');
-            error_log(print_r($e, true));
-            out($e);
-        }
+    function register_post_type()
+    {
+        // $this->getAnimals();
 
         // Set UI labels for Custom Post Type animals
         $labels_type = array(
@@ -174,141 +171,184 @@ class ShelterappAnimals
             return;
         }
 
-        acf_add_local_field_group(
-            array(
-                'key' => 'group_65fc4ecf8ebee',
-                'title' => 'Animal fields',
-                'fields' => array(
+        $group = array(
+            'key' => 'group_65fc4ecf8ebee',
+            'title' => 'Animal fields',
+            'fields' => array(),
+            'location' => array(
+                array(
                     array(
-                        'key' => 'field_65fc4ecff8d1e',
-                        'label' => 'Geburtstag',
-                        'name' => 'dateOfBirth',
-                        'aria-label' => '',
-                        'type' => 'date_picker',
-                        'instructions' => '',
-                        'required' => 0,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'display_format' => 'Y-m-d',
-                        'return_format' => 'Y-m-d',
-                        'first_day' => 1,
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'shelterapp_animals',
                     ),
-                    array(
-                        'key' => 'field_65fc5054f8d1f',
-                        'label' => 'Datum der Aufnahme',
-                        'name' => 'dateOfAdmission',
-                        'aria-label' => '',
-                        'type' => 'date_picker',
-                        'instructions' => '',
-                        'required' => 0,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'display_format' => 'Y-m-d',
-                        'return_format' => 'Y-m-d',
-                        'first_day' => 1,
-                    ),
-                    array(
-                        'key' => 'field_65fc509ff8d20',
-                        'label' => 'breedOne',
-                        'name' => 'breedOne',
-                        'aria-label' => '',
-                        'type' => 'text',
-                        'instructions' => '',
-                        'required' => 0,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'default_value' => '',
-                        'maxlength' => '',
-                        'placeholder' => '',
-                        'prepend' => '',
-                        'append' => '',
-                    ),
-                    array(
-                        'key' => 'field_65fc50b3f8d21',
-                        'label' => 'breedTwo',
-                        'name' => 'breedTwo',
-                        'aria-label' => '',
-                        'type' => 'text',
-                        'instructions' => '',
-                        'required' => 0,
-                        'conditional_logic' => array(
-                            array(
-                                array(
-                                    'field' => 'field_65fc509ff8d20',
-                                    'operator' => '!=empty',
-                                ),
-                            ),
-                        ),
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'default_value' => '',
-                        'maxlength' => '',
-                        'placeholder' => '',
-                        'prepend' => '',
-                        'append' => '',
-                    ),
-                    array(
-                        'key' => 'field_65fc50c9f8d22',
-                        'label' => 'sex',
-                        'name' => 'sex',
-                        'aria-label' => '',
+                ),
+            ),
+            'menu_order' => 0,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'top',
+            'instruction_placement' => 'label',
+            'hide_on_screen' => '',
+            'active' => true,
+            'description' => '',
+            'show_in_rest' => 0,
+        );
+
+        $file = file_get_contents(dirname(__FILE__) . '/../../openapi.json');
+        $schema = json_decode($file, true);
+        $animalSchema = $schema['components']['schemas']['Animal']['properties'];
+        $required = $schema['components']['schemas']['Animal']['required'];
+
+        foreach ($animalSchema as $key => $_value) {
+            if (in_array($key, ['id', 'name', 'type', 'procedures'])) {
+                continue;
+            }
+            $value = $animalSchema[$key];
+            if (isset($value['$ref'])) {
+                $name = basename($value['$ref']);
+                $ref = $schema['components']['schemas'][$name];
+                if ($name === 'LocalDate') {
+                    $value['type'] = 'date';
+                    $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
+                } else if (isset($ref['enum'])) {
+                    // this is a enum!
+                    $field = array(
+                        'key' => 'field_' . $key,
+                        'label' => $key,
+                        'name' => $key,
+                        'aria-label' => $key,
                         'type' => 'select',
                         'instructions' => '',
-                        'required' => 0,
+                        'required' => in_array($key, $required) ? 1 : 0,
                         'conditional_logic' => 0,
                         'wrapper' => array(
                             'width' => '',
                             'class' => '',
                             'id' => '',
                         ),
-                        'choices' => array(
-                            'MALE' => 'Männlich',
-                            'FEMALE' => 'Weiblich',
-                        ),
-                        'default_value' => 'MALE',
-                        'return_format' => 'value',
-                        'multiple' => 0,
+                        'choices' => $ref['enum'],
+                        'default_value' => '',
                         'allow_null' => 0,
+                        'multiple' => 0,
                         'ui' => 0,
                         'ajax' => 0,
                         'placeholder' => '',
+                        'return_format' => 'value',
+                    );
+                    $group['fields'][] = $field;
+                } else {
+                    out($value);
+                }
+
+                continue;
+            }
+
+            $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
+        }
+
+        acf_add_local_field_group($group);
+    }
+
+    function getFieldOfType(
+        array &$required,
+        string $type,
+        string $key,
+    ) {
+        switch ($type) {
+            case 'string':
+            case 'array':
+                $field = array(
+                    'key' => 'field_' . $key,
+                    'label' => $key,
+                    'name' => $key,
+                    'aria-label' => $key,
+                    'type' => 'text',
+                    'instructions' => '',
+                    'required' => in_array($key, $required) ? 1 : 0,
+                    'conditional_logic' => 0,
+                    'wrapper' => array(
+                        'width' => '',
+                        'class' => '',
+                        'id' => '',
                     ),
-                ),
-                'location' => array(
-                    array(
-                        array(
-                            'param' => 'post_type',
-                            'operator' => '==',
-                            'value' => 'shelterapp_animals',
-                        ),
+                    'default_value' => '',
+                    'placeholder' => '',
+                    'prepend' => '',
+                    'append' => '',
+                    'maxlength' => '',
+                );
+                return $field;
+            case 'integer':
+            case 'number':
+                $field = array(
+                    'key' => 'field_' . $key,
+                    'label' => $key,
+                    'name' => $key,
+                    'aria-label' => $key,
+                    'type' => 'number',
+                    'instructions' => '',
+                    'required' => in_array($key, $required) ? 1 : 0,
+                    'conditional_logic' => 0,
+                    'wrapper' => array(
+                        'width' => '',
+                        'class' => '',
+                        'id' => '',
                     ),
-                ),
-                'menu_order' => 0,
-                'position' => 'normal',
-                'style' => 'default',
-                'label_placement' => 'top',
-                'instruction_placement' => 'label',
-                'hide_on_screen' => '',
-                'active' => true,
-                'description' => '',
-                'show_in_rest' => 0,
-            )
-        );
+                    'default_value' => '',
+                    'placeholder' => '',
+                    'prepend' => '',
+                    'append' => '',
+                    'min' => '',
+                    'max' => '',
+                    'step' => '',
+                );
+                return $field;
+            case 'date':
+                $field = array(
+                    'key' => 'field_' . $key,
+                    'label' => $key,
+                    'name' => $key,
+                    'aria-label' => $key,
+                    'type' => 'date_picker',
+                    'instructions' => '',
+                    'required' => in_array($key, $required) ? 1 : 0,
+                    'conditional_logic' => 0,
+                    'wrapper' => array(
+                        'width' => '',
+                        'class' => '',
+                        'id' => '',
+                    ),
+                    'display_format' => 'd.m.Y',
+                    'return_format' => 'Y-m-d',
+                    'first_day' => 1,
+                );
+                return $field;
+            case 'boolean':
+                $field = array(
+                    'key' => 'field_' . $key,
+                    'label' => $key,
+                    'name' => $key,
+                    'aria-label' => $key,
+                    'type' => 'true_false',
+                    'instructions' => '',
+                    'required' => in_array($key, $required) ? 1 : 0,
+                    'conditional_logic' => 0,
+                    'wrapper' => array(
+                        'width' => '',
+                        'class' => '',
+                        'id' => '',
+                    ),
+                    'message' => '',
+                    'default_value' => 0,
+                    'ui' => 0,
+                    'ui_on_text' => '',
+                    'ui_off_text' => '',
+                );
+                return $field;
+            default:
+                throw new \Exception('Unknown type: ' . $type);
+        }
     }
 }
 
