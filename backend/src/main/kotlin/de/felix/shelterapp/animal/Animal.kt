@@ -1,16 +1,24 @@
 package de.felix.shelterapp.animal
 
+import de.felix.shelterapp.util.PagedPanacheCompanion
+import de.felix.shelterapp.util.TenantPanacheEntity
 import io.quarkus.hibernate.reactive.panache.PanacheEntity
-import jakarta.persistence.ElementCollection
-import jakarta.persistence.Embeddable
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.NamedQuery
+import jakarta.persistence.*
+import jakarta.validation.constraints.NotBlank
 import java.time.LocalDate
 
 @Entity
-@NamedQuery(name = "Animal.containsInName", query = "from Animal where name like CONCAT('%', CONCAT(:name, '%'))")
-class Animal: PanacheEntity() {
+@Table(name = "animal", indexes = [
+    Index(columnList = "name"),
+    Index(columnList = "dateOfBirth"),
+    Index(columnList = "dateOfAdmission"),
+    Index(columnList = "type"),
+    Index(columnList = "chipNumber"),
+    Index(columnList = "status"),
+
+])
+class Animal: TenantPanacheEntity() {
+    companion object : PagedPanacheCompanion<Animal>
     lateinit var name: String
     var dateOfBirth: LocalDate? = null
     lateinit var dateOfAdmission: LocalDate
