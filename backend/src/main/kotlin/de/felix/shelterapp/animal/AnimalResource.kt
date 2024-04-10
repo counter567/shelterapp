@@ -1,9 +1,6 @@
 package de.felix.shelterapp.animal
 
-import de.felix.shelterapp.util.PanacheQueryParameter
-import de.felix.shelterapp.util.PanacheQueryParameters
-import de.felix.shelterapp.util.getTenantIdOrThrow
-import de.felix.shelterapp.util.withPanacheSession
+import de.felix.shelterapp.util.*
 import io.quarkus.security.Authenticated
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import jakarta.annotation.security.RolesAllowed
@@ -116,6 +113,7 @@ class AnimalResource {
     fun createAnimal(@Valid animal: Animal) = withPanacheSession {
         val tenantId = jwt.getTenantIdOrThrow()
         animal.tenantId = tenantId
+        animal.createdAt = utcNow()
         animal.persistAndFlush<Animal>().awaitSuspending()
     }
 
@@ -146,7 +144,6 @@ class AnimalResource {
         dbAnimal.dateOfAdmission = animal.dateOfAdmission
         dbAnimal.color = animal.color
         dbAnimal.mainPictureFileUrl = animal.mainPictureFileUrl
-        dbAnimal.otherPictureFileUrls = animal.otherPictureFileUrls
         dbAnimal.weight = animal.weight
         dbAnimal.heightAtWithers = animal.heightAtWithers
         dbAnimal.circumferenceOfNeck = animal.circumferenceOfNeck
@@ -155,13 +152,14 @@ class AnimalResource {
         dbAnimal.bloodType = animal.bloodType
         dbAnimal.illnesses = animal.illnesses
         dbAnimal.allergies = animal.allergies
-        dbAnimal.procedures = animal.procedures
         dbAnimal.notes = animal.notes
         dbAnimal.description = animal.description
         dbAnimal.donationCall = animal.donationCall
         dbAnimal.internalNotes = animal.internalNotes
         dbAnimal.dateOfLeave = animal.dateOfLeave
         dbAnimal.dateOfDeath = animal.dateOfDeath
+        dbAnimal.updatedAt = utcNow()
+        dbAnimal.otherPictureFileUrls = animal.otherPictureFileUrls
         dbAnimal.persistAndFlush<Animal>().awaitSuspending()
     }
 
