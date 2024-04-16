@@ -14,8 +14,8 @@ class ShelterappAnimals
         add_action('rest_api_init', array($this, 'init_rest'));
         $this->register_custom_fields();
 
-        // add_action('after_switch_theme', array($this, 'after_switch_theme'));
-        // add_action('switch_theme', array($this, 'switch_theme'));
+        add_action('after_switch_theme', array($this, 'after_switch_theme'));
+        add_action('switch_theme', array($this, 'switch_theme'));
     }
 
     function init_rest()
@@ -74,12 +74,6 @@ class ShelterappAnimals
 
     function setup_admin()
     {
-    }
-
-    function getAnimals()
-    {
-        $client = sa_get_animal_resource_client();
-        // $animals = $client->animalsGet();
     }
 
     function register_post_type()
@@ -211,6 +205,9 @@ class ShelterappAnimals
                 if ($name === 'LocalDate') {
                     $value['type'] = 'date';
                     $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
+                } else if ($name === 'LocalDateTime') {
+                    $value['type'] = 'datetime';
+                    $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
                 } else if (isset($ref['enum'])) {
                     // this is a enum!
                     $field = array(
@@ -304,6 +301,26 @@ class ShelterappAnimals
                     'step' => '',
                 );
                 return $field;
+            case 'datetime':
+                $field = array(
+                    'key' => 'field_' . $key,
+                    'label' => $key,
+                    'name' => $key,
+                    'aria-label' => $key,
+                    'type' => 'datetime',
+                    'instructions' => '',
+                    'required' => in_array($key, $required) ? 1 : 0,
+                    'conditional_logic' => 0,
+                    'wrapper' => array(
+                        'width' => '',
+                        'class' => '',
+                        'id' => '',
+                    ),
+                    'display_format' => 'd.m.Y',
+                    'return_format' => 'Y-m-d',
+                    'first_day' => 1,
+                );
+                return $field;
             case 'date':
                 $field = array(
                     'key' => 'field_' . $key,
@@ -349,6 +366,48 @@ class ShelterappAnimals
             default:
                 throw new \Exception('Unknown type: ' . $type);
         }
+    }
+
+    function getAllAnimals(OpenAPI\Client\Api\AnimalResourceApi $client, array &$allAnimals, int $chunksize = 50, int $page = 0)
+    {
+        if ($page > 100) {
+            throw new \Exception('To many pages');
+        }
+        $animals = $client->animalsGet(page: $page, page_size: $chunksize);
+        array_push($allAnimals, ...$animals);
+        if (count($animals) < $chunksize) {
+            return;
+        }
+        $this->getAllAnimals($client, $allAnimals, $chunksize, $page + 1);
+    }
+
+    /**
+     * @return \OpenAPI\Client\Model\Animal[]
+     */
+    function initAnimalArray()
+    {
+        return array();
+    }
+
+    function sync()
+    {
+        error_log('=============================================================');
+        error_log('SYNCING');
+        $client = sa_get_animal_resource_client();
+        if (!$client) {
+            error_log('Could not get client, no token or token expired.');
+            return;
+        }
+        $animals = $this->initAnimalArray();
+        $this->getAllAnimals($client, $animals);
+        out(count($animals));
+        //out($animals);
+        $animals = array_slice($animals, 0, 1);
+
+        foreach ($animals as $animal) {
+            out($animal->jsonSerialize());
+        }
+
     }
 }
 
