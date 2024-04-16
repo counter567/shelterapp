@@ -131,6 +131,9 @@ class ShelterappAnimals
             'Tier Art',
             'type'
         );
+
+
+        $this->register_custom_fields();
     }
 
     function activate_plugin()
@@ -172,30 +175,9 @@ class ShelterappAnimals
             'location' => array(
                 array(
                     array(
-                        'key' => 'field_65fc50c9f8d22',
-                        'label' => 'sex',
-                        'name' => 'sex',
-                        'aria-label' => '',
-                        'type' => 'select',
-                        'instructions' => '',
-                        'required' => 0,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'choices' => array(
-                            'MALE' => 'Männlich',
-                            'FEMALE' => 'Weiblich',
-                        ),
-                        'default_value' => 'MALE',
-                        'return_format' => 'value',
-                        'multiple' => 0,
-                        'allow_null' => 0,
-                        'ui' => 0,
-                        'ajax' => 0,
-                        'placeholder' => '',
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'shelterapp_animals',
                     ),
                 ),
             ),
