@@ -71,22 +71,16 @@ class AnimalResourceApi
 
     /** @var string[] $contentTypes **/
     public const contentTypes = [
-        'animalsCountGet' => [
+        'animalsDelete' => [
             'application/json',
         ],
         'animalsGet' => [
             'application/json',
         ],
-        'animalsIdDelete' => [
-            'application/json',
-        ],
-        'animalsIdGet' => [
-            'application/json',
-        ],
-        'animalsIdPut' => [
-            'application/json',
-        ],
         'animalsPost' => [
+            'application/json',
+        ],
+        'animalsPut' => [
             'application/json',
         ],
     ];
@@ -138,32 +132,33 @@ class AnimalResourceApi
     }
 
     /**
-     * Operation animalsCountGet
+     * Operation animalsDelete
      *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsCountGet'] to see the possible values for this operation
+     * @param  string $id id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsDelete'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return int
+     * @return void
      */
-    public function animalsCountGet(string $contentType = self::contentTypes['animalsCountGet'][0])
+    public function animalsDelete($id, string $contentType = self::contentTypes['animalsDelete'][0])
     {
-        list($response) = $this->animalsCountGetWithHttpInfo($contentType);
-        return $response;
+        $this->animalsDeleteWithHttpInfo($id, $contentType);
     }
 
     /**
-     * Operation animalsCountGetWithHttpInfo
+     * Operation animalsDeleteWithHttpInfo
      *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsCountGet'] to see the possible values for this operation
+     * @param  string $id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsDelete'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of int, HTTP status code, HTTP response headers (array of strings)
+     * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function animalsCountGetWithHttpInfo(string $contentType = self::contentTypes['animalsCountGet'][0])
+    public function animalsDeleteWithHttpInfo($id, string $contentType = self::contentTypes['animalsDelete'][0])
     {
-        $request = $this->animalsCountGetRequest($contentType);
+        $request = $this->animalsDeleteRequest($id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -200,90 +195,27 @@ class AnimalResourceApi
                 );
             }
 
-            switch($statusCode) {
-                case 200:
-                    if ('int' === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ('int' !== 'string') {
-                            try {
-                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                            } catch (\JsonException $exception) {
-                                throw new ApiException(
-                                    sprintf(
-                                        'Error JSON decoding server response (%s)',
-                                        $request->getUri()
-                                    ),
-                                    $statusCode,
-                                    $response->getHeaders(),
-                                    $content
-                                );
-                            }
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, 'int', []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-            }
-
-            $returnType = 'int';
-            if ($returnType === '\SplFileObject') {
-                $content = $response->getBody(); //stream goes to serializer
-            } else {
-                $content = (string) $response->getBody();
-                if ($returnType !== 'string') {
-                    try {
-                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                    } catch (\JsonException $exception) {
-                        throw new ApiException(
-                            sprintf(
-                                'Error JSON decoding server response (%s)',
-                                $request->getUri()
-                            ),
-                            $statusCode,
-                            $response->getHeaders(),
-                            $content
-                        );
-                    }
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
+            return [null, $statusCode, $response->getHeaders()];
 
         } catch (ApiException $e) {
             switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        'int',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
             }
             throw $e;
         }
     }
 
     /**
-     * Operation animalsCountGetAsync
+     * Operation animalsDeleteAsync
      *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsCountGet'] to see the possible values for this operation
+     * @param  string $id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsDelete'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function animalsCountGetAsync(string $contentType = self::contentTypes['animalsCountGet'][0])
+    public function animalsDeleteAsync($id, string $contentType = self::contentTypes['animalsDelete'][0])
     {
-        return $this->animalsCountGetAsyncWithHttpInfo($contentType)
+        return $this->animalsDeleteAsyncWithHttpInfo($id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -292,36 +224,24 @@ class AnimalResourceApi
     }
 
     /**
-     * Operation animalsCountGetAsyncWithHttpInfo
+     * Operation animalsDeleteAsyncWithHttpInfo
      *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsCountGet'] to see the possible values for this operation
+     * @param  string $id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsDelete'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function animalsCountGetAsyncWithHttpInfo(string $contentType = self::contentTypes['animalsCountGet'][0])
+    public function animalsDeleteAsyncWithHttpInfo($id, string $contentType = self::contentTypes['animalsDelete'][0])
     {
-        $returnType = 'int';
-        $request = $this->animalsCountGetRequest($contentType);
+        $returnType = '';
+        $request = $this->animalsDeleteRequest($id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
             ->then(
                 function ($response) use ($returnType) {
-                    if ($returnType === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
                 },
                 function ($exception) {
                     $response = $exception->getResponse();
@@ -341,30 +261,50 @@ class AnimalResourceApi
     }
 
     /**
-     * Create request for operation 'animalsCountGet'
+     * Create request for operation 'animalsDelete'
      *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsCountGet'] to see the possible values for this operation
+     * @param  string $id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsDelete'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function animalsCountGetRequest(string $contentType = self::contentTypes['animalsCountGet'][0])
+    public function animalsDeleteRequest($id, string $contentType = self::contentTypes['animalsDelete'][0])
     {
 
+        // verify the required parameter 'id' is set
+        if ($id === null || (is_array($id) && count($id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $id when calling animalsDelete'
+            );
+        }
+        if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $id)) {
+            throw new \InvalidArgumentException("invalid value for \"id\" when calling AnimalResourceApi.animalsDelete, must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
+        }
+        
 
-        $resourcePath = '/animals/count';
+        $resourcePath = '/animals';
         $formParams = [];
         $queryParams = [];
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $id,
+            'id', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            true // required
+        ) ?? []);
 
 
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            [],
             $contentType,
             $multipart
         );
@@ -394,6 +334,10 @@ class AnimalResourceApi
             }
         }
 
+        // this endpoint requires Bearer (JWT) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -409,7 +353,7 @@ class AnimalResourceApi
         $operationHost = $this->config->getHost();
         $query = ObjectSerializer::buildQuery($queryParams);
         return new Request(
-            'GET',
+            'DELETE',
             $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
             $headers,
             $httpBody
@@ -419,86 +363,104 @@ class AnimalResourceApi
     /**
      * Operation animalsGet
      *
-     * @param  string $blood_type blood_type (optional)
-     * @param  string $breed_one breed_one (optional)
-     * @param  string $breed_two breed_two (optional)
-     * @param  string $chip_number chip_number (optional)
-     * @param  int $circumference_of_chest circumference_of_chest (optional)
-     * @param  int $circumference_of_neck circumference_of_neck (optional)
-     * @param  string $color color (optional)
-     * @param  string $description description (optional)
-     * @param  bool $donation_call donation_call (optional)
-     * @param  int $height_at_withers height_at_withers (optional)
-     * @param  int $id id (optional)
-     * @param  string $internal_notes internal_notes (optional)
+     * @param  string $blood_type_contains blood_type_contains (optional)
+     * @param  string $breed_one_contains breed_one_contains (optional)
+     * @param  string $breed_two_contains breed_two_contains (optional)
+     * @param  string $chip_number_contains chip_number_contains (optional)
+     * @param  int $circumference_of_chest_above circumference_of_chest_above (optional)
+     * @param  int $circumference_of_chest_below circumference_of_chest_below (optional)
+     * @param  int $circumference_of_neck_above circumference_of_neck_above (optional)
+     * @param  int $circumference_of_neck_below circumference_of_neck_below (optional)
+     * @param  string $color_contains color_contains (optional)
+     * @param  \DateTime $date_of_admission_after date_of_admission_after (optional)
+     * @param  \DateTime $date_of_admission_before date_of_admission_before (optional)
+     * @param  \DateTime $date_of_birth_after date_of_birth_after (optional)
+     * @param  \DateTime $date_of_birth_before date_of_birth_before (optional)
+     * @param  \DateTime $date_of_death_after date_of_death_after (optional)
+     * @param  \DateTime $date_of_death_before date_of_death_before (optional)
+     * @param  \DateTime $date_of_leave_after date_of_leave_after (optional)
+     * @param  \DateTime $date_of_leave_before date_of_leave_before (optional)
+     * @param  bool $has_donation_call has_donation_call (optional)
+     * @param  int $height_at_withers_above height_at_withers_above (optional)
+     * @param  int $height_at_withers_below height_at_withers_below (optional)
+     * @param  string $id id (optional)
      * @param  bool $is_castrated is_castrated (optional)
      * @param  bool $is_missing is_missing (optional)
      * @param  bool $is_private_adoption is_private_adoption (optional)
      * @param  bool $is_public is_public (optional)
      * @param  bool $is_success_story is_success_story (optional)
-     * @param  int $length_of_back length_of_back (optional)
-     * @param  string $main_picture_file_url main_picture_file_url (optional)
-     * @param  string $name name (optional)
-     * @param  string $named_query named_query (optional)
-     * @param  string $notes notes (optional)
-     * @param  int $page page (optional, default to 0)
-     * @param  int $size size (optional, default to 20)
-     * @param  string[] $sort sort (optional)
-     * @param  string $type type (optional)
+     * @param  int $length_of_back_above length_of_back_above (optional)
+     * @param  int $length_of_back_below length_of_back_below (optional)
+     * @param  string $name_contains name_contains (optional)
+     * @param  int $page page (optional)
+     * @param  int $page_size page_size (optional)
+     * @param  AnimalSex $sex sex (optional)
+     * @param  AnimalStatus $status status (optional)
+     * @param  string $type_contains type_contains (optional)
      * @param  bool $was_found was_found (optional)
-     * @param  float $weight weight (optional)
+     * @param  float $weight_above weight_above (optional)
+     * @param  float $weight_below weight_below (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsGet'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return \OpenAPI\Client\Model\Animal[]
      */
-    public function animalsGet($blood_type = null, $breed_one = null, $breed_two = null, $chip_number = null, $circumference_of_chest = null, $circumference_of_neck = null, $color = null, $description = null, $donation_call = null, $height_at_withers = null, $id = null, $internal_notes = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back = null, $main_picture_file_url = null, $name = null, $named_query = null, $notes = null, $page = 0, $size = 20, $sort = null, $type = null, $was_found = null, $weight = null, string $contentType = self::contentTypes['animalsGet'][0])
+    public function animalsGet($blood_type_contains = null, $breed_one_contains = null, $breed_two_contains = null, $chip_number_contains = null, $circumference_of_chest_above = null, $circumference_of_chest_below = null, $circumference_of_neck_above = null, $circumference_of_neck_below = null, $color_contains = null, $date_of_admission_after = null, $date_of_admission_before = null, $date_of_birth_after = null, $date_of_birth_before = null, $date_of_death_after = null, $date_of_death_before = null, $date_of_leave_after = null, $date_of_leave_before = null, $has_donation_call = null, $height_at_withers_above = null, $height_at_withers_below = null, $id = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back_above = null, $length_of_back_below = null, $name_contains = null, $page = null, $page_size = null, $sex = null, $status = null, $type_contains = null, $was_found = null, $weight_above = null, $weight_below = null, string $contentType = self::contentTypes['animalsGet'][0])
     {
-        list($response) = $this->animalsGetWithHttpInfo($blood_type, $breed_one, $breed_two, $chip_number, $circumference_of_chest, $circumference_of_neck, $color, $description, $donation_call, $height_at_withers, $id, $internal_notes, $is_castrated, $is_missing, $is_private_adoption, $is_public, $is_success_story, $length_of_back, $main_picture_file_url, $name, $named_query, $notes, $page, $size, $sort, $type, $was_found, $weight, $contentType);
+        list($response) = $this->animalsGetWithHttpInfo($blood_type_contains, $breed_one_contains, $breed_two_contains, $chip_number_contains, $circumference_of_chest_above, $circumference_of_chest_below, $circumference_of_neck_above, $circumference_of_neck_below, $color_contains, $date_of_admission_after, $date_of_admission_before, $date_of_birth_after, $date_of_birth_before, $date_of_death_after, $date_of_death_before, $date_of_leave_after, $date_of_leave_before, $has_donation_call, $height_at_withers_above, $height_at_withers_below, $id, $is_castrated, $is_missing, $is_private_adoption, $is_public, $is_success_story, $length_of_back_above, $length_of_back_below, $name_contains, $page, $page_size, $sex, $status, $type_contains, $was_found, $weight_above, $weight_below, $contentType);
         return $response;
     }
 
     /**
      * Operation animalsGetWithHttpInfo
      *
-     * @param  string $blood_type (optional)
-     * @param  string $breed_one (optional)
-     * @param  string $breed_two (optional)
-     * @param  string $chip_number (optional)
-     * @param  int $circumference_of_chest (optional)
-     * @param  int $circumference_of_neck (optional)
-     * @param  string $color (optional)
-     * @param  string $description (optional)
-     * @param  bool $donation_call (optional)
-     * @param  int $height_at_withers (optional)
-     * @param  int $id (optional)
-     * @param  string $internal_notes (optional)
+     * @param  string $blood_type_contains (optional)
+     * @param  string $breed_one_contains (optional)
+     * @param  string $breed_two_contains (optional)
+     * @param  string $chip_number_contains (optional)
+     * @param  int $circumference_of_chest_above (optional)
+     * @param  int $circumference_of_chest_below (optional)
+     * @param  int $circumference_of_neck_above (optional)
+     * @param  int $circumference_of_neck_below (optional)
+     * @param  string $color_contains (optional)
+     * @param  \DateTime $date_of_admission_after (optional)
+     * @param  \DateTime $date_of_admission_before (optional)
+     * @param  \DateTime $date_of_birth_after (optional)
+     * @param  \DateTime $date_of_birth_before (optional)
+     * @param  \DateTime $date_of_death_after (optional)
+     * @param  \DateTime $date_of_death_before (optional)
+     * @param  \DateTime $date_of_leave_after (optional)
+     * @param  \DateTime $date_of_leave_before (optional)
+     * @param  bool $has_donation_call (optional)
+     * @param  int $height_at_withers_above (optional)
+     * @param  int $height_at_withers_below (optional)
+     * @param  string $id (optional)
      * @param  bool $is_castrated (optional)
      * @param  bool $is_missing (optional)
      * @param  bool $is_private_adoption (optional)
      * @param  bool $is_public (optional)
      * @param  bool $is_success_story (optional)
-     * @param  int $length_of_back (optional)
-     * @param  string $main_picture_file_url (optional)
-     * @param  string $name (optional)
-     * @param  string $named_query (optional)
-     * @param  string $notes (optional)
-     * @param  int $page (optional, default to 0)
-     * @param  int $size (optional, default to 20)
-     * @param  string[] $sort (optional)
-     * @param  string $type (optional)
+     * @param  int $length_of_back_above (optional)
+     * @param  int $length_of_back_below (optional)
+     * @param  string $name_contains (optional)
+     * @param  int $page (optional)
+     * @param  int $page_size (optional)
+     * @param  AnimalSex $sex (optional)
+     * @param  AnimalStatus $status (optional)
+     * @param  string $type_contains (optional)
      * @param  bool $was_found (optional)
-     * @param  float $weight (optional)
+     * @param  float $weight_above (optional)
+     * @param  float $weight_below (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsGet'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of \OpenAPI\Client\Model\Animal[], HTTP status code, HTTP response headers (array of strings)
      */
-    public function animalsGetWithHttpInfo($blood_type = null, $breed_one = null, $breed_two = null, $chip_number = null, $circumference_of_chest = null, $circumference_of_neck = null, $color = null, $description = null, $donation_call = null, $height_at_withers = null, $id = null, $internal_notes = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back = null, $main_picture_file_url = null, $name = null, $named_query = null, $notes = null, $page = 0, $size = 20, $sort = null, $type = null, $was_found = null, $weight = null, string $contentType = self::contentTypes['animalsGet'][0])
+    public function animalsGetWithHttpInfo($blood_type_contains = null, $breed_one_contains = null, $breed_two_contains = null, $chip_number_contains = null, $circumference_of_chest_above = null, $circumference_of_chest_below = null, $circumference_of_neck_above = null, $circumference_of_neck_below = null, $color_contains = null, $date_of_admission_after = null, $date_of_admission_before = null, $date_of_birth_after = null, $date_of_birth_before = null, $date_of_death_after = null, $date_of_death_before = null, $date_of_leave_after = null, $date_of_leave_before = null, $has_donation_call = null, $height_at_withers_above = null, $height_at_withers_below = null, $id = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back_above = null, $length_of_back_below = null, $name_contains = null, $page = null, $page_size = null, $sex = null, $status = null, $type_contains = null, $was_found = null, $weight_above = null, $weight_below = null, string $contentType = self::contentTypes['animalsGet'][0])
     {
-        $request = $this->animalsGetRequest($blood_type, $breed_one, $breed_two, $chip_number, $circumference_of_chest, $circumference_of_neck, $color, $description, $donation_call, $height_at_withers, $id, $internal_notes, $is_castrated, $is_missing, $is_private_adoption, $is_public, $is_success_story, $length_of_back, $main_picture_file_url, $name, $named_query, $notes, $page, $size, $sort, $type, $was_found, $weight, $contentType);
+        $request = $this->animalsGetRequest($blood_type_contains, $breed_one_contains, $breed_two_contains, $chip_number_contains, $circumference_of_chest_above, $circumference_of_chest_below, $circumference_of_neck_above, $circumference_of_neck_below, $color_contains, $date_of_admission_after, $date_of_admission_before, $date_of_birth_after, $date_of_birth_before, $date_of_death_after, $date_of_death_before, $date_of_leave_after, $date_of_leave_before, $has_donation_call, $height_at_withers_above, $height_at_withers_below, $id, $is_castrated, $is_missing, $is_private_adoption, $is_public, $is_success_story, $length_of_back_above, $length_of_back_below, $name_contains, $page, $page_size, $sex, $status, $type_contains, $was_found, $weight_above, $weight_below, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -611,42 +573,51 @@ class AnimalResourceApi
     /**
      * Operation animalsGetAsync
      *
-     * @param  string $blood_type (optional)
-     * @param  string $breed_one (optional)
-     * @param  string $breed_two (optional)
-     * @param  string $chip_number (optional)
-     * @param  int $circumference_of_chest (optional)
-     * @param  int $circumference_of_neck (optional)
-     * @param  string $color (optional)
-     * @param  string $description (optional)
-     * @param  bool $donation_call (optional)
-     * @param  int $height_at_withers (optional)
-     * @param  int $id (optional)
-     * @param  string $internal_notes (optional)
+     * @param  string $blood_type_contains (optional)
+     * @param  string $breed_one_contains (optional)
+     * @param  string $breed_two_contains (optional)
+     * @param  string $chip_number_contains (optional)
+     * @param  int $circumference_of_chest_above (optional)
+     * @param  int $circumference_of_chest_below (optional)
+     * @param  int $circumference_of_neck_above (optional)
+     * @param  int $circumference_of_neck_below (optional)
+     * @param  string $color_contains (optional)
+     * @param  \DateTime $date_of_admission_after (optional)
+     * @param  \DateTime $date_of_admission_before (optional)
+     * @param  \DateTime $date_of_birth_after (optional)
+     * @param  \DateTime $date_of_birth_before (optional)
+     * @param  \DateTime $date_of_death_after (optional)
+     * @param  \DateTime $date_of_death_before (optional)
+     * @param  \DateTime $date_of_leave_after (optional)
+     * @param  \DateTime $date_of_leave_before (optional)
+     * @param  bool $has_donation_call (optional)
+     * @param  int $height_at_withers_above (optional)
+     * @param  int $height_at_withers_below (optional)
+     * @param  string $id (optional)
      * @param  bool $is_castrated (optional)
      * @param  bool $is_missing (optional)
      * @param  bool $is_private_adoption (optional)
      * @param  bool $is_public (optional)
      * @param  bool $is_success_story (optional)
-     * @param  int $length_of_back (optional)
-     * @param  string $main_picture_file_url (optional)
-     * @param  string $name (optional)
-     * @param  string $named_query (optional)
-     * @param  string $notes (optional)
-     * @param  int $page (optional, default to 0)
-     * @param  int $size (optional, default to 20)
-     * @param  string[] $sort (optional)
-     * @param  string $type (optional)
+     * @param  int $length_of_back_above (optional)
+     * @param  int $length_of_back_below (optional)
+     * @param  string $name_contains (optional)
+     * @param  int $page (optional)
+     * @param  int $page_size (optional)
+     * @param  AnimalSex $sex (optional)
+     * @param  AnimalStatus $status (optional)
+     * @param  string $type_contains (optional)
      * @param  bool $was_found (optional)
-     * @param  float $weight (optional)
+     * @param  float $weight_above (optional)
+     * @param  float $weight_below (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsGet'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function animalsGetAsync($blood_type = null, $breed_one = null, $breed_two = null, $chip_number = null, $circumference_of_chest = null, $circumference_of_neck = null, $color = null, $description = null, $donation_call = null, $height_at_withers = null, $id = null, $internal_notes = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back = null, $main_picture_file_url = null, $name = null, $named_query = null, $notes = null, $page = 0, $size = 20, $sort = null, $type = null, $was_found = null, $weight = null, string $contentType = self::contentTypes['animalsGet'][0])
+    public function animalsGetAsync($blood_type_contains = null, $breed_one_contains = null, $breed_two_contains = null, $chip_number_contains = null, $circumference_of_chest_above = null, $circumference_of_chest_below = null, $circumference_of_neck_above = null, $circumference_of_neck_below = null, $color_contains = null, $date_of_admission_after = null, $date_of_admission_before = null, $date_of_birth_after = null, $date_of_birth_before = null, $date_of_death_after = null, $date_of_death_before = null, $date_of_leave_after = null, $date_of_leave_before = null, $has_donation_call = null, $height_at_withers_above = null, $height_at_withers_below = null, $id = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back_above = null, $length_of_back_below = null, $name_contains = null, $page = null, $page_size = null, $sex = null, $status = null, $type_contains = null, $was_found = null, $weight_above = null, $weight_below = null, string $contentType = self::contentTypes['animalsGet'][0])
     {
-        return $this->animalsGetAsyncWithHttpInfo($blood_type, $breed_one, $breed_two, $chip_number, $circumference_of_chest, $circumference_of_neck, $color, $description, $donation_call, $height_at_withers, $id, $internal_notes, $is_castrated, $is_missing, $is_private_adoption, $is_public, $is_success_story, $length_of_back, $main_picture_file_url, $name, $named_query, $notes, $page, $size, $sort, $type, $was_found, $weight, $contentType)
+        return $this->animalsGetAsyncWithHttpInfo($blood_type_contains, $breed_one_contains, $breed_two_contains, $chip_number_contains, $circumference_of_chest_above, $circumference_of_chest_below, $circumference_of_neck_above, $circumference_of_neck_below, $color_contains, $date_of_admission_after, $date_of_admission_before, $date_of_birth_after, $date_of_birth_before, $date_of_death_after, $date_of_death_before, $date_of_leave_after, $date_of_leave_before, $has_donation_call, $height_at_withers_above, $height_at_withers_below, $id, $is_castrated, $is_missing, $is_private_adoption, $is_public, $is_success_story, $length_of_back_above, $length_of_back_below, $name_contains, $page, $page_size, $sex, $status, $type_contains, $was_found, $weight_above, $weight_below, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -657,43 +628,52 @@ class AnimalResourceApi
     /**
      * Operation animalsGetAsyncWithHttpInfo
      *
-     * @param  string $blood_type (optional)
-     * @param  string $breed_one (optional)
-     * @param  string $breed_two (optional)
-     * @param  string $chip_number (optional)
-     * @param  int $circumference_of_chest (optional)
-     * @param  int $circumference_of_neck (optional)
-     * @param  string $color (optional)
-     * @param  string $description (optional)
-     * @param  bool $donation_call (optional)
-     * @param  int $height_at_withers (optional)
-     * @param  int $id (optional)
-     * @param  string $internal_notes (optional)
+     * @param  string $blood_type_contains (optional)
+     * @param  string $breed_one_contains (optional)
+     * @param  string $breed_two_contains (optional)
+     * @param  string $chip_number_contains (optional)
+     * @param  int $circumference_of_chest_above (optional)
+     * @param  int $circumference_of_chest_below (optional)
+     * @param  int $circumference_of_neck_above (optional)
+     * @param  int $circumference_of_neck_below (optional)
+     * @param  string $color_contains (optional)
+     * @param  \DateTime $date_of_admission_after (optional)
+     * @param  \DateTime $date_of_admission_before (optional)
+     * @param  \DateTime $date_of_birth_after (optional)
+     * @param  \DateTime $date_of_birth_before (optional)
+     * @param  \DateTime $date_of_death_after (optional)
+     * @param  \DateTime $date_of_death_before (optional)
+     * @param  \DateTime $date_of_leave_after (optional)
+     * @param  \DateTime $date_of_leave_before (optional)
+     * @param  bool $has_donation_call (optional)
+     * @param  int $height_at_withers_above (optional)
+     * @param  int $height_at_withers_below (optional)
+     * @param  string $id (optional)
      * @param  bool $is_castrated (optional)
      * @param  bool $is_missing (optional)
      * @param  bool $is_private_adoption (optional)
      * @param  bool $is_public (optional)
      * @param  bool $is_success_story (optional)
-     * @param  int $length_of_back (optional)
-     * @param  string $main_picture_file_url (optional)
-     * @param  string $name (optional)
-     * @param  string $named_query (optional)
-     * @param  string $notes (optional)
-     * @param  int $page (optional, default to 0)
-     * @param  int $size (optional, default to 20)
-     * @param  string[] $sort (optional)
-     * @param  string $type (optional)
+     * @param  int $length_of_back_above (optional)
+     * @param  int $length_of_back_below (optional)
+     * @param  string $name_contains (optional)
+     * @param  int $page (optional)
+     * @param  int $page_size (optional)
+     * @param  AnimalSex $sex (optional)
+     * @param  AnimalStatus $status (optional)
+     * @param  string $type_contains (optional)
      * @param  bool $was_found (optional)
-     * @param  float $weight (optional)
+     * @param  float $weight_above (optional)
+     * @param  float $weight_below (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsGet'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function animalsGetAsyncWithHttpInfo($blood_type = null, $breed_one = null, $breed_two = null, $chip_number = null, $circumference_of_chest = null, $circumference_of_neck = null, $color = null, $description = null, $donation_call = null, $height_at_withers = null, $id = null, $internal_notes = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back = null, $main_picture_file_url = null, $name = null, $named_query = null, $notes = null, $page = 0, $size = 20, $sort = null, $type = null, $was_found = null, $weight = null, string $contentType = self::contentTypes['animalsGet'][0])
+    public function animalsGetAsyncWithHttpInfo($blood_type_contains = null, $breed_one_contains = null, $breed_two_contains = null, $chip_number_contains = null, $circumference_of_chest_above = null, $circumference_of_chest_below = null, $circumference_of_neck_above = null, $circumference_of_neck_below = null, $color_contains = null, $date_of_admission_after = null, $date_of_admission_before = null, $date_of_birth_after = null, $date_of_birth_before = null, $date_of_death_after = null, $date_of_death_before = null, $date_of_leave_after = null, $date_of_leave_before = null, $has_donation_call = null, $height_at_withers_above = null, $height_at_withers_below = null, $id = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back_above = null, $length_of_back_below = null, $name_contains = null, $page = null, $page_size = null, $sex = null, $status = null, $type_contains = null, $was_found = null, $weight_above = null, $weight_below = null, string $contentType = self::contentTypes['animalsGet'][0])
     {
         $returnType = '\OpenAPI\Client\Model\Animal[]';
-        $request = $this->animalsGetRequest($blood_type, $breed_one, $breed_two, $chip_number, $circumference_of_chest, $circumference_of_neck, $color, $description, $donation_call, $height_at_withers, $id, $internal_notes, $is_castrated, $is_missing, $is_private_adoption, $is_public, $is_success_story, $length_of_back, $main_picture_file_url, $name, $named_query, $notes, $page, $size, $sort, $type, $was_found, $weight, $contentType);
+        $request = $this->animalsGetRequest($blood_type_contains, $breed_one_contains, $breed_two_contains, $chip_number_contains, $circumference_of_chest_above, $circumference_of_chest_below, $circumference_of_neck_above, $circumference_of_neck_below, $color_contains, $date_of_admission_after, $date_of_admission_before, $date_of_birth_after, $date_of_birth_before, $date_of_death_after, $date_of_death_before, $date_of_leave_after, $date_of_leave_before, $has_donation_call, $height_at_withers_above, $height_at_withers_below, $id, $is_castrated, $is_missing, $is_private_adoption, $is_public, $is_success_story, $length_of_back_above, $length_of_back_below, $name_contains, $page, $page_size, $sex, $status, $type_contains, $was_found, $weight_above, $weight_below, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -734,41 +714,59 @@ class AnimalResourceApi
     /**
      * Create request for operation 'animalsGet'
      *
-     * @param  string $blood_type (optional)
-     * @param  string $breed_one (optional)
-     * @param  string $breed_two (optional)
-     * @param  string $chip_number (optional)
-     * @param  int $circumference_of_chest (optional)
-     * @param  int $circumference_of_neck (optional)
-     * @param  string $color (optional)
-     * @param  string $description (optional)
-     * @param  bool $donation_call (optional)
-     * @param  int $height_at_withers (optional)
-     * @param  int $id (optional)
-     * @param  string $internal_notes (optional)
+     * @param  string $blood_type_contains (optional)
+     * @param  string $breed_one_contains (optional)
+     * @param  string $breed_two_contains (optional)
+     * @param  string $chip_number_contains (optional)
+     * @param  int $circumference_of_chest_above (optional)
+     * @param  int $circumference_of_chest_below (optional)
+     * @param  int $circumference_of_neck_above (optional)
+     * @param  int $circumference_of_neck_below (optional)
+     * @param  string $color_contains (optional)
+     * @param  \DateTime $date_of_admission_after (optional)
+     * @param  \DateTime $date_of_admission_before (optional)
+     * @param  \DateTime $date_of_birth_after (optional)
+     * @param  \DateTime $date_of_birth_before (optional)
+     * @param  \DateTime $date_of_death_after (optional)
+     * @param  \DateTime $date_of_death_before (optional)
+     * @param  \DateTime $date_of_leave_after (optional)
+     * @param  \DateTime $date_of_leave_before (optional)
+     * @param  bool $has_donation_call (optional)
+     * @param  int $height_at_withers_above (optional)
+     * @param  int $height_at_withers_below (optional)
+     * @param  string $id (optional)
      * @param  bool $is_castrated (optional)
      * @param  bool $is_missing (optional)
      * @param  bool $is_private_adoption (optional)
      * @param  bool $is_public (optional)
      * @param  bool $is_success_story (optional)
-     * @param  int $length_of_back (optional)
-     * @param  string $main_picture_file_url (optional)
-     * @param  string $name (optional)
-     * @param  string $named_query (optional)
-     * @param  string $notes (optional)
-     * @param  int $page (optional, default to 0)
-     * @param  int $size (optional, default to 20)
-     * @param  string[] $sort (optional)
-     * @param  string $type (optional)
+     * @param  int $length_of_back_above (optional)
+     * @param  int $length_of_back_below (optional)
+     * @param  string $name_contains (optional)
+     * @param  int $page (optional)
+     * @param  int $page_size (optional)
+     * @param  AnimalSex $sex (optional)
+     * @param  AnimalStatus $status (optional)
+     * @param  string $type_contains (optional)
      * @param  bool $was_found (optional)
-     * @param  float $weight (optional)
+     * @param  float $weight_above (optional)
+     * @param  float $weight_below (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsGet'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function animalsGetRequest($blood_type = null, $breed_one = null, $breed_two = null, $chip_number = null, $circumference_of_chest = null, $circumference_of_neck = null, $color = null, $description = null, $donation_call = null, $height_at_withers = null, $id = null, $internal_notes = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back = null, $main_picture_file_url = null, $name = null, $named_query = null, $notes = null, $page = 0, $size = 20, $sort = null, $type = null, $was_found = null, $weight = null, string $contentType = self::contentTypes['animalsGet'][0])
+    public function animalsGetRequest($blood_type_contains = null, $breed_one_contains = null, $breed_two_contains = null, $chip_number_contains = null, $circumference_of_chest_above = null, $circumference_of_chest_below = null, $circumference_of_neck_above = null, $circumference_of_neck_below = null, $color_contains = null, $date_of_admission_after = null, $date_of_admission_before = null, $date_of_birth_after = null, $date_of_birth_before = null, $date_of_death_after = null, $date_of_death_before = null, $date_of_leave_after = null, $date_of_leave_before = null, $has_donation_call = null, $height_at_withers_above = null, $height_at_withers_below = null, $id = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back_above = null, $length_of_back_below = null, $name_contains = null, $page = null, $page_size = null, $sex = null, $status = null, $type_contains = null, $was_found = null, $weight_above = null, $weight_below = null, string $contentType = self::contentTypes['animalsGet'][0])
     {
+
+
+
+
+
+
+
+
+
 
 
 
@@ -808,8 +806,8 @@ class AnimalResourceApi
 
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $blood_type,
-            'bloodType', // param base name
+            $blood_type_contains,
+            'bloodTypeContains', // param base name
             'string', // openApiType
             'form', // style
             true, // explode
@@ -817,8 +815,8 @@ class AnimalResourceApi
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $breed_one,
-            'breedOne', // param base name
+            $breed_one_contains,
+            'breedOneContains', // param base name
             'string', // openApiType
             'form', // style
             true, // explode
@@ -826,8 +824,8 @@ class AnimalResourceApi
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $breed_two,
-            'breedTwo', // param base name
+            $breed_two_contains,
+            'breedTwoContains', // param base name
             'string', // openApiType
             'form', // style
             true, // explode
@@ -835,8 +833,8 @@ class AnimalResourceApi
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $chip_number,
-            'chipNumber', // param base name
+            $chip_number_contains,
+            'chipNumberContains', // param base name
             'string', // openApiType
             'form', // style
             true, // explode
@@ -844,8 +842,8 @@ class AnimalResourceApi
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $circumference_of_chest,
-            'circumferenceOfChest', // param base name
+            $circumference_of_chest_above,
+            'circumferenceOfChestAbove', // param base name
             'integer', // openApiType
             'form', // style
             true, // explode
@@ -853,8 +851,8 @@ class AnimalResourceApi
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $circumference_of_neck,
-            'circumferenceOfNeck', // param base name
+            $circumference_of_chest_below,
+            'circumferenceOfChestBelow', // param base name
             'integer', // openApiType
             'form', // style
             true, // explode
@@ -862,8 +860,26 @@ class AnimalResourceApi
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $color,
-            'color', // param base name
+            $circumference_of_neck_above,
+            'circumferenceOfNeckAbove', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $circumference_of_neck_below,
+            'circumferenceOfNeckBelow', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $color_contains,
+            'colorContains', // param base name
             'string', // openApiType
             'form', // style
             true, // explode
@@ -871,17 +887,80 @@ class AnimalResourceApi
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $description,
-            'description', // param base name
-            'string', // openApiType
+            $date_of_admission_after,
+            'dateOfAdmissionAfter', // param base name
+            '\DateTime', // openApiType
             'form', // style
             true, // explode
             false // required
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $donation_call,
-            'donationCall', // param base name
+            $date_of_admission_before,
+            'dateOfAdmissionBefore', // param base name
+            '\DateTime', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $date_of_birth_after,
+            'dateOfBirthAfter', // param base name
+            '\DateTime', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $date_of_birth_before,
+            'dateOfBirthBefore', // param base name
+            '\DateTime', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $date_of_death_after,
+            'dateOfDeathAfter', // param base name
+            '\DateTime', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $date_of_death_before,
+            'dateOfDeathBefore', // param base name
+            '\DateTime', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $date_of_leave_after,
+            'dateOfLeaveAfter', // param base name
+            '\DateTime', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $date_of_leave_before,
+            'dateOfLeaveBefore', // param base name
+            '\DateTime', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $has_donation_call,
+            'hasDonationCall', // param base name
             'boolean', // openApiType
             'form', // style
             true, // explode
@@ -889,8 +968,17 @@ class AnimalResourceApi
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $height_at_withers,
-            'heightAtWithers', // param base name
+            $height_at_withers_above,
+            'heightAtWithersAbove', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $height_at_withers_below,
+            'heightAtWithersBelow', // param base name
             'integer', // openApiType
             'form', // style
             true, // explode
@@ -900,15 +988,6 @@ class AnimalResourceApi
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $id,
             'id', // param base name
-            'integer', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $internal_notes,
-            'internalNotes', // param base name
             'string', // openApiType
             'form', // style
             true, // explode
@@ -961,8 +1040,8 @@ class AnimalResourceApi
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $length_of_back,
-            'lengthOfBack', // param base name
+            $length_of_back_above,
+            'lengthOfBackAbove', // param base name
             'integer', // openApiType
             'form', // style
             true, // explode
@@ -970,35 +1049,17 @@ class AnimalResourceApi
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $main_picture_file_url,
-            'mainPictureFileUrl', // param base name
-            'string', // openApiType
+            $length_of_back_below,
+            'lengthOfBackBelow', // param base name
+            'integer', // openApiType
             'form', // style
             true, // explode
             false // required
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $name,
-            'name', // param base name
-            'string', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $named_query,
-            'namedQuery', // param base name
-            'string', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $notes,
-            'notes', // param base name
+            $name_contains,
+            'nameContains', // param base name
             'string', // openApiType
             'form', // style
             true, // explode
@@ -1015,8 +1076,8 @@ class AnimalResourceApi
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $size,
-            'size', // param base name
+            $page_size,
+            'pageSize', // param base name
             'integer', // openApiType
             'form', // style
             true, // explode
@@ -1024,17 +1085,26 @@ class AnimalResourceApi
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $sort,
-            'sort', // param base name
-            'array', // openApiType
+            $sex,
+            'sex', // param base name
+            'AnimalSex', // openApiType
             'form', // style
             true, // explode
             false // required
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $type,
-            'type', // param base name
+            $status,
+            'status', // param base name
+            'AnimalStatus', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $type_contains,
+            'typeContains', // param base name
             'string', // openApiType
             'form', // style
             true, // explode
@@ -1051,8 +1121,17 @@ class AnimalResourceApi
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $weight,
-            'weight', // param base name
+            $weight_above,
+            'weightAbove', // param base name
+            'number', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $weight_below,
+            'weightBelow', // param base name
             'number', // openApiType
             'form', // style
             true, // explode
@@ -1093,6 +1172,10 @@ class AnimalResourceApi
             }
         }
 
+        // this endpoint requires Bearer (JWT) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -1109,838 +1192,6 @@ class AnimalResourceApi
         $query = ObjectSerializer::buildQuery($queryParams);
         return new Request(
             'GET',
-            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
-        );
-    }
-
-    /**
-     * Operation animalsIdDelete
-     *
-     * @param  int $id id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsIdDelete'] to see the possible values for this operation
-     *
-     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return void
-     */
-    public function animalsIdDelete($id, string $contentType = self::contentTypes['animalsIdDelete'][0])
-    {
-        $this->animalsIdDeleteWithHttpInfo($id, $contentType);
-    }
-
-    /**
-     * Operation animalsIdDeleteWithHttpInfo
-     *
-     * @param  int $id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsIdDelete'] to see the possible values for this operation
-     *
-     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     */
-    public function animalsIdDeleteWithHttpInfo($id, string $contentType = self::contentTypes['animalsIdDelete'][0])
-    {
-        $request = $this->animalsIdDeleteRequest($id, $contentType);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
-                );
-            } catch (ConnectException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    null,
-                    null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        (string) $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    (string) $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-            }
-            throw $e;
-        }
-    }
-
-    /**
-     * Operation animalsIdDeleteAsync
-     *
-     * @param  int $id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsIdDelete'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function animalsIdDeleteAsync($id, string $contentType = self::contentTypes['animalsIdDelete'][0])
-    {
-        return $this->animalsIdDeleteAsyncWithHttpInfo($id, $contentType)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation animalsIdDeleteAsyncWithHttpInfo
-     *
-     * @param  int $id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsIdDelete'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function animalsIdDeleteAsyncWithHttpInfo($id, string $contentType = self::contentTypes['animalsIdDelete'][0])
-    {
-        $returnType = '';
-        $request = $this->animalsIdDeleteRequest($id, $contentType);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        (string) $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Create request for operation 'animalsIdDelete'
-     *
-     * @param  int $id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsIdDelete'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    public function animalsIdDeleteRequest($id, string $contentType = self::contentTypes['animalsIdDelete'][0])
-    {
-
-        // verify the required parameter 'id' is set
-        if ($id === null || (is_array($id) && count($id) === 0)) {
-            throw new \InvalidArgumentException(
-                'Missing the required parameter $id when calling animalsIdDelete'
-            );
-        }
-
-
-        $resourcePath = '/animals/{id}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-
-        // path params
-        if ($id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'id' . '}',
-                ObjectSerializer::toPathValue($id),
-                $resourcePath
-            );
-        }
-
-
-        $headers = $this->headerSelector->selectHeaders(
-            [],
-            $contentType,
-            $multipart
-        );
-
-        // for model (json/xml)
-        if (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
-                    foreach ($formParamValueItems as $formParamValueItem) {
-                        $multipartContents[] = [
-                            'name' => $formParamName,
-                            'contents' => $formParamValueItem
-                        ];
-                    }
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
-                # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
-            } else {
-                // for HTTP post (form)
-                $httpBody = ObjectSerializer::buildQuery($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
-        );
-
-        $operationHost = $this->config->getHost();
-        $query = ObjectSerializer::buildQuery($queryParams);
-        return new Request(
-            'DELETE',
-            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
-        );
-    }
-
-    /**
-     * Operation animalsIdGet
-     *
-     * @param  int $id id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsIdGet'] to see the possible values for this operation
-     *
-     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return \OpenAPI\Client\Model\Animal
-     */
-    public function animalsIdGet($id, string $contentType = self::contentTypes['animalsIdGet'][0])
-    {
-        list($response) = $this->animalsIdGetWithHttpInfo($id, $contentType);
-        return $response;
-    }
-
-    /**
-     * Operation animalsIdGetWithHttpInfo
-     *
-     * @param  int $id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsIdGet'] to see the possible values for this operation
-     *
-     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Client\Model\Animal, HTTP status code, HTTP response headers (array of strings)
-     */
-    public function animalsIdGetWithHttpInfo($id, string $contentType = self::contentTypes['animalsIdGet'][0])
-    {
-        $request = $this->animalsIdGetRequest($id, $contentType);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
-                );
-            } catch (ConnectException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    null,
-                    null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        (string) $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    (string) $response->getBody()
-                );
-            }
-
-            switch($statusCode) {
-                case 200:
-                    if ('\OpenAPI\Client\Model\Animal' === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ('\OpenAPI\Client\Model\Animal' !== 'string') {
-                            try {
-                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                            } catch (\JsonException $exception) {
-                                throw new ApiException(
-                                    sprintf(
-                                        'Error JSON decoding server response (%s)',
-                                        $request->getUri()
-                                    ),
-                                    $statusCode,
-                                    $response->getHeaders(),
-                                    $content
-                                );
-                            }
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, '\OpenAPI\Client\Model\Animal', []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-            }
-
-            $returnType = '\OpenAPI\Client\Model\Animal';
-            if ($returnType === '\SplFileObject') {
-                $content = $response->getBody(); //stream goes to serializer
-            } else {
-                $content = (string) $response->getBody();
-                if ($returnType !== 'string') {
-                    try {
-                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                    } catch (\JsonException $exception) {
-                        throw new ApiException(
-                            sprintf(
-                                'Error JSON decoding server response (%s)',
-                                $request->getUri()
-                            ),
-                            $statusCode,
-                            $response->getHeaders(),
-                            $content
-                        );
-                    }
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\OpenAPI\Client\Model\Animal',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
-    }
-
-    /**
-     * Operation animalsIdGetAsync
-     *
-     * @param  int $id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsIdGet'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function animalsIdGetAsync($id, string $contentType = self::contentTypes['animalsIdGet'][0])
-    {
-        return $this->animalsIdGetAsyncWithHttpInfo($id, $contentType)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation animalsIdGetAsyncWithHttpInfo
-     *
-     * @param  int $id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsIdGet'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function animalsIdGetAsyncWithHttpInfo($id, string $contentType = self::contentTypes['animalsIdGet'][0])
-    {
-        $returnType = '\OpenAPI\Client\Model\Animal';
-        $request = $this->animalsIdGetRequest($id, $contentType);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    if ($returnType === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        (string) $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Create request for operation 'animalsIdGet'
-     *
-     * @param  int $id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsIdGet'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    public function animalsIdGetRequest($id, string $contentType = self::contentTypes['animalsIdGet'][0])
-    {
-
-        // verify the required parameter 'id' is set
-        if ($id === null || (is_array($id) && count($id) === 0)) {
-            throw new \InvalidArgumentException(
-                'Missing the required parameter $id when calling animalsIdGet'
-            );
-        }
-
-
-        $resourcePath = '/animals/{id}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-
-        // path params
-        if ($id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'id' . '}',
-                ObjectSerializer::toPathValue($id),
-                $resourcePath
-            );
-        }
-
-
-        $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
-            $contentType,
-            $multipart
-        );
-
-        // for model (json/xml)
-        if (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
-                    foreach ($formParamValueItems as $formParamValueItem) {
-                        $multipartContents[] = [
-                            'name' => $formParamName,
-                            'contents' => $formParamValueItem
-                        ];
-                    }
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
-                # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
-            } else {
-                // for HTTP post (form)
-                $httpBody = ObjectSerializer::buildQuery($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
-        );
-
-        $operationHost = $this->config->getHost();
-        $query = ObjectSerializer::buildQuery($queryParams);
-        return new Request(
-            'GET',
-            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
-        );
-    }
-
-    /**
-     * Operation animalsIdPut
-     *
-     * @param  int $id id (required)
-     * @param  \OpenAPI\Client\Model\Animal $animal animal (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsIdPut'] to see the possible values for this operation
-     *
-     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return \OpenAPI\Client\Model\Animal
-     */
-    public function animalsIdPut($id, $animal = null, string $contentType = self::contentTypes['animalsIdPut'][0])
-    {
-        list($response) = $this->animalsIdPutWithHttpInfo($id, $animal, $contentType);
-        return $response;
-    }
-
-    /**
-     * Operation animalsIdPutWithHttpInfo
-     *
-     * @param  int $id (required)
-     * @param  \OpenAPI\Client\Model\Animal $animal (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsIdPut'] to see the possible values for this operation
-     *
-     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Client\Model\Animal, HTTP status code, HTTP response headers (array of strings)
-     */
-    public function animalsIdPutWithHttpInfo($id, $animal = null, string $contentType = self::contentTypes['animalsIdPut'][0])
-    {
-        $request = $this->animalsIdPutRequest($id, $animal, $contentType);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
-                );
-            } catch (ConnectException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    null,
-                    null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        (string) $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    (string) $response->getBody()
-                );
-            }
-
-            switch($statusCode) {
-                case 201:
-                    if ('\OpenAPI\Client\Model\Animal' === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ('\OpenAPI\Client\Model\Animal' !== 'string') {
-                            try {
-                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                            } catch (\JsonException $exception) {
-                                throw new ApiException(
-                                    sprintf(
-                                        'Error JSON decoding server response (%s)',
-                                        $request->getUri()
-                                    ),
-                                    $statusCode,
-                                    $response->getHeaders(),
-                                    $content
-                                );
-                            }
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, '\OpenAPI\Client\Model\Animal', []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-            }
-
-            $returnType = '\OpenAPI\Client\Model\Animal';
-            if ($returnType === '\SplFileObject') {
-                $content = $response->getBody(); //stream goes to serializer
-            } else {
-                $content = (string) $response->getBody();
-                if ($returnType !== 'string') {
-                    try {
-                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                    } catch (\JsonException $exception) {
-                        throw new ApiException(
-                            sprintf(
-                                'Error JSON decoding server response (%s)',
-                                $request->getUri()
-                            ),
-                            $statusCode,
-                            $response->getHeaders(),
-                            $content
-                        );
-                    }
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 201:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\OpenAPI\Client\Model\Animal',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
-    }
-
-    /**
-     * Operation animalsIdPutAsync
-     *
-     * @param  int $id (required)
-     * @param  \OpenAPI\Client\Model\Animal $animal (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsIdPut'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function animalsIdPutAsync($id, $animal = null, string $contentType = self::contentTypes['animalsIdPut'][0])
-    {
-        return $this->animalsIdPutAsyncWithHttpInfo($id, $animal, $contentType)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation animalsIdPutAsyncWithHttpInfo
-     *
-     * @param  int $id (required)
-     * @param  \OpenAPI\Client\Model\Animal $animal (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsIdPut'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function animalsIdPutAsyncWithHttpInfo($id, $animal = null, string $contentType = self::contentTypes['animalsIdPut'][0])
-    {
-        $returnType = '\OpenAPI\Client\Model\Animal';
-        $request = $this->animalsIdPutRequest($id, $animal, $contentType);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    if ($returnType === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        (string) $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Create request for operation 'animalsIdPut'
-     *
-     * @param  int $id (required)
-     * @param  \OpenAPI\Client\Model\Animal $animal (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsIdPut'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    public function animalsIdPutRequest($id, $animal = null, string $contentType = self::contentTypes['animalsIdPut'][0])
-    {
-
-        // verify the required parameter 'id' is set
-        if ($id === null || (is_array($id) && count($id) === 0)) {
-            throw new \InvalidArgumentException(
-                'Missing the required parameter $id when calling animalsIdPut'
-            );
-        }
-
-
-
-        $resourcePath = '/animals/{id}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-
-        // path params
-        if ($id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'id' . '}',
-                ObjectSerializer::toPathValue($id),
-                $resourcePath
-            );
-        }
-
-
-        $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
-            $contentType,
-            $multipart
-        );
-
-        // for model (json/xml)
-        if (isset($animal)) {
-            if (stripos($headers['Content-Type'], 'application/json') !== false) {
-                # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($animal));
-            } else {
-                $httpBody = $animal;
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
-                    foreach ($formParamValueItems as $formParamValueItem) {
-                        $multipartContents[] = [
-                            'name' => $formParamName,
-                            'contents' => $formParamValueItem
-                        ];
-                    }
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
-                # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
-            } else {
-                // for HTTP post (form)
-                $httpBody = ObjectSerializer::buildQuery($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
-        );
-
-        $operationHost = $this->config->getHost();
-        $query = ObjectSerializer::buildQuery($queryParams);
-        return new Request(
-            'PUT',
             $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
             $headers,
             $httpBody
@@ -2013,7 +1264,7 @@ class AnimalResourceApi
             }
 
             switch($statusCode) {
-                case 201:
+                case 200:
                     if ('\OpenAPI\Client\Model\Animal' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
@@ -2072,7 +1323,7 @@ class AnimalResourceApi
 
         } catch (ApiException $e) {
             switch ($e->getCode()) {
-                case 201:
+                case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\OpenAPI\Client\Model\Animal',
@@ -2237,6 +1488,302 @@ class AnimalResourceApi
         $query = ObjectSerializer::buildQuery($queryParams);
         return new Request(
             'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation animalsPut
+     *
+     * @param  \OpenAPI\Client\Model\Animal $animal animal (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsPut'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \OpenAPI\Client\Model\Animal
+     */
+    public function animalsPut($animal = null, string $contentType = self::contentTypes['animalsPut'][0])
+    {
+        list($response) = $this->animalsPutWithHttpInfo($animal, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation animalsPutWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\Animal $animal (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsPut'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \OpenAPI\Client\Model\Animal, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function animalsPutWithHttpInfo($animal = null, string $contentType = self::contentTypes['animalsPut'][0])
+    {
+        $request = $this->animalsPutRequest($animal, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            switch($statusCode) {
+                case 200:
+                    if ('\OpenAPI\Client\Model\Animal' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ('\OpenAPI\Client\Model\Animal' !== 'string') {
+                            try {
+                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                            } catch (\JsonException $exception) {
+                                throw new ApiException(
+                                    sprintf(
+                                        'Error JSON decoding server response (%s)',
+                                        $request->getUri()
+                                    ),
+                                    $statusCode,
+                                    $response->getHeaders(),
+                                    $content
+                                );
+                            }
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\OpenAPI\Client\Model\Animal', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+            }
+
+            $returnType = '\OpenAPI\Client\Model\Animal';
+            if ($returnType === '\SplFileObject') {
+                $content = $response->getBody(); //stream goes to serializer
+            } else {
+                $content = (string) $response->getBody();
+                if ($returnType !== 'string') {
+                    try {
+                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                    } catch (\JsonException $exception) {
+                        throw new ApiException(
+                            sprintf(
+                                'Error JSON decoding server response (%s)',
+                                $request->getUri()
+                            ),
+                            $statusCode,
+                            $response->getHeaders(),
+                            $content
+                        );
+                    }
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\Animal',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation animalsPutAsync
+     *
+     * @param  \OpenAPI\Client\Model\Animal $animal (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsPut'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function animalsPutAsync($animal = null, string $contentType = self::contentTypes['animalsPut'][0])
+    {
+        return $this->animalsPutAsyncWithHttpInfo($animal, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation animalsPutAsyncWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\Animal $animal (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsPut'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function animalsPutAsyncWithHttpInfo($animal = null, string $contentType = self::contentTypes['animalsPut'][0])
+    {
+        $returnType = '\OpenAPI\Client\Model\Animal';
+        $request = $this->animalsPutRequest($animal, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'animalsPut'
+     *
+     * @param  \OpenAPI\Client\Model\Animal $animal (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalsPut'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function animalsPutRequest($animal = null, string $contentType = self::contentTypes['animalsPut'][0])
+    {
+
+
+
+        $resourcePath = '/animals';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($animal)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($animal));
+            } else {
+                $httpBody = $animal;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer (JWT) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'PUT',
             $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
             $headers,
             $httpBody

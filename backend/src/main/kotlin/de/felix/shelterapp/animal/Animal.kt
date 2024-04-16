@@ -1,16 +1,27 @@
 package de.felix.shelterapp.animal
 
+import de.felix.shelterapp.util.PagedPanacheCompanion
+import de.felix.shelterapp.util.TenantPanacheEntity
+import de.felix.shelterapp.util.utcNow
 import io.quarkus.hibernate.reactive.panache.PanacheEntity
-import jakarta.persistence.ElementCollection
-import jakarta.persistence.Embeddable
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.NamedQuery
+import jakarta.persistence.*
+import jakarta.validation.constraints.NotBlank
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Entity
-@NamedQuery(name = "Animal.containsInName", query = "from Animal where name like CONCAT('%', CONCAT(:name, '%'))")
-class Animal: PanacheEntity() {
+@Table(name = "animal", indexes = [
+    Index(columnList = "name"),
+    Index(columnList = "dateOfBirth"),
+    Index(columnList = "dateOfAdmission"),
+    Index(columnList = "type"),
+    Index(columnList = "chipNumber"),
+    Index(columnList = "status"),
+    Index(columnList = "createdAt"),
+    Index(columnList = "updatedAt")
+])
+class Animal: TenantPanacheEntity() {
+    companion object : PagedPanacheCompanion<Animal>
     lateinit var name: String
     var dateOfBirth: LocalDate? = null
     lateinit var dateOfAdmission: LocalDate
@@ -33,8 +44,6 @@ class Animal: PanacheEntity() {
     var illnesses: List<String>? = null
     @ElementCollection(fetch = FetchType.EAGER)
     var allergies: List<String>? = null
-    @ElementCollection(targetClass = AnimalProcedure::class, fetch = FetchType.EAGER)
-    var procedures: List<AnimalProcedure>? = null
     var chipNumber: String? = null
     var isPublic: Boolean = false
     lateinit var status: AnimalStatus
@@ -48,6 +57,8 @@ class Animal: PanacheEntity() {
     var internalNotes: String? = null
     var dateOfLeave: LocalDate? = null
     var dateOfDeath: LocalDate? = null
+    var createdAt: LocalDateTime = utcNow()
+    var updatedAt: LocalDateTime = utcNow()
 }
 
 enum class AnimalSex {
@@ -58,9 +69,4 @@ enum class AnimalStatus {
     NEW, SEARCHING, REQUEST_STOP, EMERGENCY, RESERVED, ADOPTED, FINAL_CARE, COURT_OF_GRACE, DECEASED
 }
 
-@Embeddable
-class AnimalProcedure {
-    lateinit var title: String
-    lateinit var date: LocalDate
-}
 

@@ -8,55 +8,29 @@ servers:
   description: Auto generated value
 - url: http://0.0.0.0:8080
   description: Auto generated value
-tags:
-- name: AnimalEventResource
-- name: AnimalResource
 paths:
   /animal-events:
     get:
       tags:
-      - AnimalEventResource
+      - Animal Event Resource
       parameters:
-      - name: animalId
-        in: query
-        schema:
-          format: int64
-          type: integer
-      - name: comment
-        in: query
-        schema:
-          type: string
       - name: id
         in: query
+        required: true
         schema:
-          format: int64
-          type: integer
-      - name: namedQuery
-        in: query
-        schema:
-          type: string
+          $ref: '#/components/schemas/UUID'
       - name: page
         in: query
         schema:
           format: int32
-          default: 0
           type: integer
-      - name: size
+          nullable: true
+      - name: pageSize
         in: query
         schema:
           format: int32
-          default: 20
           type: integer
-      - name: sort
-        in: query
-        schema:
-          type: array
-          items:
-            type: string
-      - name: title
-        in: query
-        schema:
-          type: string
+          nullable: true
       responses:
         "200":
           description: OK
@@ -66,212 +40,382 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/AnimalEvent'
-    post:
-      tags:
-      - AnimalEventResource
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AnimalEvent'
-      responses:
-        "201":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AnimalEvent'
-  /animal-events/count:
-    get:
-      tags:
-      - AnimalEventResource
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                format: int64
-                type: integer
-  /animal-events/{id}:
-    get:
-      tags:
-      - AnimalEventResource
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          format: int64
-          type: integer
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AnimalEvent'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
     put:
       tags:
-      - AnimalEventResource
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          format: int64
-          type: integer
+      - Animal Event Resource
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/AnimalEvent'
       responses:
-        "201":
+        "200":
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AnimalEvent'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+    post:
+      tags:
+      - Animal Event Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnimalEvent'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimalEvent'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
     delete:
       tags:
-      - AnimalEventResource
+      - Animal Event Resource
       parameters:
       - name: id
-        in: path
+        in: query
         required: true
         schema:
-          format: int64
-          type: integer
+          $ref: '#/components/schemas/UUID'
       responses:
-        "204": {}
-  /animals:
+        "204":
+          description: No Content
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+  /animal-procedures:
     get:
       tags:
-      - AnimalResource
+      - Animal Procedure Resource
       parameters:
-      - name: bloodType
+      - name: animalId
         in: query
+        required: true
         schema:
-          type: string
-      - name: breedOne
-        in: query
-        schema:
-          type: string
-      - name: breedTwo
-        in: query
-        schema:
-          type: string
-      - name: chipNumber
-        in: query
-        schema:
-          type: string
-      - name: circumferenceOfChest
-        in: query
-        schema:
-          format: int32
-          type: integer
-      - name: circumferenceOfNeck
-        in: query
-        schema:
-          format: int32
-          type: integer
-      - name: color
-        in: query
-        schema:
-          type: string
-      - name: description
-        in: query
-        schema:
-          type: string
-      - name: donationCall
-        in: query
-        schema:
-          type: boolean
-      - name: heightAtWithers
-        in: query
-        schema:
-          format: int32
-          type: integer
-      - name: id
-        in: query
-        schema:
-          format: int64
-          type: integer
-      - name: internalNotes
-        in: query
-        schema:
-          type: string
-      - name: isCastrated
-        in: query
-        schema:
-          type: boolean
-      - name: isMissing
-        in: query
-        schema:
-          type: boolean
-      - name: isPrivateAdoption
-        in: query
-        schema:
-          type: boolean
-      - name: isPublic
-        in: query
-        schema:
-          type: boolean
-      - name: isSuccessStory
-        in: query
-        schema:
-          type: boolean
-      - name: lengthOfBack
-        in: query
-        schema:
-          format: int32
-          type: integer
-      - name: mainPictureFileUrl
-        in: query
-        schema:
-          type: string
-      - name: name
-        in: query
-        schema:
-          type: string
-      - name: namedQuery
-        in: query
-        schema:
-          type: string
-      - name: notes
-        in: query
-        schema:
-          type: string
+          $ref: '#/components/schemas/UUID'
       - name: page
         in: query
         schema:
           format: int32
-          default: 0
           type: integer
-      - name: size
+          nullable: true
+      - name: pageSize
         in: query
         schema:
           format: int32
-          default: 20
           type: integer
-      - name: sort
+          nullable: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AnimalProcedure'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+    put:
+      tags:
+      - Animal Procedure Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnimalProcedure'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimalProcedure'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+    post:
+      tags:
+      - Animal Procedure Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnimalProcedure'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimalProcedure'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+    delete:
+      tags:
+      - Animal Procedure Resource
+      parameters:
+      - name: id
         in: query
+        required: true
         schema:
-          type: array
-          items:
-            type: string
-      - name: type
+          $ref: '#/components/schemas/UUID'
+      responses:
+        "204":
+          description: No Content
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+  /animals:
+    get:
+      tags:
+      - Animal Resource
+      parameters:
+      - name: bloodTypeContains
         in: query
         schema:
           type: string
+          nullable: true
+      - name: breedOneContains
+        in: query
+        schema:
+          type: string
+          nullable: true
+      - name: breedTwoContains
+        in: query
+        schema:
+          type: string
+          nullable: true
+      - name: chipNumberContains
+        in: query
+        schema:
+          type: string
+          nullable: true
+      - name: circumferenceOfChestAbove
+        in: query
+        schema:
+          format: int32
+          type: integer
+          nullable: true
+      - name: circumferenceOfChestBelow
+        in: query
+        schema:
+          format: int32
+          type: integer
+          nullable: true
+      - name: circumferenceOfNeckAbove
+        in: query
+        schema:
+          format: int32
+          type: integer
+          nullable: true
+      - name: circumferenceOfNeckBelow
+        in: query
+        schema:
+          format: int32
+          type: integer
+          nullable: true
+      - name: colorContains
+        in: query
+        schema:
+          type: string
+          nullable: true
+      - name: dateOfAdmissionAfter
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/LocalDate'
+          - nullable: true
+      - name: dateOfAdmissionBefore
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/LocalDate'
+          - nullable: true
+      - name: dateOfBirthAfter
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/LocalDate'
+          - nullable: true
+      - name: dateOfBirthBefore
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/LocalDate'
+          - nullable: true
+      - name: dateOfDeathAfter
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/LocalDate'
+          - nullable: true
+      - name: dateOfDeathBefore
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/LocalDate'
+          - nullable: true
+      - name: dateOfLeaveAfter
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/LocalDate'
+          - nullable: true
+      - name: dateOfLeaveBefore
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/LocalDate'
+          - nullable: true
+      - name: hasDonationCall
+        in: query
+        schema:
+          type: boolean
+          nullable: true
+      - name: heightAtWithersAbove
+        in: query
+        schema:
+          format: int32
+          type: integer
+          nullable: true
+      - name: heightAtWithersBelow
+        in: query
+        schema:
+          format: int32
+          type: integer
+          nullable: true
+      - name: id
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          - nullable: true
+      - name: isCastrated
+        in: query
+        schema:
+          type: boolean
+          nullable: true
+      - name: isMissing
+        in: query
+        schema:
+          type: boolean
+          nullable: true
+      - name: isPrivateAdoption
+        in: query
+        schema:
+          type: boolean
+          nullable: true
+      - name: isPublic
+        in: query
+        schema:
+          type: boolean
+          nullable: true
+      - name: isSuccessStory
+        in: query
+        schema:
+          type: boolean
+          nullable: true
+      - name: lengthOfBackAbove
+        in: query
+        schema:
+          format: int32
+          type: integer
+          nullable: true
+      - name: lengthOfBackBelow
+        in: query
+        schema:
+          format: int32
+          type: integer
+          nullable: true
+      - name: nameContains
+        in: query
+        schema:
+          type: string
+          nullable: true
+      - name: page
+        in: query
+        schema:
+          format: int32
+          type: integer
+          nullable: true
+      - name: pageSize
+        in: query
+        schema:
+          format: int32
+          type: integer
+          nullable: true
+      - name: sex
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/AnimalSex'
+          - nullable: true
+      - name: status
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/AnimalStatus'
+          - nullable: true
+      - name: typeContains
+        in: query
+        schema:
+          type: string
+          nullable: true
       - name: wasFound
         in: query
         schema:
           type: boolean
-      - name: weight
+          nullable: true
+      - name: weightAbove
         in: query
         schema:
           format: float
           type: number
+          nullable: true
+      - name: weightBelow
+        in: query
+        schema:
+          format: float
+          type: number
+          nullable: true
       responses:
         "200":
           description: OK
@@ -281,16 +425,23 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Animal'
-    post:
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+    put:
       tags:
-      - AnimalResource
+      - Animal Resource
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Animal'
       responses:
-        "201":
+        "200":
+          description: OK
           content:
             application/json:
               schema:
@@ -301,84 +452,129 @@ paths:
           description: Not Authorized
       security:
       - SecurityScheme: []
-  /animals/count:
-    get:
+    post:
       tags:
-      - AnimalResource
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                format: int64
-                type: integer
-  /animals/{id}:
-    get:
-      tags:
-      - AnimalResource
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          format: int64
-          type: integer
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Animal'
-    put:
-      tags:
-      - AnimalResource
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          format: int64
-          type: integer
+      - Animal Resource
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Animal'
       responses:
-        "201":
+        "200":
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Animal'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
     delete:
       tags:
-      - AnimalResource
+      - Animal Resource
       parameters:
       - name: id
-        in: path
+        in: query
         required: true
         schema:
-          format: int64
-          type: integer
+          $ref: '#/components/schemas/UUID'
       responses:
-        "204": {}
+        "204":
+          description: No Content
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
   /auth/login:
-    get:
+    post:
       tags:
-      - Auth Resource Impl
+      - Auth Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokenResponse'
+                $ref: '#/components/schemas/LoginResponse'
+  /auth/login/anonymous:
+    get:
+      tags:
+      - Auth Resource
+      parameters:
+      - name: tenantId
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
   /auth/logout:
     get:
       tags:
-      - Auth Resource Impl
+      - Auth Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+  /auth/logoutAll:
+    get:
+      tags:
+      - Auth Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+  /auth/refresh:
+    get:
+      tags:
+      - Auth Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshResponse'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+  /auth/token/validate:
+    get:
+      tags:
+      - Auth Resource
       responses:
         "200":
           description: OK
@@ -386,21 +582,474 @@ paths:
             application/json:
               schema:
                 type: boolean
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+  /tenants:
+    get:
+      tags:
+      - Tenant Resource
+      parameters:
+      - name: nameContains
+        in: query
+        schema:
+          type: string
+          nullable: true
+      - name: page
+        in: query
+        schema:
+          format: int32
+          type: integer
+          nullable: true
+      - name: pageSize
+        in: query
+        schema:
+          format: int32
+          type: integer
+          nullable: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tenant'
+    put:
+      tags:
+      - Tenant Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tenant'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+    post:
+      tags:
+      - Tenant Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tenant'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+    delete:
+      tags:
+      - Tenant Resource
+      parameters:
+      - name: id
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        "204":
+          description: No Content
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+  /users:
+    get:
+      tags:
+      - User Resource
+      parameters:
+      - name: createdAfter
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/LocalDateTime'
+          - nullable: true
+      - name: createdBefore
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/LocalDateTime'
+          - nullable: true
+      - name: emailContains
+        in: query
+        schema:
+          type: string
+          nullable: true
+      - name: fistNameContains
+        in: query
+        schema:
+          type: string
+          nullable: true
+      - name: idIs
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          - nullable: true
+      - name: lastLoginAfter
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/LocalDateTime'
+          - nullable: true
+      - name: lastLoginBefore
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/LocalDateTime'
+          - nullable: true
+      - name: lastNameContains
+        in: query
+        schema:
+          type: string
+          nullable: true
+      - name: page
+        in: query
+        schema:
+          format: int32
+          type: integer
+          nullable: true
+      - name: pageSize
+        in: query
+        schema:
+          format: int32
+          type: integer
+          nullable: true
+      - name: roleIs
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/UserRole'
+          - nullable: true
+      - name: usernameContains
+        in: query
+        schema:
+          type: string
+          nullable: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+    put:
+      tags:
+      - User Resource
+      parameters:
+      - name: updatePassword
+        in: query
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+    post:
+      tags:
+      - User Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+    delete:
+      tags:
+      - User Resource
+      parameters:
+      - name: id
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+  /users/email/change:
+    post:
+      tags:
+      - User Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserEmailChangeRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+  /users/email/change/confirm:
+    get:
+      tags:
+      - User Resource
+      parameters:
+      - name: token
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+  /users/emailTaken:
+    get:
+      tags:
+      - User Resource
+      parameters:
+      - name: email
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: boolean
+  /users/password/change:
+    post:
+      tags:
+      - User Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPasswordChangeRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+  /users/password/reset:
+    get:
+      tags:
+      - User Resource
+      parameters:
+      - name: email
+        in: query
+        schema:
+          type: string
+          nullable: true
+      - name: username
+        in: query
+        schema:
+          type: string
+          nullable: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+  /users/password/reset/{id}:
+    post:
+      tags:
+      - User Resource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPasswordResetConfirmationRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+  /users/register:
+    post:
+      tags:
+      - User Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistrationRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
+  /users/register/{id}:
+    post:
+      tags:
+      - User Resource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserFinishRegistrationRequest'
+      responses:
+        "201":
+          description: Created
+  /users/usernameTaken:
+    get:
+      tags:
+      - User Resource
+      parameters:
+      - name: tenantId
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+      - name: username
+        in: query
+        required: true
+        schema:
+          minLength: 1
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: boolean
 components:
   schemas:
     Animal:
       required:
+      - id
       - name
       - dateOfAdmission
       - type
       - breedOne
       - sex
       - status
+      - createdAt
+      - updatedAt
       type: object
       properties:
         id:
-          format: int64
-          type: integer
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          readOnly: true
         name:
           type: string
         dateOfBirth:
@@ -466,11 +1115,6 @@ components:
           items:
             type: string
           nullable: true
-        procedures:
-          type: array
-          items:
-            $ref: '#/components/schemas/AnimalProcedure'
-          nullable: true
         chipNumber:
           type: string
           nullable: true
@@ -508,6 +1152,10 @@ components:
           allOf:
           - $ref: '#/components/schemas/LocalDate'
           nullable: true
+        createdAt:
+          $ref: '#/components/schemas/LocalDateTime'
+        updatedAt:
+          $ref: '#/components/schemas/LocalDateTime'
         castrated:
           type: boolean
           nullable: true
@@ -521,15 +1169,18 @@ components:
           type: boolean
     AnimalEvent:
       required:
+      - id
+      - animalId
       - title
       type: object
       properties:
         id:
-          format: int64
-          type: integer
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          readOnly: true
         animalId:
-          format: int64
-          type: integer
+          $ref: '#/components/schemas/UUID'
         date:
           type: string
           allOf:
@@ -552,14 +1203,24 @@ components:
           nullable: true
     AnimalProcedure:
       required:
+      - id
       - title
       - date
+      - animalId
       type: object
       properties:
+        id:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          readOnly: true
         title:
+          pattern: \S
           type: string
         date:
           $ref: '#/components/schemas/LocalDate'
+        animalId:
+          $ref: '#/components/schemas/UUID'
     AnimalSex:
       enum:
       - MALE
@@ -581,13 +1242,160 @@ components:
       format: date
       type: string
       example: 2022-03-10
-    TokenResponse:
+    LocalDateTime:
+      format: date-time
+      type: string
+      example: 2022-03-10T12:15:50
+    LoginRequest:
       required:
-      - token
+      - password
       type: object
       properties:
-        token:
+        username:
           type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        password:
+          type: string
+    LoginResponse:
+      required:
+      - refreshToken
+      - accessToken
+      type: object
+      properties:
+        refreshToken:
+          type: string
+        accessToken:
+          type: string
+    RefreshResponse:
+      required:
+      - accessToken
+      type: object
+      properties:
+        accessToken:
+          type: string
+    Tenant:
+      required:
+      - id
+      - name
+      - ownerId
+      type: object
+      properties:
+        id:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          readOnly: true
+        name:
+          type: string
+        ownerId:
+          $ref: '#/components/schemas/UUID'
+    UUID:
+      format: uuid
+      pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+      type: string
+    Unit:
+      type: object
+    User:
+      required:
+      - id
+      - username
+      - email
+      - password
+      - createdAt
+      - role
+      type: object
+      properties:
+        id:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          readOnly: true
+        username:
+          minLength: 1
+          type: string
+        email:
+          type: string
+        password:
+          minLength: 1
+          type: string
+          writeOnly: true
+        createdAt:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/LocalDateTime'
+          readOnly: true
+        lastLogin:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/LocalDateTime'
+          readOnly: true
+          nullable: true
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        role:
+          $ref: '#/components/schemas/UserRole'
+    UserEmailChangeRequest:
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    UserFinishRegistrationRequest:
+      required:
+      - password
+      - username
+      type: object
+      properties:
+        password:
+          type: string
+        username:
+          type: string
+    UserPasswordChangeRequest:
+      required:
+      - oldPassword
+      - newPassword
+      type: object
+      properties:
+        oldPassword:
+          type: string
+        newPassword:
+          type: string
+    UserPasswordResetConfirmationRequest:
+      required:
+      - newPassword
+      type: object
+      properties:
+        newPassword:
+          type: string
+    UserRegistrationRequest:
+      required:
+      - email
+      - userRole
+      type: object
+      properties:
+        email:
+          type: string
+        userRole:
+          $ref: '#/components/schemas/UserRole'
+    UserRole:
+      enum:
+      - USER
+      - CARETAKER
+      - ADMIN
+      - SUPER_ADMIN
+      - SUPER_DUPER_ADMIN
+      type: string
   securitySchemes:
     SecurityScheme:
       type: http

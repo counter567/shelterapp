@@ -57,8 +57,8 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'id' => 'int',
-        'animal_id' => 'int',
+        'id' => 'string',
+        'animal_id' => 'string',
         'date' => '\DateTime',
         'tags' => 'string[]',
         'picture_file_urls' => 'string[]',
@@ -74,8 +74,8 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'id' => 'int64',
-        'animal_id' => 'int64',
+        'id' => 'uuid',
+        'animal_id' => 'uuid',
         'date' => 'date',
         'tags' => null,
         'picture_file_urls' => null,
@@ -316,6 +316,20 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $invalidProperties = [];
 
+        if ($this->container['id'] === null) {
+            $invalidProperties[] = "'id' can't be null";
+        }
+        if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $this->container['id'])) {
+            $invalidProperties[] = "invalid value for 'id', must be conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.";
+        }
+
+        if ($this->container['animal_id'] === null) {
+            $invalidProperties[] = "'animal_id' can't be null";
+        }
+        if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $this->container['animal_id'])) {
+            $invalidProperties[] = "invalid value for 'animal_id', must be conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.";
+        }
+
         if ($this->container['title'] === null) {
             $invalidProperties[] = "'title' can't be null";
         }
@@ -337,7 +351,7 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Gets id
      *
-     * @return int|null
+     * @return string
      */
     public function getId()
     {
@@ -347,7 +361,7 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets id
      *
-     * @param int|null $id id
+     * @param string $id id
      *
      * @return self
      */
@@ -356,6 +370,11 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
         if (is_null($id)) {
             throw new \InvalidArgumentException('non-nullable id cannot be null');
         }
+
+        if ((!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", ObjectSerializer::toString($id)))) {
+            throw new \InvalidArgumentException("invalid value for \$id when calling AnimalEvent., must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
+        }
+
         $this->container['id'] = $id;
 
         return $this;
@@ -364,7 +383,7 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Gets animal_id
      *
-     * @return int|null
+     * @return string
      */
     public function getAnimalId()
     {
@@ -374,7 +393,7 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets animal_id
      *
-     * @param int|null $animal_id animal_id
+     * @param string $animal_id animal_id
      *
      * @return self
      */
@@ -383,6 +402,11 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
         if (is_null($animal_id)) {
             throw new \InvalidArgumentException('non-nullable animal_id cannot be null');
         }
+
+        if ((!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", ObjectSerializer::toString($animal_id)))) {
+            throw new \InvalidArgumentException("invalid value for \$animal_id when calling AnimalEvent., must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
+        }
+
         $this->container['animal_id'] = $animal_id;
 
         return $this;

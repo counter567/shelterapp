@@ -1,14 +1,17 @@
 package de.felix.shelterapp.petevent
 
-import io.quarkus.hibernate.reactive.panache.PanacheEntity
+import de.felix.shelterapp.util.PagedPanacheCompanion
+import de.felix.shelterapp.util.TenantPanacheEntity
 import jakarta.persistence.ElementCollection
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import java.time.LocalDate
+import java.util.*
 
 @Entity
-class AnimalEvent: PanacheEntity() {
-    var animalId: Long = 0
+class AnimalEvent: TenantPanacheEntity() {
+    companion object : PagedPanacheCompanion<AnimalEvent>
+    lateinit var animalId: UUID
     var date: LocalDate? = null
     @ElementCollection(fetch = FetchType.EAGER)
     var tags: List<String>? = null
