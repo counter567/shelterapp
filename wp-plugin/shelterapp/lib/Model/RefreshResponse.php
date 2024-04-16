@@ -1,6 +1,6 @@
 <?php
 /**
- * AnimalProcedure
+ * RefreshResponse
  *
  * PHP version 7.4
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * AnimalProcedure Class Doc Comment
+ * RefreshResponse Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
+class RefreshResponse implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'AnimalProcedure';
+    protected static $openAPIModelName = 'RefreshResponse';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,10 +57,7 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'id' => 'string',
-        'title' => 'string',
-        'date' => '\DateTime',
-        'animal_id' => 'string'
+        'access_token' => 'string'
     ];
 
     /**
@@ -71,10 +68,7 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'id' => 'uuid',
-        'title' => null,
-        'date' => 'date',
-        'animal_id' => 'uuid'
+        'access_token' => null
     ];
 
     /**
@@ -83,10 +77,7 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'id' => false,
-        'title' => false,
-        'date' => false,
-        'animal_id' => false
+        'access_token' => false
     ];
 
     /**
@@ -175,10 +166,7 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $attributeMap = [
-        'id' => 'id',
-        'title' => 'title',
-        'date' => 'date',
-        'animal_id' => 'animalId'
+        'access_token' => 'accessToken'
     ];
 
     /**
@@ -187,10 +175,7 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $setters = [
-        'id' => 'setId',
-        'title' => 'setTitle',
-        'date' => 'setDate',
-        'animal_id' => 'setAnimalId'
+        'access_token' => 'setAccessToken'
     ];
 
     /**
@@ -199,10 +184,7 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $getters = [
-        'id' => 'getId',
-        'title' => 'getTitle',
-        'date' => 'getDate',
-        'animal_id' => 'getAnimalId'
+        'access_token' => 'getAccessToken'
     ];
 
     /**
@@ -262,10 +244,7 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     public function __construct(array $data = null)
     {
-        $this->setIfExists('id', $data ?? [], null);
-        $this->setIfExists('title', $data ?? [], null);
-        $this->setIfExists('date', $data ?? [], null);
-        $this->setIfExists('animal_id', $data ?? [], null);
+        $this->setIfExists('access_token', $data ?? [], null);
     }
 
     /**
@@ -295,30 +274,9 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $invalidProperties = [];
 
-        if ($this->container['id'] === null) {
-            $invalidProperties[] = "'id' can't be null";
+        if ($this->container['access_token'] === null) {
+            $invalidProperties[] = "'access_token' can't be null";
         }
-        if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $this->container['id'])) {
-            $invalidProperties[] = "invalid value for 'id', must be conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.";
-        }
-
-        if ($this->container['title'] === null) {
-            $invalidProperties[] = "'title' can't be null";
-        }
-        if (!preg_match("/\\S/", $this->container['title'])) {
-            $invalidProperties[] = "invalid value for 'title', must be conform to the pattern /\\S/.";
-        }
-
-        if ($this->container['date'] === null) {
-            $invalidProperties[] = "'date' can't be null";
-        }
-        if ($this->container['animal_id'] === null) {
-            $invalidProperties[] = "'animal_id' can't be null";
-        }
-        if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $this->container['animal_id'])) {
-            $invalidProperties[] = "invalid value for 'animal_id', must be conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.";
-        }
-
         return $invalidProperties;
     }
 
@@ -335,124 +293,28 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
 
 
     /**
-     * Gets id
+     * Gets access_token
      *
      * @return string
      */
-    public function getId()
+    public function getAccessToken()
     {
-        return $this->container['id'];
+        return $this->container['access_token'];
     }
 
     /**
-     * Sets id
+     * Sets access_token
      *
-     * @param string $id id
+     * @param string $access_token access_token
      *
      * @return self
      */
-    public function setId($id)
+    public function setAccessToken($access_token)
     {
-        if (is_null($id)) {
-            throw new \InvalidArgumentException('non-nullable id cannot be null');
+        if (is_null($access_token)) {
+            throw new \InvalidArgumentException('non-nullable access_token cannot be null');
         }
-
-        if ((!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", ObjectSerializer::toString($id)))) {
-            throw new \InvalidArgumentException("invalid value for \$id when calling AnimalProcedure., must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
-        }
-
-        $this->container['id'] = $id;
-
-        return $this;
-    }
-
-    /**
-     * Gets title
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->container['title'];
-    }
-
-    /**
-     * Sets title
-     *
-     * @param string $title title
-     *
-     * @return self
-     */
-    public function setTitle($title)
-    {
-        if (is_null($title)) {
-            throw new \InvalidArgumentException('non-nullable title cannot be null');
-        }
-
-        if ((!preg_match("/\\S/", ObjectSerializer::toString($title)))) {
-            throw new \InvalidArgumentException("invalid value for \$title when calling AnimalProcedure., must conform to the pattern /\\S/.");
-        }
-
-        $this->container['title'] = $title;
-
-        return $this;
-    }
-
-    /**
-     * Gets date
-     *
-     * @return \DateTime
-     */
-    public function getDate()
-    {
-        return $this->container['date'];
-    }
-
-    /**
-     * Sets date
-     *
-     * @param \DateTime $date date
-     *
-     * @return self
-     */
-    public function setDate($date)
-    {
-        if (is_null($date)) {
-            throw new \InvalidArgumentException('non-nullable date cannot be null');
-        }
-        $this->container['date'] = $date;
-
-        return $this;
-    }
-
-    /**
-     * Gets animal_id
-     *
-     * @return string
-     */
-    public function getAnimalId()
-    {
-        return $this->container['animal_id'];
-    }
-
-    /**
-     * Sets animal_id
-     *
-     * @param string $animal_id animal_id
-     *
-     * @return self
-     */
-    public function setAnimalId($animal_id)
-    {
-        if (is_null($animal_id)) {
-            throw new \InvalidArgumentException('non-nullable animal_id cannot be null');
-        }
-
-        if ((!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", ObjectSerializer::toString($animal_id)))) {
-            throw new \InvalidArgumentException("invalid value for \$animal_id when calling AnimalProcedure., must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
-        }
-
-        $this->container['animal_id'] = $animal_id;
+        $this->container['access_token'] = $access_token;
 
         return $this;
     }

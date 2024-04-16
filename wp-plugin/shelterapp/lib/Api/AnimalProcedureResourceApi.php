@@ -1,6 +1,6 @@
 <?php
 /**
- * AuthResourceApi
+ * AnimalProcedureResourceApi
  * PHP version 7.4
  *
  * @category Class
@@ -40,14 +40,14 @@ use OpenAPI\Client\HeaderSelector;
 use OpenAPI\Client\ObjectSerializer;
 
 /**
- * AuthResourceApi Class Doc Comment
+ * AnimalProcedureResourceApi Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */
-class AuthResourceApi
+class AnimalProcedureResourceApi
 {
     /**
      * @var ClientInterface
@@ -71,22 +71,16 @@ class AuthResourceApi
 
     /** @var string[] $contentTypes **/
     public const contentTypes = [
-        'authLoginAnonymousGet' => [
+        'animalProceduresDelete' => [
             'application/json',
         ],
-        'authLoginPost' => [
+        'animalProceduresGet' => [
             'application/json',
         ],
-        'authLogoutAllGet' => [
+        'animalProceduresPost' => [
             'application/json',
         ],
-        'authLogoutGet' => [
-            'application/json',
-        ],
-        'authRefreshGet' => [
-            'application/json',
-        ],
-        'authTokenValidateGet' => [
+        'animalProceduresPut' => [
             'application/json',
         ],
     ];
@@ -138,34 +132,267 @@ class AuthResourceApi
     }
 
     /**
-     * Operation authLoginAnonymousGet
+     * Operation animalProceduresDelete
      *
-     * @param  string $tenant_id tenant_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLoginAnonymousGet'] to see the possible values for this operation
+     * @param  string $id id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresDelete'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return string
+     * @return void
      */
-    public function authLoginAnonymousGet($tenant_id, string $contentType = self::contentTypes['authLoginAnonymousGet'][0])
+    public function animalProceduresDelete($id, string $contentType = self::contentTypes['animalProceduresDelete'][0])
     {
-        list($response) = $this->authLoginAnonymousGetWithHttpInfo($tenant_id, $contentType);
+        $this->animalProceduresDeleteWithHttpInfo($id, $contentType);
+    }
+
+    /**
+     * Operation animalProceduresDeleteWithHttpInfo
+     *
+     * @param  string $id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresDelete'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function animalProceduresDeleteWithHttpInfo($id, string $contentType = self::contentTypes['animalProceduresDelete'][0])
+    {
+        $request = $this->animalProceduresDeleteRequest($id, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return [null, $statusCode, $response->getHeaders()];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation animalProceduresDeleteAsync
+     *
+     * @param  string $id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresDelete'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function animalProceduresDeleteAsync($id, string $contentType = self::contentTypes['animalProceduresDelete'][0])
+    {
+        return $this->animalProceduresDeleteAsyncWithHttpInfo($id, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation animalProceduresDeleteAsyncWithHttpInfo
+     *
+     * @param  string $id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresDelete'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function animalProceduresDeleteAsyncWithHttpInfo($id, string $contentType = self::contentTypes['animalProceduresDelete'][0])
+    {
+        $returnType = '';
+        $request = $this->animalProceduresDeleteRequest($id, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'animalProceduresDelete'
+     *
+     * @param  string $id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresDelete'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function animalProceduresDeleteRequest($id, string $contentType = self::contentTypes['animalProceduresDelete'][0])
+    {
+
+        // verify the required parameter 'id' is set
+        if ($id === null || (is_array($id) && count($id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $id when calling animalProceduresDelete'
+            );
+        }
+        if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $id)) {
+            throw new \InvalidArgumentException("invalid value for \"id\" when calling AnimalProcedureResourceApi.animalProceduresDelete, must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
+        }
+        
+
+        $resourcePath = '/animal-procedures';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $id,
+            'id', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            true // required
+        ) ?? []);
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            [],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer (JWT) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'DELETE',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation animalProceduresGet
+     *
+     * @param  string $animal_id animal_id (required)
+     * @param  int $page page (optional)
+     * @param  int $page_size page_size (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresGet'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \OpenAPI\Client\Model\AnimalProcedure[]
+     */
+    public function animalProceduresGet($animal_id, $page = null, $page_size = null, string $contentType = self::contentTypes['animalProceduresGet'][0])
+    {
+        list($response) = $this->animalProceduresGetWithHttpInfo($animal_id, $page, $page_size, $contentType);
         return $response;
     }
 
     /**
-     * Operation authLoginAnonymousGetWithHttpInfo
+     * Operation animalProceduresGetWithHttpInfo
      *
-     * @param  string $tenant_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLoginAnonymousGet'] to see the possible values for this operation
+     * @param  string $animal_id (required)
+     * @param  int $page (optional)
+     * @param  int $page_size (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresGet'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of string, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Client\Model\AnimalProcedure[], HTTP status code, HTTP response headers (array of strings)
      */
-    public function authLoginAnonymousGetWithHttpInfo($tenant_id, string $contentType = self::contentTypes['authLoginAnonymousGet'][0])
+    public function animalProceduresGetWithHttpInfo($animal_id, $page = null, $page_size = null, string $contentType = self::contentTypes['animalProceduresGet'][0])
     {
-        $request = $this->authLoginAnonymousGetRequest($tenant_id, $contentType);
+        $request = $this->animalProceduresGetRequest($animal_id, $page, $page_size, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -204,11 +431,11 @@ class AuthResourceApi
 
             switch($statusCode) {
                 case 200:
-                    if ('string' === '\SplFileObject') {
+                    if ('\OpenAPI\Client\Model\AnimalProcedure[]' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
                         $content = (string) $response->getBody();
-                        if ('string' !== 'string') {
+                        if ('\OpenAPI\Client\Model\AnimalProcedure[]' !== 'string') {
                             try {
                                 $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
                             } catch (\JsonException $exception) {
@@ -226,13 +453,13 @@ class AuthResourceApi
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, 'string', []),
+                        ObjectSerializer::deserialize($content, '\OpenAPI\Client\Model\AnimalProcedure[]', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
             }
 
-            $returnType = 'string';
+            $returnType = '\OpenAPI\Client\Model\AnimalProcedure[]';
             if ($returnType === '\SplFileObject') {
                 $content = $response->getBody(); //stream goes to serializer
             } else {
@@ -265,7 +492,7 @@ class AuthResourceApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        'string',
+                        '\OpenAPI\Client\Model\AnimalProcedure[]',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -276,17 +503,19 @@ class AuthResourceApi
     }
 
     /**
-     * Operation authLoginAnonymousGetAsync
+     * Operation animalProceduresGetAsync
      *
-     * @param  string $tenant_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLoginAnonymousGet'] to see the possible values for this operation
+     * @param  string $animal_id (required)
+     * @param  int $page (optional)
+     * @param  int $page_size (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresGet'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function authLoginAnonymousGetAsync($tenant_id, string $contentType = self::contentTypes['authLoginAnonymousGet'][0])
+    public function animalProceduresGetAsync($animal_id, $page = null, $page_size = null, string $contentType = self::contentTypes['animalProceduresGet'][0])
     {
-        return $this->authLoginAnonymousGetAsyncWithHttpInfo($tenant_id, $contentType)
+        return $this->animalProceduresGetAsyncWithHttpInfo($animal_id, $page, $page_size, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -295,18 +524,20 @@ class AuthResourceApi
     }
 
     /**
-     * Operation authLoginAnonymousGetAsyncWithHttpInfo
+     * Operation animalProceduresGetAsyncWithHttpInfo
      *
-     * @param  string $tenant_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLoginAnonymousGet'] to see the possible values for this operation
+     * @param  string $animal_id (required)
+     * @param  int $page (optional)
+     * @param  int $page_size (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresGet'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function authLoginAnonymousGetAsyncWithHttpInfo($tenant_id, string $contentType = self::contentTypes['authLoginAnonymousGet'][0])
+    public function animalProceduresGetAsyncWithHttpInfo($animal_id, $page = null, $page_size = null, string $contentType = self::contentTypes['animalProceduresGet'][0])
     {
-        $returnType = 'string';
-        $request = $this->authLoginAnonymousGetRequest($tenant_id, $contentType);
+        $returnType = '\OpenAPI\Client\Model\AnimalProcedure[]';
+        $request = $this->animalProceduresGetRequest($animal_id, $page, $page_size, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -345,29 +576,33 @@ class AuthResourceApi
     }
 
     /**
-     * Create request for operation 'authLoginAnonymousGet'
+     * Create request for operation 'animalProceduresGet'
      *
-     * @param  string $tenant_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLoginAnonymousGet'] to see the possible values for this operation
+     * @param  string $animal_id (required)
+     * @param  int $page (optional)
+     * @param  int $page_size (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresGet'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function authLoginAnonymousGetRequest($tenant_id, string $contentType = self::contentTypes['authLoginAnonymousGet'][0])
+    public function animalProceduresGetRequest($animal_id, $page = null, $page_size = null, string $contentType = self::contentTypes['animalProceduresGet'][0])
     {
 
-        // verify the required parameter 'tenant_id' is set
-        if ($tenant_id === null || (is_array($tenant_id) && count($tenant_id) === 0)) {
+        // verify the required parameter 'animal_id' is set
+        if ($animal_id === null || (is_array($animal_id) && count($animal_id) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $tenant_id when calling authLoginAnonymousGet'
+                'Missing the required parameter $animal_id when calling animalProceduresGet'
             );
         }
-        if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $tenant_id)) {
-            throw new \InvalidArgumentException("invalid value for \"tenant_id\" when calling AuthResourceApi.authLoginAnonymousGet, must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
+        if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $animal_id)) {
+            throw new \InvalidArgumentException("invalid value for \"animal_id\" when calling AnimalProcedureResourceApi.animalProceduresGet, must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
         }
         
 
-        $resourcePath = '/auth/login/anonymous';
+
+
+        $resourcePath = '/animal-procedures';
         $formParams = [];
         $queryParams = [];
         $headerParams = [];
@@ -376,12 +611,30 @@ class AuthResourceApi
 
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $tenant_id,
-            'tenantId', // param base name
+            $animal_id,
+            'animalId', // param base name
             'string', // openApiType
             'form', // style
             true, // explode
             true // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $page,
+            'page', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $page_size,
+            'pageSize', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
         ) ?? []);
 
 
@@ -418,6 +671,10 @@ class AuthResourceApi
             }
         }
 
+        // this endpoint requires Bearer (JWT) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -441,34 +698,34 @@ class AuthResourceApi
     }
 
     /**
-     * Operation authLoginPost
+     * Operation animalProceduresPost
      *
-     * @param  \OpenAPI\Client\Model\LoginRequest $login_request login_request (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLoginPost'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\AnimalProcedure $animal_procedure animal_procedure (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresPost'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Client\Model\LoginResponse
+     * @return \OpenAPI\Client\Model\AnimalProcedure
      */
-    public function authLoginPost($login_request = null, string $contentType = self::contentTypes['authLoginPost'][0])
+    public function animalProceduresPost($animal_procedure = null, string $contentType = self::contentTypes['animalProceduresPost'][0])
     {
-        list($response) = $this->authLoginPostWithHttpInfo($login_request, $contentType);
+        list($response) = $this->animalProceduresPostWithHttpInfo($animal_procedure, $contentType);
         return $response;
     }
 
     /**
-     * Operation authLoginPostWithHttpInfo
+     * Operation animalProceduresPostWithHttpInfo
      *
-     * @param  \OpenAPI\Client\Model\LoginRequest $login_request (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLoginPost'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\AnimalProcedure $animal_procedure (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresPost'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Client\Model\LoginResponse, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Client\Model\AnimalProcedure, HTTP status code, HTTP response headers (array of strings)
      */
-    public function authLoginPostWithHttpInfo($login_request = null, string $contentType = self::contentTypes['authLoginPost'][0])
+    public function animalProceduresPostWithHttpInfo($animal_procedure = null, string $contentType = self::contentTypes['animalProceduresPost'][0])
     {
-        $request = $this->authLoginPostRequest($login_request, $contentType);
+        $request = $this->animalProceduresPostRequest($animal_procedure, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -507,11 +764,11 @@ class AuthResourceApi
 
             switch($statusCode) {
                 case 200:
-                    if ('\OpenAPI\Client\Model\LoginResponse' === '\SplFileObject') {
+                    if ('\OpenAPI\Client\Model\AnimalProcedure' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
                         $content = (string) $response->getBody();
-                        if ('\OpenAPI\Client\Model\LoginResponse' !== 'string') {
+                        if ('\OpenAPI\Client\Model\AnimalProcedure' !== 'string') {
                             try {
                                 $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
                             } catch (\JsonException $exception) {
@@ -529,13 +786,13 @@ class AuthResourceApi
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, '\OpenAPI\Client\Model\LoginResponse', []),
+                        ObjectSerializer::deserialize($content, '\OpenAPI\Client\Model\AnimalProcedure', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
             }
 
-            $returnType = '\OpenAPI\Client\Model\LoginResponse';
+            $returnType = '\OpenAPI\Client\Model\AnimalProcedure';
             if ($returnType === '\SplFileObject') {
                 $content = $response->getBody(); //stream goes to serializer
             } else {
@@ -568,7 +825,7 @@ class AuthResourceApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\OpenAPI\Client\Model\LoginResponse',
+                        '\OpenAPI\Client\Model\AnimalProcedure',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -579,17 +836,17 @@ class AuthResourceApi
     }
 
     /**
-     * Operation authLoginPostAsync
+     * Operation animalProceduresPostAsync
      *
-     * @param  \OpenAPI\Client\Model\LoginRequest $login_request (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLoginPost'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\AnimalProcedure $animal_procedure (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresPost'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function authLoginPostAsync($login_request = null, string $contentType = self::contentTypes['authLoginPost'][0])
+    public function animalProceduresPostAsync($animal_procedure = null, string $contentType = self::contentTypes['animalProceduresPost'][0])
     {
-        return $this->authLoginPostAsyncWithHttpInfo($login_request, $contentType)
+        return $this->animalProceduresPostAsyncWithHttpInfo($animal_procedure, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -598,18 +855,18 @@ class AuthResourceApi
     }
 
     /**
-     * Operation authLoginPostAsyncWithHttpInfo
+     * Operation animalProceduresPostAsyncWithHttpInfo
      *
-     * @param  \OpenAPI\Client\Model\LoginRequest $login_request (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLoginPost'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\AnimalProcedure $animal_procedure (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresPost'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function authLoginPostAsyncWithHttpInfo($login_request = null, string $contentType = self::contentTypes['authLoginPost'][0])
+    public function animalProceduresPostAsyncWithHttpInfo($animal_procedure = null, string $contentType = self::contentTypes['animalProceduresPost'][0])
     {
-        $returnType = '\OpenAPI\Client\Model\LoginResponse';
-        $request = $this->authLoginPostRequest($login_request, $contentType);
+        $returnType = '\OpenAPI\Client\Model\AnimalProcedure';
+        $request = $this->animalProceduresPostRequest($animal_procedure, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -648,20 +905,20 @@ class AuthResourceApi
     }
 
     /**
-     * Create request for operation 'authLoginPost'
+     * Create request for operation 'animalProceduresPost'
      *
-     * @param  \OpenAPI\Client\Model\LoginRequest $login_request (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLoginPost'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\AnimalProcedure $animal_procedure (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresPost'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function authLoginPostRequest($login_request = null, string $contentType = self::contentTypes['authLoginPost'][0])
+    public function animalProceduresPostRequest($animal_procedure = null, string $contentType = self::contentTypes['animalProceduresPost'][0])
     {
 
 
 
-        $resourcePath = '/auth/login';
+        $resourcePath = '/animal-procedures';
         $formParams = [];
         $queryParams = [];
         $headerParams = [];
@@ -679,12 +936,12 @@ class AuthResourceApi
         );
 
         // for model (json/xml)
-        if (isset($login_request)) {
+        if (isset($animal_procedure)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($login_request));
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($animal_procedure));
             } else {
-                $httpBody = $login_request;
+                $httpBody = $animal_procedure;
             }
         } elseif (count($formParams) > 0) {
             if ($multipart) {
@@ -710,6 +967,10 @@ class AuthResourceApi
             }
         }
 
+        // this endpoint requires Bearer (JWT) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -733,442 +994,34 @@ class AuthResourceApi
     }
 
     /**
-     * Operation authLogoutAllGet
+     * Operation animalProceduresPut
      *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLogoutAllGet'] to see the possible values for this operation
-     *
-     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return void
-     */
-    public function authLogoutAllGet(string $contentType = self::contentTypes['authLogoutAllGet'][0])
-    {
-        $this->authLogoutAllGetWithHttpInfo($contentType);
-    }
-
-    /**
-     * Operation authLogoutAllGetWithHttpInfo
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLogoutAllGet'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\AnimalProcedure $animal_procedure animal_procedure (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresPut'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @return \OpenAPI\Client\Model\AnimalProcedure
      */
-    public function authLogoutAllGetWithHttpInfo(string $contentType = self::contentTypes['authLogoutAllGet'][0])
+    public function animalProceduresPut($animal_procedure = null, string $contentType = self::contentTypes['animalProceduresPut'][0])
     {
-        $request = $this->authLogoutAllGetRequest($contentType);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
-                );
-            } catch (ConnectException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    null,
-                    null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        (string) $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    (string) $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-            }
-            throw $e;
-        }
-    }
-
-    /**
-     * Operation authLogoutAllGetAsync
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLogoutAllGet'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function authLogoutAllGetAsync(string $contentType = self::contentTypes['authLogoutAllGet'][0])
-    {
-        return $this->authLogoutAllGetAsyncWithHttpInfo($contentType)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation authLogoutAllGetAsyncWithHttpInfo
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLogoutAllGet'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function authLogoutAllGetAsyncWithHttpInfo(string $contentType = self::contentTypes['authLogoutAllGet'][0])
-    {
-        $returnType = '';
-        $request = $this->authLogoutAllGetRequest($contentType);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        (string) $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Create request for operation 'authLogoutAllGet'
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLogoutAllGet'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    public function authLogoutAllGetRequest(string $contentType = self::contentTypes['authLogoutAllGet'][0])
-    {
-
-
-        $resourcePath = '/auth/logoutAll';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-
-
-
-        $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
-            $contentType,
-            $multipart
-        );
-
-        // for model (json/xml)
-        if (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
-                    foreach ($formParamValueItems as $formParamValueItem) {
-                        $multipartContents[] = [
-                            'name' => $formParamName,
-                            'contents' => $formParamValueItem
-                        ];
-                    }
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
-                # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
-            } else {
-                // for HTTP post (form)
-                $httpBody = ObjectSerializer::buildQuery($formParams);
-            }
-        }
-
-        // this endpoint requires Bearer (JWT) authentication (access token)
-        if (!empty($this->config->getAccessToken())) {
-            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
-        }
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
-        );
-
-        $operationHost = $this->config->getHost();
-        $query = ObjectSerializer::buildQuery($queryParams);
-        return new Request(
-            'GET',
-            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
-        );
-    }
-
-    /**
-     * Operation authLogoutGet
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLogoutGet'] to see the possible values for this operation
-     *
-     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return void
-     */
-    public function authLogoutGet(string $contentType = self::contentTypes['authLogoutGet'][0])
-    {
-        $this->authLogoutGetWithHttpInfo($contentType);
-    }
-
-    /**
-     * Operation authLogoutGetWithHttpInfo
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLogoutGet'] to see the possible values for this operation
-     *
-     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     */
-    public function authLogoutGetWithHttpInfo(string $contentType = self::contentTypes['authLogoutGet'][0])
-    {
-        $request = $this->authLogoutGetRequest($contentType);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
-                );
-            } catch (ConnectException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    null,
-                    null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        (string) $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    (string) $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-            }
-            throw $e;
-        }
-    }
-
-    /**
-     * Operation authLogoutGetAsync
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLogoutGet'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function authLogoutGetAsync(string $contentType = self::contentTypes['authLogoutGet'][0])
-    {
-        return $this->authLogoutGetAsyncWithHttpInfo($contentType)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation authLogoutGetAsyncWithHttpInfo
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLogoutGet'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function authLogoutGetAsyncWithHttpInfo(string $contentType = self::contentTypes['authLogoutGet'][0])
-    {
-        $returnType = '';
-        $request = $this->authLogoutGetRequest($contentType);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        (string) $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Create request for operation 'authLogoutGet'
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authLogoutGet'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    public function authLogoutGetRequest(string $contentType = self::contentTypes['authLogoutGet'][0])
-    {
-
-
-        $resourcePath = '/auth/logout';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-
-
-
-        $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
-            $contentType,
-            $multipart
-        );
-
-        // for model (json/xml)
-        if (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
-                    foreach ($formParamValueItems as $formParamValueItem) {
-                        $multipartContents[] = [
-                            'name' => $formParamName,
-                            'contents' => $formParamValueItem
-                        ];
-                    }
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
-                # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
-            } else {
-                // for HTTP post (form)
-                $httpBody = ObjectSerializer::buildQuery($formParams);
-            }
-        }
-
-        // this endpoint requires Bearer (JWT) authentication (access token)
-        if (!empty($this->config->getAccessToken())) {
-            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
-        }
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
-        );
-
-        $operationHost = $this->config->getHost();
-        $query = ObjectSerializer::buildQuery($queryParams);
-        return new Request(
-            'GET',
-            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
-        );
-    }
-
-    /**
-     * Operation authRefreshGet
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authRefreshGet'] to see the possible values for this operation
-     *
-     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return \OpenAPI\Client\Model\RefreshResponse
-     */
-    public function authRefreshGet(string $contentType = self::contentTypes['authRefreshGet'][0])
-    {
-        list($response) = $this->authRefreshGetWithHttpInfo($contentType);
+        list($response) = $this->animalProceduresPutWithHttpInfo($animal_procedure, $contentType);
         return $response;
     }
 
     /**
-     * Operation authRefreshGetWithHttpInfo
+     * Operation animalProceduresPutWithHttpInfo
      *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authRefreshGet'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\AnimalProcedure $animal_procedure (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresPut'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Client\Model\RefreshResponse, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Client\Model\AnimalProcedure, HTTP status code, HTTP response headers (array of strings)
      */
-    public function authRefreshGetWithHttpInfo(string $contentType = self::contentTypes['authRefreshGet'][0])
+    public function animalProceduresPutWithHttpInfo($animal_procedure = null, string $contentType = self::contentTypes['animalProceduresPut'][0])
     {
-        $request = $this->authRefreshGetRequest($contentType);
+        $request = $this->animalProceduresPutRequest($animal_procedure, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1207,11 +1060,11 @@ class AuthResourceApi
 
             switch($statusCode) {
                 case 200:
-                    if ('\OpenAPI\Client\Model\RefreshResponse' === '\SplFileObject') {
+                    if ('\OpenAPI\Client\Model\AnimalProcedure' === '\SplFileObject') {
                         $content = $response->getBody(); //stream goes to serializer
                     } else {
                         $content = (string) $response->getBody();
-                        if ('\OpenAPI\Client\Model\RefreshResponse' !== 'string') {
+                        if ('\OpenAPI\Client\Model\AnimalProcedure' !== 'string') {
                             try {
                                 $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
                             } catch (\JsonException $exception) {
@@ -1229,13 +1082,13 @@ class AuthResourceApi
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, '\OpenAPI\Client\Model\RefreshResponse', []),
+                        ObjectSerializer::deserialize($content, '\OpenAPI\Client\Model\AnimalProcedure', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
             }
 
-            $returnType = '\OpenAPI\Client\Model\RefreshResponse';
+            $returnType = '\OpenAPI\Client\Model\AnimalProcedure';
             if ($returnType === '\SplFileObject') {
                 $content = $response->getBody(); //stream goes to serializer
             } else {
@@ -1268,7 +1121,7 @@ class AuthResourceApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\OpenAPI\Client\Model\RefreshResponse',
+                        '\OpenAPI\Client\Model\AnimalProcedure',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -1279,16 +1132,17 @@ class AuthResourceApi
     }
 
     /**
-     * Operation authRefreshGetAsync
+     * Operation animalProceduresPutAsync
      *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authRefreshGet'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\AnimalProcedure $animal_procedure (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresPut'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function authRefreshGetAsync(string $contentType = self::contentTypes['authRefreshGet'][0])
+    public function animalProceduresPutAsync($animal_procedure = null, string $contentType = self::contentTypes['animalProceduresPut'][0])
     {
-        return $this->authRefreshGetAsyncWithHttpInfo($contentType)
+        return $this->animalProceduresPutAsyncWithHttpInfo($animal_procedure, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1297,17 +1151,18 @@ class AuthResourceApi
     }
 
     /**
-     * Operation authRefreshGetAsyncWithHttpInfo
+     * Operation animalProceduresPutAsyncWithHttpInfo
      *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authRefreshGet'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\AnimalProcedure $animal_procedure (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresPut'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function authRefreshGetAsyncWithHttpInfo(string $contentType = self::contentTypes['authRefreshGet'][0])
+    public function animalProceduresPutAsyncWithHttpInfo($animal_procedure = null, string $contentType = self::contentTypes['animalProceduresPut'][0])
     {
-        $returnType = '\OpenAPI\Client\Model\RefreshResponse';
-        $request = $this->authRefreshGetRequest($contentType);
+        $returnType = '\OpenAPI\Client\Model\AnimalProcedure';
+        $request = $this->animalProceduresPutRequest($animal_procedure, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1346,18 +1201,20 @@ class AuthResourceApi
     }
 
     /**
-     * Create request for operation 'authRefreshGet'
+     * Create request for operation 'animalProceduresPut'
      *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authRefreshGet'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\AnimalProcedure $animal_procedure (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['animalProceduresPut'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function authRefreshGetRequest(string $contentType = self::contentTypes['authRefreshGet'][0])
+    public function animalProceduresPutRequest($animal_procedure = null, string $contentType = self::contentTypes['animalProceduresPut'][0])
     {
 
 
-        $resourcePath = '/auth/refresh';
+
+        $resourcePath = '/animal-procedures';
         $formParams = [];
         $queryParams = [];
         $headerParams = [];
@@ -1375,7 +1232,14 @@ class AuthResourceApi
         );
 
         // for model (json/xml)
-        if (count($formParams) > 0) {
+        if (isset($animal_procedure)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($animal_procedure));
+            } else {
+                $httpBody = $animal_procedure;
+            }
+        } elseif (count($formParams) > 0) {
             if ($multipart) {
                 $multipartContents = [];
                 foreach ($formParams as $formParamName => $formParamValue) {
@@ -1418,290 +1282,7 @@ class AuthResourceApi
         $operationHost = $this->config->getHost();
         $query = ObjectSerializer::buildQuery($queryParams);
         return new Request(
-            'GET',
-            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
-        );
-    }
-
-    /**
-     * Operation authTokenValidateGet
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authTokenValidateGet'] to see the possible values for this operation
-     *
-     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return bool
-     */
-    public function authTokenValidateGet(string $contentType = self::contentTypes['authTokenValidateGet'][0])
-    {
-        list($response) = $this->authTokenValidateGetWithHttpInfo($contentType);
-        return $response;
-    }
-
-    /**
-     * Operation authTokenValidateGetWithHttpInfo
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authTokenValidateGet'] to see the possible values for this operation
-     *
-     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return array of bool, HTTP status code, HTTP response headers (array of strings)
-     */
-    public function authTokenValidateGetWithHttpInfo(string $contentType = self::contentTypes['authTokenValidateGet'][0])
-    {
-        $request = $this->authTokenValidateGetRequest($contentType);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
-                );
-            } catch (ConnectException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    null,
-                    null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        (string) $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    (string) $response->getBody()
-                );
-            }
-
-            switch($statusCode) {
-                case 200:
-                    if ('bool' === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ('bool' !== 'string') {
-                            try {
-                                $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                            } catch (\JsonException $exception) {
-                                throw new ApiException(
-                                    sprintf(
-                                        'Error JSON decoding server response (%s)',
-                                        $request->getUri()
-                                    ),
-                                    $statusCode,
-                                    $response->getHeaders(),
-                                    $content
-                                );
-                            }
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, 'bool', []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-            }
-
-            $returnType = 'bool';
-            if ($returnType === '\SplFileObject') {
-                $content = $response->getBody(); //stream goes to serializer
-            } else {
-                $content = (string) $response->getBody();
-                if ($returnType !== 'string') {
-                    try {
-                        $content = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-                    } catch (\JsonException $exception) {
-                        throw new ApiException(
-                            sprintf(
-                                'Error JSON decoding server response (%s)',
-                                $request->getUri()
-                            ),
-                            $statusCode,
-                            $response->getHeaders(),
-                            $content
-                        );
-                    }
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        'bool',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
-    }
-
-    /**
-     * Operation authTokenValidateGetAsync
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authTokenValidateGet'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function authTokenValidateGetAsync(string $contentType = self::contentTypes['authTokenValidateGet'][0])
-    {
-        return $this->authTokenValidateGetAsyncWithHttpInfo($contentType)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation authTokenValidateGetAsyncWithHttpInfo
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authTokenValidateGet'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function authTokenValidateGetAsyncWithHttpInfo(string $contentType = self::contentTypes['authTokenValidateGet'][0])
-    {
-        $returnType = 'bool';
-        $request = $this->authTokenValidateGetRequest($contentType);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    if ($returnType === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        (string) $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Create request for operation 'authTokenValidateGet'
-     *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authTokenValidateGet'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    public function authTokenValidateGetRequest(string $contentType = self::contentTypes['authTokenValidateGet'][0])
-    {
-
-
-        $resourcePath = '/auth/token/validate';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-
-
-
-        $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
-            $contentType,
-            $multipart
-        );
-
-        // for model (json/xml)
-        if (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
-                    foreach ($formParamValueItems as $formParamValueItem) {
-                        $multipartContents[] = [
-                            'name' => $formParamName,
-                            'contents' => $formParamValueItem
-                        ];
-                    }
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
-                # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
-            } else {
-                // for HTTP post (form)
-                $httpBody = ObjectSerializer::buildQuery($formParams);
-            }
-        }
-
-        // this endpoint requires Bearer (JWT) authentication (access token)
-        if (!empty($this->config->getAccessToken())) {
-            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
-        }
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
-        );
-
-        $operationHost = $this->config->getHost();
-        $query = ObjectSerializer::buildQuery($queryParams);
-        return new Request(
-            'GET',
+            'PUT',
             $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
             $headers,
             $httpBody

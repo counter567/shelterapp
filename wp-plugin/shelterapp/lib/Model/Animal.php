@@ -77,7 +77,6 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'blood_type' => 'string',
         'illnesses' => 'string[]',
         'allergies' => 'string[]',
-        'procedures' => '\OpenAPI\Client\Model\AnimalProcedure[]',
         'chip_number' => 'string',
         'is_public' => 'bool',
         'status' => '\OpenAPI\Client\Model\AnimalStatus',
@@ -91,6 +90,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'internal_notes' => 'string',
         'date_of_leave' => '\DateTime',
         'date_of_death' => '\DateTime',
+        'created_at' => '\DateTime',
+        'updated_at' => '\DateTime',
         'castrated' => 'bool',
         'public' => 'bool',
         'success_story' => 'bool',
@@ -126,7 +127,6 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'blood_type' => null,
         'illnesses' => null,
         'allergies' => null,
-        'procedures' => null,
         'chip_number' => null,
         'is_public' => null,
         'status' => null,
@@ -140,6 +140,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'internal_notes' => null,
         'date_of_leave' => 'date',
         'date_of_death' => 'date',
+        'created_at' => 'date-time',
+        'updated_at' => 'date-time',
         'castrated' => null,
         'public' => null,
         'success_story' => null,
@@ -173,7 +175,6 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'blood_type' => true,
         'illnesses' => true,
         'allergies' => true,
-        'procedures' => true,
         'chip_number' => true,
         'is_public' => false,
         'status' => false,
@@ -187,6 +188,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'internal_notes' => true,
         'date_of_leave' => true,
         'date_of_death' => true,
+        'created_at' => false,
+        'updated_at' => false,
         'castrated' => true,
         'public' => false,
         'success_story' => false,
@@ -300,7 +303,6 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'blood_type' => 'bloodType',
         'illnesses' => 'illnesses',
         'allergies' => 'allergies',
-        'procedures' => 'procedures',
         'chip_number' => 'chipNumber',
         'is_public' => 'isPublic',
         'status' => 'status',
@@ -314,6 +316,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'internal_notes' => 'internalNotes',
         'date_of_leave' => 'dateOfLeave',
         'date_of_death' => 'dateOfDeath',
+        'created_at' => 'createdAt',
+        'updated_at' => 'updatedAt',
         'castrated' => 'castrated',
         'public' => 'public',
         'success_story' => 'successStory',
@@ -347,7 +351,6 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'blood_type' => 'setBloodType',
         'illnesses' => 'setIllnesses',
         'allergies' => 'setAllergies',
-        'procedures' => 'setProcedures',
         'chip_number' => 'setChipNumber',
         'is_public' => 'setIsPublic',
         'status' => 'setStatus',
@@ -361,6 +364,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'internal_notes' => 'setInternalNotes',
         'date_of_leave' => 'setDateOfLeave',
         'date_of_death' => 'setDateOfDeath',
+        'created_at' => 'setCreatedAt',
+        'updated_at' => 'setUpdatedAt',
         'castrated' => 'setCastrated',
         'public' => 'setPublic',
         'success_story' => 'setSuccessStory',
@@ -394,7 +399,6 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'blood_type' => 'getBloodType',
         'illnesses' => 'getIllnesses',
         'allergies' => 'getAllergies',
-        'procedures' => 'getProcedures',
         'chip_number' => 'getChipNumber',
         'is_public' => 'getIsPublic',
         'status' => 'getStatus',
@@ -408,6 +412,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'internal_notes' => 'getInternalNotes',
         'date_of_leave' => 'getDateOfLeave',
         'date_of_death' => 'getDateOfDeath',
+        'created_at' => 'getCreatedAt',
+        'updated_at' => 'getUpdatedAt',
         'castrated' => 'getCastrated',
         'public' => 'getPublic',
         'success_story' => 'getSuccessStory',
@@ -492,7 +498,6 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('blood_type', $data ?? [], null);
         $this->setIfExists('illnesses', $data ?? [], null);
         $this->setIfExists('allergies', $data ?? [], null);
-        $this->setIfExists('procedures', $data ?? [], null);
         $this->setIfExists('chip_number', $data ?? [], null);
         $this->setIfExists('is_public', $data ?? [], null);
         $this->setIfExists('status', $data ?? [], null);
@@ -506,6 +511,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('internal_notes', $data ?? [], null);
         $this->setIfExists('date_of_leave', $data ?? [], null);
         $this->setIfExists('date_of_death', $data ?? [], null);
+        $this->setIfExists('created_at', $data ?? [], null);
+        $this->setIfExists('updated_at', $data ?? [], null);
         $this->setIfExists('castrated', $data ?? [], null);
         $this->setIfExists('public', $data ?? [], null);
         $this->setIfExists('success_story', $data ?? [], null);
@@ -564,6 +571,12 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         }
         if ($this->container['status'] === null) {
             $invalidProperties[] = "'status' can't be null";
+        }
+        if ($this->container['created_at'] === null) {
+            $invalidProperties[] = "'created_at' can't be null";
+        }
+        if ($this->container['updated_at'] === null) {
+            $invalidProperties[] = "'updated_at' can't be null";
         }
         return $invalidProperties;
     }
@@ -1224,40 +1237,6 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Gets procedures
-     *
-     * @return \OpenAPI\Client\Model\AnimalProcedure[]|null
-     */
-    public function getProcedures()
-    {
-        return $this->container['procedures'];
-    }
-
-    /**
-     * Sets procedures
-     *
-     * @param \OpenAPI\Client\Model\AnimalProcedure[]|null $procedures procedures
-     *
-     * @return self
-     */
-    public function setProcedures($procedures)
-    {
-        if (is_null($procedures)) {
-            array_push($this->openAPINullablesSetToNull, 'procedures');
-        } else {
-            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
-            $index = array_search('procedures', $nullablesSetToNull);
-            if ($index !== FALSE) {
-                unset($nullablesSetToNull[$index]);
-                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
-            }
-        }
-        $this->container['procedures'] = $procedures;
-
-        return $this;
-    }
-
-    /**
      * Gets chip_number
      *
      * @return string|null
@@ -1653,6 +1632,60 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
             }
         }
         $this->container['date_of_death'] = $date_of_death;
+
+        return $this;
+    }
+
+    /**
+     * Gets created_at
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->container['created_at'];
+    }
+
+    /**
+     * Sets created_at
+     *
+     * @param \DateTime $created_at created_at
+     *
+     * @return self
+     */
+    public function setCreatedAt($created_at)
+    {
+        if (is_null($created_at)) {
+            throw new \InvalidArgumentException('non-nullable created_at cannot be null');
+        }
+        $this->container['created_at'] = $created_at;
+
+        return $this;
+    }
+
+    /**
+     * Gets updated_at
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->container['updated_at'];
+    }
+
+    /**
+     * Sets updated_at
+     *
+     * @param \DateTime $updated_at updated_at
+     *
+     * @return self
+     */
+    public function setUpdatedAt($updated_at)
+    {
+        if (is_null($updated_at)) {
+            throw new \InvalidArgumentException('non-nullable updated_at cannot be null');
+        }
+        $this->container['updated_at'] = $updated_at;
 
         return $this;
     }
