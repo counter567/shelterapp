@@ -9,10 +9,13 @@ services:
       QUARKUS_DATASOURCE_REACTIVE_URL: "postgresql://backend-db:5432/shelterapp"
       QUARKUS_DATASOURCE_USERNAME: shelterapp
       QUARKUS_DATASOURCE_PASSWORD: shelterapp
+      SHELTERAPP_BASEURL: "http://localhost:8081"
       QUARKUS_PROFILE: dev
-      QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION: "drop-and-create" # drop-and-create or update. Update is for when you want to keep your data
+      #QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION: "drop-and-create" # drop-and-create or update. Update is for when you want to keep your data
+      #QUARKUS_HIBERNATE_ORM_SQL_LOAD_SCRIPT: "import.sql"
     depends_on:
-      - backend-db
+      backend-db:
+        condition: service_healthy
   wordpress:
     image: wordpress
     restart: always
@@ -39,8 +42,10 @@ services:
   backend-db:
     image: postgres:latest
     restart: always
+    ports:
+      - "5433:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
+      test: ["CMD-SHELL", "pg_isready -U shelterapp"]
       interval: 10s
       timeout: 5s
       retries: 5

@@ -14,8 +14,8 @@ class ShelterappAnimals
         add_action('rest_api_init', array($this, 'init_rest'));
         $this->register_custom_fields();
 
-        // add_action('after_switch_theme', array($this, 'after_switch_theme'));
-        // add_action('switch_theme', array($this, 'switch_theme'));
+        add_action('after_switch_theme', array($this, 'after_switch_theme'));
+        add_action('switch_theme', array($this, 'switch_theme'));
     }
 
     function init_rest()
@@ -25,9 +25,9 @@ class ShelterappAnimals
             'shelterapp_animals',
             'shelterapp_meta',
             array(
-                'get_callback'      => array($this, 'get_meta_rest'),
-                'update_callback'   => array($this, 'set_meta_rest'),
-                'schema'            => null
+                'get_callback' => array($this, 'get_meta_rest'),
+                'update_callback' => array($this, 'set_meta_rest'),
+                'schema' => null
             )
         );
     }
@@ -78,55 +78,48 @@ class ShelterappAnimals
 
     function register_post_type()
     {
-        $client = sa_get_animal_resource_client();
-        try{
-            $count = $client->animalsCountGet();
-            error_log($count);
-        } catch(Exception $e) {
-            error_log('Error');
-            error_log(print_r($e, true));
-        }
+        // $this->getAnimals();
 
         // Set UI labels for Custom Post Type animals
         $labels_type = array(
-            'name'                => _x('Tiere', 'Post Type General Name', 'shelterapp'),
-            'singular_name'       => _x('Tier', 'Post Type Singular Name', 'shelterapp'),
-            'menu_name'           => __('Tiere', 'shelterapp'),
-            'parent_item_colon'   => __('Übergeordnetes Tier', 'shelterapp'),
-            'all_items'           => __('Alle Tiere', 'shelterapp'),
-            'view_item'           => __('Zeige Tier', 'shelterapp'),
-            'add_new_item'        => __('Tier hinzufügen', 'shelterapp'),
-            'add_new'             => __('Tier hinzufügen', 'shelterapp'),
-            'edit_item'           => __('Tier bearbeiten', 'shelterapp'),
-            'update_item'         => __('Tier aktualisieren', 'shelterapp'),
-            'search_items'        => __('Tier suchen', 'shelterapp'),
-            'not_found'           => __('Tier nicht gefunden', 'shelterapp'),
-            'not_found_in_trash'  => __('Tier im Papierkorb nicht gefunden', 'shelterapp')
+            'name' => _x('Tiere', 'Post Type General Name', 'shelterapp'),
+            'singular_name' => _x('Tier', 'Post Type Singular Name', 'shelterapp'),
+            'menu_name' => __('Tiere', 'shelterapp'),
+            'parent_item_colon' => __('Übergeordnetes Tier', 'shelterapp'),
+            'all_items' => __('Alle Tiere', 'shelterapp'),
+            'view_item' => __('Zeige Tier', 'shelterapp'),
+            'add_new_item' => __('Tier hinzufügen', 'shelterapp'),
+            'add_new' => __('Tier hinzufügen', 'shelterapp'),
+            'edit_item' => __('Tier bearbeiten', 'shelterapp'),
+            'update_item' => __('Tier aktualisieren', 'shelterapp'),
+            'search_items' => __('Tier suchen', 'shelterapp'),
+            'not_found' => __('Tier nicht gefunden', 'shelterapp'),
+            'not_found_in_trash' => __('Tier im Papierkorb nicht gefunden', 'shelterapp')
         );
 
         // Set other options for Custom Post Type animals
         $args_type = array(
-            'label'                 => __('Tier', 'shelterapp'),
-            'description'           => __('Shelterapp Tierekatalog', 'shelterapp'),
-            'labels'                => $labels_type,
-            'supports'              => array('title', 'author', 'thumbnail', 'revisions', 'custom-fields'),
-            'show_in_rest'          => true,
-            'taxonomies'            => array('shelterapp_animal_type'),
-            'hierarchical'          => false,
-            'public'                => true,
-            'show_ui'               => true,
-            'show_in_menu'          => true,
-            'show_in_nav_menus'     => false,
-            'show_in_admin_bar'     => false,
-            'menu_position'         => 35,
-            'can_export'            => true,
-            'has_archive'           => false,
-            'exclude_from_search'   => true,
-            'publicly_queryable'    => true,
-            'rewrite'               => array('slug' => 'animal'), // my custom slug
-            'menu_icon'             => 'dashicons-buddicons-replies',
-            'capability_type'       => 'animal',
-            'capabilities'          => sa_compile_post_type_capabilities('animal', 'animals')
+            'label' => __('Tier', 'shelterapp'),
+            'description' => __('Shelterapp Tierekatalog', 'shelterapp'),
+            'labels' => $labels_type,
+            'supports' => array('title', 'author', 'thumbnail', 'revisions', 'custom-fields'),
+            'show_in_rest' => true,
+            'taxonomies' => array('shelterapp_animal_type'),
+            'hierarchical' => false,
+            'public' => true,
+            'show_ui' => true,
+            'show_in_menu' => true,
+            'show_in_nav_menus' => false,
+            'show_in_admin_bar' => false,
+            'menu_position' => 35,
+            'can_export' => true,
+            'has_archive' => false,
+            'exclude_from_search' => true,
+            'publicly_queryable' => true,
+            'rewrite' => array('slug' => 'animal'), // my custom slug
+            'menu_icon' => 'dashicons-buddicons-replies',
+            'capability_type' => 'animal',
+            'capabilities' => sa_compile_post_type_capabilities('animal', 'animals')
         );
 
         register_post_type('shelterapp_animals', $args_type);
@@ -172,120 +165,10 @@ class ShelterappAnimals
             return;
         }
 
-        acf_add_local_field_group(array(
+        $group = array(
             'key' => 'group_65fc4ecf8ebee',
             'title' => 'Animal fields',
-            'fields' => array(
-                array(
-                    'key' => 'field_65fc4ecff8d1e',
-                    'label' => 'Geburtstag',
-                    'name' => 'dateOfBirth',
-                    'aria-label' => '',
-                    'type' => 'date_picker',
-                    'instructions' => '',
-                    'required' => 0,
-                    'conditional_logic' => 0,
-                    'wrapper' => array(
-                        'width' => '',
-                        'class' => '',
-                        'id' => '',
-                    ),
-                    'display_format' => 'Y-m-d',
-                    'return_format' => 'Y-m-d',
-                    'first_day' => 1,
-                ),
-                array(
-                    'key' => 'field_65fc5054f8d1f',
-                    'label' => 'Datum der Aufnahme',
-                    'name' => 'dateOfAdmission',
-                    'aria-label' => '',
-                    'type' => 'date_picker',
-                    'instructions' => '',
-                    'required' => 0,
-                    'conditional_logic' => 0,
-                    'wrapper' => array(
-                        'width' => '',
-                        'class' => '',
-                        'id' => '',
-                    ),
-                    'display_format' => 'Y-m-d',
-                    'return_format' => 'Y-m-d',
-                    'first_day' => 1,
-                ),
-                array(
-                    'key' => 'field_65fc509ff8d20',
-                    'label' => 'breedOne',
-                    'name' => 'breedOne',
-                    'aria-label' => '',
-                    'type' => 'text',
-                    'instructions' => '',
-                    'required' => 0,
-                    'conditional_logic' => 0,
-                    'wrapper' => array(
-                        'width' => '',
-                        'class' => '',
-                        'id' => '',
-                    ),
-                    'default_value' => '',
-                    'maxlength' => '',
-                    'placeholder' => '',
-                    'prepend' => '',
-                    'append' => '',
-                ),
-                array(
-                    'key' => 'field_65fc50b3f8d21',
-                    'label' => 'breedTwo',
-                    'name' => 'breedTwo',
-                    'aria-label' => '',
-                    'type' => 'text',
-                    'instructions' => '',
-                    'required' => 0,
-                    'conditional_logic' => array(
-                        array(
-                            array(
-                                'field' => 'field_65fc509ff8d20',
-                                'operator' => '!=empty',
-                            ),
-                        ),
-                    ),
-                    'wrapper' => array(
-                        'width' => '',
-                        'class' => '',
-                        'id' => '',
-                    ),
-                    'default_value' => '',
-                    'maxlength' => '',
-                    'placeholder' => '',
-                    'prepend' => '',
-                    'append' => '',
-                ),
-                array(
-                    'key' => 'field_65fc50c9f8d22',
-                    'label' => 'sex',
-                    'name' => 'sex',
-                    'aria-label' => '',
-                    'type' => 'select',
-                    'instructions' => '',
-                    'required' => 0,
-                    'conditional_logic' => 0,
-                    'wrapper' => array(
-                        'width' => '',
-                        'class' => '',
-                        'id' => '',
-                    ),
-                    'choices' => array(
-                        'MALE' => 'Männlich',
-                        'FEMALE' => 'Weiblich',
-                    ),
-                    'default_value' => 'MALE',
-                    'return_format' => 'value',
-                    'multiple' => 0,
-                    'allow_null' => 0,
-                    'ui' => 0,
-                    'ajax' => 0,
-                    'placeholder' => '',
-                ),
-            ),
+            'fields' => array(),
             'location' => array(
                 array(
                     array(
@@ -304,7 +187,227 @@ class ShelterappAnimals
             'active' => true,
             'description' => '',
             'show_in_rest' => 0,
-        ));
+        );
+
+        $file = file_get_contents(dirname(__FILE__) . '/../../openapi.json');
+        $schema = json_decode($file, true);
+        $animalSchema = $schema['components']['schemas']['Animal']['properties'];
+        $required = $schema['components']['schemas']['Animal']['required'];
+
+        foreach ($animalSchema as $key => $_value) {
+            if (in_array($key, ['id', 'name', 'type', 'procedures'])) {
+                continue;
+            }
+            $value = $animalSchema[$key];
+            if (isset($value['$ref'])) {
+                $name = basename($value['$ref']);
+                $ref = $schema['components']['schemas'][$name];
+                if ($name === 'LocalDate') {
+                    $value['type'] = 'date';
+                    $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
+                } else if ($name === 'LocalDateTime') {
+                    $value['type'] = 'datetime';
+                    $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
+                } else if (isset($ref['enum'])) {
+                    // this is a enum!
+                    $field = array(
+                        'key' => 'field_' . $key,
+                        'label' => $key,
+                        'name' => $key,
+                        'aria-label' => $key,
+                        'type' => 'select',
+                        'instructions' => '',
+                        'required' => in_array($key, $required) ? 1 : 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'choices' => $ref['enum'],
+                        'default_value' => '',
+                        'allow_null' => 0,
+                        'multiple' => 0,
+                        'ui' => 0,
+                        'ajax' => 0,
+                        'placeholder' => '',
+                        'return_format' => 'value',
+                    );
+                    $group['fields'][] = $field;
+                } else {
+                    out($value);
+                }
+
+                continue;
+            }
+
+            $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
+        }
+
+        acf_add_local_field_group($group);
+    }
+
+    function getFieldOfType(
+        array &$required,
+        string $type,
+        string $key,
+    ) {
+        switch ($type) {
+            case 'string':
+            case 'array':
+                $field = array(
+                    'key' => 'field_' . $key,
+                    'label' => $key,
+                    'name' => $key,
+                    'aria-label' => $key,
+                    'type' => 'text',
+                    'instructions' => '',
+                    'required' => in_array($key, $required) ? 1 : 0,
+                    'conditional_logic' => 0,
+                    'wrapper' => array(
+                        'width' => '',
+                        'class' => '',
+                        'id' => '',
+                    ),
+                    'default_value' => '',
+                    'placeholder' => '',
+                    'prepend' => '',
+                    'append' => '',
+                    'maxlength' => '',
+                );
+                return $field;
+            case 'integer':
+            case 'number':
+                $field = array(
+                    'key' => 'field_' . $key,
+                    'label' => $key,
+                    'name' => $key,
+                    'aria-label' => $key,
+                    'type' => 'number',
+                    'instructions' => '',
+                    'required' => in_array($key, $required) ? 1 : 0,
+                    'conditional_logic' => 0,
+                    'wrapper' => array(
+                        'width' => '',
+                        'class' => '',
+                        'id' => '',
+                    ),
+                    'default_value' => '',
+                    'placeholder' => '',
+                    'prepend' => '',
+                    'append' => '',
+                    'min' => '',
+                    'max' => '',
+                    'step' => '',
+                );
+                return $field;
+            case 'datetime':
+                $field = array(
+                    'key' => 'field_' . $key,
+                    'label' => $key,
+                    'name' => $key,
+                    'aria-label' => $key,
+                    'type' => 'datetime',
+                    'instructions' => '',
+                    'required' => in_array($key, $required) ? 1 : 0,
+                    'conditional_logic' => 0,
+                    'wrapper' => array(
+                        'width' => '',
+                        'class' => '',
+                        'id' => '',
+                    ),
+                    'display_format' => 'd.m.Y',
+                    'return_format' => 'Y-m-d',
+                    'first_day' => 1,
+                );
+                return $field;
+            case 'date':
+                $field = array(
+                    'key' => 'field_' . $key,
+                    'label' => $key,
+                    'name' => $key,
+                    'aria-label' => $key,
+                    'type' => 'date_picker',
+                    'instructions' => '',
+                    'required' => in_array($key, $required) ? 1 : 0,
+                    'conditional_logic' => 0,
+                    'wrapper' => array(
+                        'width' => '',
+                        'class' => '',
+                        'id' => '',
+                    ),
+                    'display_format' => 'd.m.Y',
+                    'return_format' => 'Y-m-d',
+                    'first_day' => 1,
+                );
+                return $field;
+            case 'boolean':
+                $field = array(
+                    'key' => 'field_' . $key,
+                    'label' => $key,
+                    'name' => $key,
+                    'aria-label' => $key,
+                    'type' => 'true_false',
+                    'instructions' => '',
+                    'required' => in_array($key, $required) ? 1 : 0,
+                    'conditional_logic' => 0,
+                    'wrapper' => array(
+                        'width' => '',
+                        'class' => '',
+                        'id' => '',
+                    ),
+                    'message' => '',
+                    'default_value' => 0,
+                    'ui' => 0,
+                    'ui_on_text' => '',
+                    'ui_off_text' => '',
+                );
+                return $field;
+            default:
+                throw new \Exception('Unknown type: ' . $type);
+        }
+    }
+
+    function getAllAnimals(OpenAPI\Client\Api\AnimalResourceApi $client, array &$allAnimals, int $chunksize = 50, int $page = 0)
+    {
+        if ($page > 100) {
+            throw new \Exception('To many pages');
+        }
+        $animals = $client->animalsGet(page: $page, page_size: $chunksize);
+        array_push($allAnimals, ...$animals);
+        if (count($animals) < $chunksize) {
+            return;
+        }
+        $this->getAllAnimals($client, $allAnimals, $chunksize, $page + 1);
+    }
+
+    /**
+     * @return \OpenAPI\Client\Model\Animal[]
+     */
+    function initAnimalArray()
+    {
+        return array();
+    }
+
+    function sync()
+    {
+        error_log('=============================================================');
+        error_log('SYNCING');
+        $client = sa_get_animal_resource_client();
+        if (!$client) {
+            error_log('Could not get client, no token or token expired.');
+            return;
+        }
+        $animals = $this->initAnimalArray();
+        $this->getAllAnimals($client, $animals);
+        out(count($animals));
+        //out($animals);
+        $animals = array_slice($animals, 0, 1);
+
+        foreach ($animals as $animal) {
+            out($animal->jsonSerialize());
+        }
+
     }
 }
 
