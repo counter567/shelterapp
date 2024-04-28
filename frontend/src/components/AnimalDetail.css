@@ -13,3 +13,9 @@
   aspect-ratio: 1/1;
   max-width: 550px;
 }
+
+.image-gallery-thumbnails-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
