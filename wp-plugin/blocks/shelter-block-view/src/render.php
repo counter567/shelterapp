@@ -14,6 +14,8 @@ wp_localize_script(
 		'block' => $block,
 	)
 );
+wp_enqueue_script('shelter-app-frontend', plugins_url('js/static/js/main.js', SHELTERAPP_PATH), array('wp-api-fetch'), null, true);
+wp_enqueue_style('shelter-app-frontend-style', plugins_url('js/static/css/main.css', SHELTERAPP_PATH), array(), null, true);
 
 if (defined('WP_DEBUG') && true == WP_DEBUG) {
 	?>
@@ -27,8 +29,7 @@ if (defined('WP_DEBUG') && true == WP_DEBUG) {
 } else {
 	?>
 
-	<div data-type="<?php echo isset($attributes['type']) ? $attributes['type'] : '' ?>" <?php echo get_block_wrapper_attributes(); ?>>
-		<?php esc_html_e('Shelter Block View – hello from a dynamic block!', 'shelter-block-view'); ?>
+	<div id="root" data-type="<?php echo isset($attributes['type']) ? $attributes['type'] : '' ?>" <?php echo get_block_wrapper_attributes(); ?>>
 	</div>
 
 	<?php
