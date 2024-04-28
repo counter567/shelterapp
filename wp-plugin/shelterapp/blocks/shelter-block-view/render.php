@@ -12,25 +12,26 @@ wp_localize_script(
 		'nonce' => wp_create_nonce('wp_rest'),
 		'attributes' => $attributes,
 		'block' => $block,
+		'publicUrlBase' => plugin_dir_url(SHELTERAPP_PATH) . 'public',
 	)
 );
 wp_enqueue_style('shelter-app-frontend-style', plugins_url('js/static/css/main.css', SHELTERAPP_PATH), array(), '1.0', 'all');
 wp_enqueue_script('shelter-app-frontend', plugins_url('js/static/js/main.js', SHELTERAPP_PATH), array('wp-api-fetch'), '1.0', true);
 
 if (defined('WP_DEBUG') && true == WP_DEBUG) {
-?>
+	?>
 
 	<div data-type="<?php echo isset($attributes['type']) ? $attributes['type'] : '' ?>" <?php echo get_block_wrapper_attributes(); ?>>
 		<iframe class="iframe-preview" src="http://localhost:3000">
 		</iframe>
 	</div>
 
-<?php
+	<?php
 } else {
-?>
+	?>
 
 	<div id="root" data-type="<?php echo isset($attributes['type']) ? $attributes['type'] : '' ?>" <?php echo get_block_wrapper_attributes(); ?>>
 	</div>
 
-<?php
+	<?php
 }

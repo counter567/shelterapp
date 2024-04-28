@@ -82,7 +82,11 @@ export class Animal {
   cType?: string;
   illnesses?: string[];
   allergies?: string[];
-  otherPictureFileUrls?: string[];
+  otherPictureFileUrls?: {
+    meta: ImageMetaData;
+    url: string;
+    thumbnailUrl: string;
+  }[];
 }
 
 function parseDate(dateString?: string) {
@@ -98,4 +102,49 @@ function parseDate(dateString?: string) {
 
 function parseBoolean(value: string) {
   return value === "1" ? true : false;
+}
+
+
+
+
+
+
+export interface ImageMetaData {
+  width: number
+  height: number
+  file: string
+  filesize: number
+  sizes: Sizes
+  image_meta: ImageMeta
+}
+
+export interface Sizes {
+  medium: ImageSize
+  large: ImageSize
+  thumbnail: ImageSize
+  medium_large: ImageSize
+  "1536x1536": ImageSize
+}
+
+export interface ImageSize {
+  file: string
+  width: number
+  height: number
+  "mime-type": string
+  filesize: number
+}
+
+export interface ImageMeta {
+  aperture: string
+  credit: string
+  camera: string
+  caption: string
+  created_timestamp: string
+  copyright: string
+  focal_length: string
+  iso: string
+  shutter_speed: string
+  title: string
+  orientation: string
+  keywords: any[]
 }

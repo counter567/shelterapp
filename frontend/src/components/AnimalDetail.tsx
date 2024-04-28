@@ -114,11 +114,13 @@ const AnimalDetail = () => {
             </div> */}
             <ImageGallery
               items={
-                otherPictureFileUrls?.map((url) => ({
-                  original: url,
-                  thumbnail: url,
+                otherPictureFileUrls?.map((data) => ({
+                  original: data.url,
+                  thumbnail: data.thumbnailUrl,
                 })) ?? []
               }
+              showThumbnails={true}
+              lazyLoad={true}
             />
           </div>
         </div>
