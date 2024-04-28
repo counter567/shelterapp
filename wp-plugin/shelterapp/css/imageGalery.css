@@ -1,5 +1,5 @@
 .image-gallery {
-  padding: 1rem 0;
+  padding: 1rem 0 0 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: left;
@@ -18,9 +18,15 @@
   width: 96%;
   height: 96%;
 }
-#image-gallery .image-gallery-item input {
+#image-gallery .image-gallery-item input.button {
   position: absolute;
-  bottom: 8px;
-  inset: 8px 10px;
+  inset: 6px 6px;
   top: unset;
+  line-height: 1;
+  padding: 0;
+  min-height: 1.7em;
+  opacity: 0.5;
+}
+#image-gallery .image-gallery-item:hover input.button {
+  opacity: 1;
 }

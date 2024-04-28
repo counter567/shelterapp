@@ -576,11 +576,7 @@ function wporg_custom_box_html($post)
     wp_enqueue_style('image-galery-style', plugin_dir_url(SHELTERAPP_PATH) . 'css/imageGalery.css', array(), '1.0');
 
     $galery_ids = get_post_meta($post->ID, 'otherPictureFileUrls', true);
-    echo _wporg_custom_box_html($galery_ids, $post->ID);
-}
 
-function _wporg_custom_box_html($galery_ids = [], $post = null)
-{
     $content = '<input type="button" id="add_image_to_galery" class="button button-primary button-large" value="Bild Hinzufügen">';
     $content .= '<div id="image-gallery" class="image-gallery">';
     if (isset($galery_ids) && is_array($galery_ids)) {
@@ -594,5 +590,5 @@ function _wporg_custom_box_html($galery_ids = [], $post = null)
     }
     $content .= '</div>';
 
-    return $content;
+    echo $content;
 }
