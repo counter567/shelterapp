@@ -3,6 +3,9 @@ defined('ABSPATH') or die("");
 global $preventPreGetPosts;
 $preventPreGetPosts = false;
 
+$filteredMetaFields = [
+    'internalNotes'
+];
 class ShelterappAnimals
 {
     private $rest_is_init = false;
@@ -16,6 +19,19 @@ class ShelterappAnimals
 
         add_action('after_switch_theme', array($this, 'after_switch_theme'));
         add_action('switch_theme', array($this, 'switch_theme'));
+
+        add_action('save_post', array($this, 'save_post'), 10, 3);
+    }
+
+    /**
+     * @param int $post_id
+     * @param WP_Post $post
+     * @param bool $update
+     */
+    function save_post(int $post_id, $post, $update)
+    {
+        $post_value = $_POST['otherPictureFileUrls'];
+        update_post_meta($post->ID, 'otherPictureFileUrls', $post_value);
     }
 
     function init_rest()
@@ -101,6 +117,18 @@ class ShelterappAnimals
         $meta['allergies'] = [];
         foreach ($allergies as $allergy) {
             $meta['allergies'][] = $allergy->name;
+        }
+
+        $meta['mainPictureFileUrl'] = wp_get_attachment_url(get_post_meta($post_id, '_thumbnail_id', true));
+        $images = get_post_meta($post_id, 'otherPictureFileUrls', true);
+        $meta['otherPictureFileUrls'] = array();
+        foreach ($images as $image) {
+            $meta['otherPictureFileUrls'][] = wp_get_attachment_url($image);
+        }
+
+        global $filteredMetaFields;
+        foreach ($filteredMetaFields as $filed) {
+            unset($meta[$filed]);
         }
 
         return $meta;
@@ -218,30 +246,6 @@ class ShelterappAnimals
             return;
         }
 
-        $group = array(
-            'key' => 'group_65fc4ecf8ebee',
-            'title' => 'Animal fields',
-            'fields' => array(),
-            'location' => array(
-                array(
-                    array(
-                        'param' => 'post_type',
-                        'operator' => '==',
-                        'value' => 'shelterapp_animals',
-                    ),
-                ),
-            ),
-            'menu_order' => 0,
-            'position' => 'normal',
-            'style' => 'default',
-            'label_placement' => 'top',
-            'instruction_placement' => 'label',
-            'hide_on_screen' => '',
-            'active' => true,
-            'description' => '',
-            'show_in_rest' => 0,
-        );
-
         $file = file_get_contents(dirname(__FILE__) . '/../../openapi.json');
         $schema = json_decode($file, true);
         $animalSchema = $schema['components']['schemas']['Animal']['properties'];
@@ -282,8 +286,6 @@ class ShelterappAnimals
         $this->get_custom_input_group('Medizinisches', [
             'castrated',
             'bloodType',
-            'illnesses',
-            'allergies',
         ], $animalSchema, $schema, $required);
 
         /*
@@ -524,9 +526,6 @@ class ShelterappAnimals
 
     function sync()
     {
-        // return;
-        error_log('=============================================================');
-        error_log('SYNCING');
         $client = sa_get_animal_resource_client();
         if (!$client) {
             error_log('Could not get client, no token or token expired.');
@@ -574,72 +573,27 @@ add_action('add_meta_boxes', 'wporg_add_custom_box');
 
 function wporg_custom_box_html($post)
 {
-    wp_enqueue_script('wporg_custom_js', plugin_dir_url(SHELTERAPP_PATH) . 'js/imageGalery.js', array('jquery'), '1.0', true);
-    $galery_ids = get_post_meta($post->ID, 'galery_ids', true);
-    // echo _wporg_custom_box_html($galery_ids, $post->ID);
+    wp_enqueue_script('image-galery-script', plugin_dir_url(SHELTERAPP_PATH) . 'js/imageGalery.js', array('jquery'), '1.0', true);
+    wp_enqueue_style('image-galery-style', plugin_dir_url(SHELTERAPP_PATH) . 'css/imageGalery.css', array(), '1.0');
+
+    $galery_ids = get_post_meta($post->ID, 'otherPictureFileUrls', true);
+    echo _wporg_custom_box_html($galery_ids, $post->ID);
 }
 
-function _wporg_custom_box_html($thumbnail_id = null, $post = null)
+function _wporg_custom_box_html($galery_ids = [], $post = null)
 {
-    $_wp_additional_image_sizes = wp_get_additional_image_sizes();
-
-    $post = get_post($post);
-    $post_type_object = get_post_type_object($post->post_type);
-    $set_thumbnail_link = '<p class="hide-if-no-js"><a href="%s" id="set-post-thumbnail"%s class="thickbox">%s</a></p>';
-    $upload_iframe_src = get_upload_iframe_src('image', $post->ID);
-
-    $content = sprintf(
-        $set_thumbnail_link,
-        esc_url($upload_iframe_src),
-        '', // Empty when there's no featured image set, `aria-describedby` attribute otherwise.
-        esc_html($post_type_object->labels->set_featured_image)
-    );
-
-    if ($thumbnail_id && get_post($thumbnail_id)) {
-        $size = isset($_wp_additional_image_sizes['post-thumbnail']) ? 'post-thumbnail' : array(266, 266);
-
-        /**
-         * Filters the size used to display the post thumbnail image in the 'Featured image' meta box.
-         *
-         * Note: When a theme adds 'post-thumbnail' support, a special 'post-thumbnail'
-         * image size is registered, which differs from the 'thumbnail' image size
-         * managed via the Settings > Media screen.
-         *
-         * @since 4.4.0
-         *
-         * @param string|int[] $size         Requested image size. Can be any registered image size name, or
-         *                                   an array of width and height values in pixels (in that order).
-         * @param int          $thumbnail_id Post thumbnail attachment ID.
-         * @param WP_Post      $post         The post object associated with the thumbnail.
-         */
-        $size = apply_filters('admin_post_thumbnail_size', $size, $thumbnail_id, $post);
-
-        $thumbnail_html = wp_get_attachment_image($thumbnail_id, $size);
-
-        if (!empty($thumbnail_html)) {
-            $content = sprintf(
-                $set_thumbnail_link,
-                esc_url($upload_iframe_src),
-                ' aria-describedby="set-post-thumbnail-desc"',
-                $thumbnail_html
-            );
-            $content .= '<p class="hide-if-no-js howto" id="set-post-thumbnail-desc">' . __('Click the image to edit or update') . '</p>';
-            $content .= '<p class="hide-if-no-js"><a href="#" id="remove-post-thumbnail">' . esc_html($post_type_object->labels->remove_featured_image) . '</a></p>';
+    $content = '<input type="button" id="add_image_to_galery" class="button button-primary button-large" value="Bild Hinzufügen">';
+    $content .= '<div id="image-gallery" class="image-gallery">';
+    if (isset($galery_ids) && is_array($galery_ids)) {
+        foreach ($galery_ids as $id) {
+            $content .= '<div class="image-gallery-item" data-id="' . $id . '">';
+            $content .= '<img src="' . wp_get_attachment_url($id) . '" alt="Bild">';
+            $content .= '<input type="button" class="button button-primary button-large delete" value="Löschen">';
+            $content .= '<input type="hidden" name="otherPictureFileUrls[]" value="' . $id . '">';
+            $content .= '</div>';
         }
     }
+    $content .= '</div>';
 
-    $content .= '<input type="hidden" id="_thumbnail_id" name="_thumbnail_id" value="' . esc_attr($thumbnail_id ? $thumbnail_id : '-1') . '" />';
-
-    /**
-     * Filters the admin post thumbnail HTML markup to return.
-     *
-     * @since 2.9.0
-     * @since 3.5.0 Added the `$post_id` parameter.
-     * @since 4.6.0 Added the `$thumbnail_id` parameter.
-     *
-     * @param string   $content      Admin post thumbnail HTML markup.
-     * @param int      $post_id      Post ID.
-     * @param int|null $thumbnail_id Thumbnail attachment ID, or null if there isn't one.
-     */
-    return apply_filters('admin_post_thumbnail_html', $content, $post->ID, $thumbnail_id);
+    return $content;
 }
