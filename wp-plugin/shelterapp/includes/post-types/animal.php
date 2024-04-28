@@ -52,9 +52,10 @@ class ShelterappAnimals
             array(
                 'methods' => 'GET',
                 'callback' => function ($data) {
-                    return array(
+                    return array (
                         'root' => esc_url_raw(rest_url()),
-                        'nonce' => wp_create_nonce('wp_rest')
+                        'nonce' => wp_create_nonce('wp_rest'),
+                        'publicUrlBase' => plugin_dir_url(SHELTERAPP_PATH) . 'public'
                     );
                 },
                 'permission_callback' => function () {
@@ -123,7 +124,11 @@ class ShelterappAnimals
         $images = get_post_meta($post_id, 'otherPictureFileUrls', true);
         $meta['otherPictureFileUrls'] = array();
         foreach ($images as $image) {
-            $meta['otherPictureFileUrls'][] = wp_get_attachment_url($image);
+            $meta['otherPictureFileUrls'][] = array(
+                'meta' => wp_get_attachment_metadata($image),
+                'url' => wp_get_attachment_url($image),
+                'thumbnailUrl' => wp_get_attachment_image_url($image, 'medium'),
+            );
         }
 
         global $filteredMetaFields;
