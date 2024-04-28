@@ -36,7 +36,7 @@ class ShelterappAnimals
             array(
                 'methods' => 'GET',
                 'callback' => function ($data) {
-                    return array(
+                    return array (
                         'root' => esc_url_raw(rest_url()),
                         'nonce' => wp_create_nonce('wp_rest')
                     );
@@ -85,6 +85,24 @@ class ShelterappAnimals
             }
             $meta[$key] = get_post_meta($post_id, $key, true);
         }
+
+        $type = wp_get_post_terms($post_id, 'shelterapp_animal_type');
+        if (isset($type) && count($type) > 0) {
+            $meta['type'] = $type[0]->name;
+        }
+
+        $illnesses = wp_get_post_terms($post_id, 'shelterapp_animal_illness');
+        $meta['illnesses'] = [];
+        foreach ($illnesses as $illness) {
+            $meta['illnesses'][] = $illness->name;
+        }
+
+        $allergies = wp_get_post_terms($post_id, 'shelterapp_animal_allergies');
+        $meta['allergies'] = [];
+        foreach ($allergies as $allergy) {
+            $meta['allergies'][] = $allergy->name;
+        }
+
         return $meta;
     }
 
@@ -94,8 +112,6 @@ class ShelterappAnimals
 
     function register_post_type()
     {
-        // $this->getAnimals();
-
         // Set UI labels for Custom Post Type animals
         $labels_type = array(
             'name' => _x('Tiere', 'Post Type General Name', 'shelterapp'),
@@ -147,9 +163,27 @@ class ShelterappAnimals
             'Tier Art',
             'type'
         );
+        sa_generate_taxonomy(
+            'shelterapp_animal_illness',
+            array('shelterapp_animals'),
+            'Tier Krankheit',
+            'Tier Krankheiten',
+            null,
+            false
+        );
+        sa_generate_taxonomy(
+            'shelterapp_animal_allergies',
+            array('shelterapp_animals'),
+            'Tier Allergie',
+            'Tier Allergien',
+            null,
+            false
+        );
 
 
         $this->register_custom_fields();
+
+        // $this->sync();
     }
 
     function activate_plugin()
@@ -213,54 +247,134 @@ class ShelterappAnimals
         $animalSchema = $schema['components']['schemas']['Animal']['properties'];
         $required = $schema['components']['schemas']['Animal']['required'];
 
-        foreach ($animalSchema as $key => $_value) {
-            if (in_array($key, ['id', 'name', 'type', 'procedures'])) {
-                continue;
-            }
-            $value = $animalSchema[$key];
-            if (isset($value['$ref'])) {
-                $name = basename($value['$ref']);
-                $ref = $schema['components']['schemas'][$name];
-                if ($name === 'LocalDate') {
-                    $value['type'] = 'date';
-                    $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
-                } else if ($name === 'LocalDateTime') {
-                    $value['type'] = 'datetime';
-                    $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
-                } else if (isset($ref['enum'])) {
-                    // this is a enum!
-                    $field = array(
-                        'key' => 'field_' . $key,
-                        'label' => $key,
-                        'name' => $key,
-                        'aria-label' => $key,
-                        'type' => 'select',
-                        'instructions' => '',
-                        'required' => in_array($key, $required) ? 1 : 0,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'choices' => $ref['enum'],
-                        'default_value' => '',
-                        'allow_null' => 0,
-                        'multiple' => 0,
-                        'ui' => 0,
-                        'ajax' => 0,
-                        'placeholder' => '',
-                        'return_format' => 'value',
-                    );
-                    $group['fields'][] = $field;
-                } else {
-                    out($value);
+        $this->get_custom_input_group('Stammdaten', [
+            'dateOfBirth',
+            'sex',
+            'color',
+            'breedOne',
+            'breedTwo',
+            'chipNumber',
+            'description',
+            'wasFound',
+            'missing',
+        ], $animalSchema, $schema, $required);
+
+        $this->get_custom_input_group('Maße', [
+            'weight',
+            'heightAtWithers',
+            'circumferenceOfNeck',
+            'lengthOfBack',
+            'circumferenceOfChest',
+        ], $animalSchema, $schema, $required);
+
+        $this->get_custom_input_group('Shelter Interner', [
+            'dateOfAdmission',
+            'dateOfLeave',
+            'dateOfDeath',
+            'status',
+            'notes',
+            'internalNotes',
+            'donationCall',
+            'successStory',
+            'privateAdoption',
+        ], $animalSchema, $schema, $required);
+
+        $this->get_custom_input_group('Medizinisches', [
+            'castrated',
+            'bloodType',
+            'illnesses',
+            'allergies',
+        ], $animalSchema, $schema, $required);
+
+        /*
+        mainPictureFileUrl
+        otherPictureFileUrls
+        */
+    }
+
+    function get_custom_input_group(string $groupName, array $fields, $animalSchema, $schema, $required)
+    {
+        $group = array(
+            'key' => 'group_' . $groupName,
+            'title' => $groupName,
+            'fields' => array(),
+            'location' => array(
+                array(
+                    array(
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'shelterapp_animals',
+                    ),
+                ),
+            ),
+            'menu_order' => 0,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'top',
+            'instruction_placement' => 'label',
+            'hide_on_screen' => '',
+            'active' => true,
+            'description' => '',
+            'show_in_rest' => 0,
+        );
+
+        foreach ($fields as $field) {
+            foreach ($animalSchema as $key => $_value) {
+                if ($field !== $key) {
+                    continue;
+                }
+                $value = $animalSchema[$key];
+                if (isset($value['allOf']) && is_array($value['allOf']) && count($value['allOf']) > 0) {
+                    $entry = $value['allOf'][0];
+                    if (isset($entry['$ref'])) {
+                        $value['$ref'] = $entry['$ref'];
+                    }
+                }
+                if (isset($value['$ref'])) {
+                    $name = basename($value['$ref']);
+                    $ref = $schema['components']['schemas'][$name];
+                    if ($name === 'LocalDate') {
+                        $value['type'] = 'date';
+                        $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
+                    } else if ($name === 'LocalDateTime') {
+                        $value['type'] = 'datetime';
+                        $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
+                    } else if (isset($ref['enum'])) {
+                        // this is a enum!
+                        $field = array(
+                            'key' => 'field_' . $key,
+                            'label' => $key,
+                            'name' => $key,
+                            'aria-label' => $key,
+                            'type' => 'select',
+                            'instructions' => '',
+                            'required' => in_array($key, $required) ? 1 : 0,
+                            'conditional_logic' => 0,
+                            'wrapper' => array(
+                                'width' => '',
+                                'class' => '',
+                                'id' => '',
+                            ),
+                            'choices' => array_combine($ref['enum'], $ref['enum']),
+                            'default_value' => '',
+                            'allow_null' => 0,
+                            'multiple' => 0,
+                            'ui' => 0,
+                            'ajax' => 0,
+                            'placeholder' => '',
+                            'return_format' => 'value',
+                        );
+                        $group['fields'][] = $field;
+                    } else {
+                        out($value);
+                    }
+
+                    continue;
                 }
 
-                continue;
+                $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
             }
 
-            $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
         }
 
         acf_add_local_field_group($group);
@@ -410,6 +524,7 @@ class ShelterappAnimals
 
     function sync()
     {
+        // return;
         error_log('=============================================================');
         error_log('SYNCING');
         $client = sa_get_animal_resource_client();
@@ -419,15 +534,112 @@ class ShelterappAnimals
         }
         $animals = $this->initAnimalArray();
         $this->getAllAnimals($client, $animals);
-        out(count($animals));
-        //out($animals);
-        $animals = array_slice($animals, 0, 1);
 
         foreach ($animals as $animal) {
-            out($animal->jsonSerialize());
+            sa_sync_ensure_term($animal->getType());
+            sa_sync_ensure_illnesses($animal->getIllnesses());
+            sa_sync_ensure_allergies($animal->getAllergies());
+
+            $args = array(
+                'meta_key' => 'shelterapp_id',
+                'meta_value' => $animal->getId(),
+                'post_type' => 'shelterapp_animals',
+                'post_status' => 'any',
+                'posts_per_page' => -1
+            );
+            $posts = get_posts($args);
+            if (count($posts) > 0) {
+                // we already have a post with this link id!
+                sa_sync_update_animal($animal, $posts[0]);
+            } else {
+                sa_sync_insert_animal($animal);
+            }
         }
     }
 }
 
 global $SHELTERAPP_GLOBAL_ANIMAL;
 $SHELTERAPP_GLOBAL_ANIMAL = new ShelterappAnimals();
+
+
+
+function wporg_add_custom_box()
+{
+    $screens = ['shelterapp_animals'];
+    foreach ($screens as $screen) {
+        add_meta_box('postimagegalery', 'Galerie', 'wporg_custom_box_html', null, 'side', 'low', array('__back_compat_meta_box' => true));
+    }
+}
+add_action('add_meta_boxes', 'wporg_add_custom_box');
+
+function wporg_custom_box_html($post)
+{
+    wp_enqueue_script('wporg_custom_js', plugin_dir_url(SHELTERAPP_PATH) . 'js/imageGalery.js', array('jquery'), '1.0', true);
+    $galery_ids = get_post_meta($post->ID, 'galery_ids', true);
+    // echo _wporg_custom_box_html($galery_ids, $post->ID);
+}
+
+function _wporg_custom_box_html($thumbnail_id = null, $post = null)
+{
+    $_wp_additional_image_sizes = wp_get_additional_image_sizes();
+
+    $post = get_post($post);
+    $post_type_object = get_post_type_object($post->post_type);
+    $set_thumbnail_link = '<p class="hide-if-no-js"><a href="%s" id="set-post-thumbnail"%s class="thickbox">%s</a></p>';
+    $upload_iframe_src = get_upload_iframe_src('image', $post->ID);
+
+    $content = sprintf(
+        $set_thumbnail_link,
+        esc_url($upload_iframe_src),
+        '', // Empty when there's no featured image set, `aria-describedby` attribute otherwise.
+        esc_html($post_type_object->labels->set_featured_image)
+    );
+
+    if ($thumbnail_id && get_post($thumbnail_id)) {
+        $size = isset($_wp_additional_image_sizes['post-thumbnail']) ? 'post-thumbnail' : array(266, 266);
+
+        /**
+         * Filters the size used to display the post thumbnail image in the 'Featured image' meta box.
+         *
+         * Note: When a theme adds 'post-thumbnail' support, a special 'post-thumbnail'
+         * image size is registered, which differs from the 'thumbnail' image size
+         * managed via the Settings > Media screen.
+         *
+         * @since 4.4.0
+         *
+         * @param string|int[] $size         Requested image size. Can be any registered image size name, or
+         *                                   an array of width and height values in pixels (in that order).
+         * @param int          $thumbnail_id Post thumbnail attachment ID.
+         * @param WP_Post      $post         The post object associated with the thumbnail.
+         */
+        $size = apply_filters('admin_post_thumbnail_size', $size, $thumbnail_id, $post);
+
+        $thumbnail_html = wp_get_attachment_image($thumbnail_id, $size);
+
+        if (!empty($thumbnail_html)) {
+            $content = sprintf(
+                $set_thumbnail_link,
+                esc_url($upload_iframe_src),
+                ' aria-describedby="set-post-thumbnail-desc"',
+                $thumbnail_html
+            );
+            $content .= '<p class="hide-if-no-js howto" id="set-post-thumbnail-desc">' . __('Click the image to edit or update') . '</p>';
+            $content .= '<p class="hide-if-no-js"><a href="#" id="remove-post-thumbnail">' . esc_html($post_type_object->labels->remove_featured_image) . '</a></p>';
+        }
+    }
+
+    $content .= '<input type="hidden" id="_thumbnail_id" name="_thumbnail_id" value="' . esc_attr($thumbnail_id ? $thumbnail_id : '-1') . '" />';
+
+    /**
+     * Filters the admin post thumbnail HTML markup to return.
+     *
+     * @since 2.9.0
+     * @since 3.5.0 Added the `$post_id` parameter.
+     * @since 4.6.0 Added the `$thumbnail_id` parameter.
+     *
+     * @param string   $content      Admin post thumbnail HTML markup.
+     * @param int      $post_id      Post ID.
+     * @param int|null $thumbnail_id Thumbnail attachment ID, or null if there isn't one.
+     */
+    return apply_filters('admin_post_thumbnail_html', $content, $post->ID, $thumbnail_id);
+}
