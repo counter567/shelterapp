@@ -1,11 +1,11 @@
-import { AnimalStatus } from "./animalStatus";
-
 export interface AnimalSource {
   title: {
     rendered: string;
   };
   cType?: string;
+  id?: number;
   cStatus?: string;
+  shelterapp_animal_type?: number[];
   shelterapp_meta: {
     /**
      *

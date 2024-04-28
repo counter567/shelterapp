@@ -9,7 +9,7 @@ import { requestData } from "./service/requestData";
 function App() {
   useEffect(() => {
     requestData("/wp/v2")
-      .then((data) => {
+      .then((data: any) => {
         console.log("all routes: ", data.routes);
       })
       .catch((error) => {
@@ -19,7 +19,6 @@ function App() {
 
   return (
     <div className="App">
-      <h1 className="text-3xl font-bold text-center">Tierheim-Helper v0.1a</h1>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<AnimalList />} />

@@ -3,33 +3,43 @@ import { requestData } from "./requestData";
 
 let animalTypeMap = new Map<number, string>();
 
-type Endpoints = "shelterapp_animals" | "shelterapp_animal_type";
-
 const allAnimals = async (): Promise<AnimalSource[]> => {
-  await animalTypes();
-  let allAnimals = await requestData("/wp/v2/shelterapp_animals");
-  allAnimals.forEach(
-    (animal: { shelterapp_animal_type: number[]; cType: string }) => {
-      animal.cType = animal.shelterapp_animal_type
-        .map((nr) => animalTypeMap.get(nr))
-        .join(", ");
-      return animal;
-    }
+  let allAnimals = await requestData<AnimalSource[]>(
+    "/wp/v2/shelterapp_animals"
   );
+  allAnimals.map(async (animal) => await setCType(animal));
   return allAnimals;
 };
 
+const setCType = async (animalSource: AnimalSource) => {
+  await animalTypes();
+  if (animalSource.shelterapp_animal_type === undefined) return animalSource;
+  animalSource.cType = animalSource.shelterapp_animal_type
+    .map((nr) => animalTypeMap.get(nr))
+    .join(", ");
+};
+
+const getAnimal = async (id: number): Promise<AnimalSource> => {
+  let animal = await requestData<AnimalSource>(
+    `/wp/v2/shelterapp_animals/${id}`
+  );
+  await setCType(animal);
+  return animal;
+};
+interface SelectItem {
+  id: number;
+  name: string;
+}
 const animalTypes = async () => {
+  if (animalTypeMap.size > 0) return;
   console.log("animalTypes");
-  const allTypes = await requestData("/wp/v2/shelterapp_animal_type");
+  const allTypes = await requestData<SelectItem[]>(
+    "/wp/v2/shelterapp_animal_type"
+  );
   allTypes.forEach((type: { id: number; name: string }) => {
     animalTypeMap.set(type.id, type.name);
   });
   return allTypes;
 };
 
-const getData = (endPoint: Endpoints) => {
-  return requestData(`/wp/v2/${endPoint}`);
-};
-
-export { allAnimals, animalTypes };
+export { allAnimals, animalTypes, getAnimal };

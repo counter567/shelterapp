@@ -2,11 +2,11 @@ import getNonce from "./nonce-helper";
 
 type RequestData = FormData | { [key: string]: any };
 
-export async function requestData(
+export async function requestData<T>(
   path: string | URL,
   data?: RequestData,
   initOptions: RequestInit = {}
-) {
+): Promise<T> {
   if (path instanceof URL) {
     path = path.href;
   }
