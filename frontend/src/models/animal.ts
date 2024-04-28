@@ -7,8 +7,8 @@ export class Animal {
     Object.assign(this, props, {
       name: animalSource.title.rendered,
       cType: animalSource.cType ?? "",
+      id: animalSource.id,
 
-      id: props.id,
       illnesses: props.illnesses?.split(",") ?? [],
       allergies: props.allergies?.split(",") ?? [],
       otherPictureFileUrls: props.otherPictureFileUrls?.split(",") ?? [],

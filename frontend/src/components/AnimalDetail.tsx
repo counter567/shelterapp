@@ -7,21 +7,21 @@ import {
 import CakeIcon from "../icons/cake";
 import CalendarIcon from "../icons/calendar";
 import { Animal } from "../models/animal";
-import { allAnimals } from "../service/animalapi";
+import { getAnimal } from "../service/animalapi";
 import "./AnimalDetail.css";
 import BirthDate from "./Birthdate";
 import Gender, { sexInGerman } from "./Gender";
 import PayPalButton from "./PaypalButton";
+import ImageGallery from "react-image-gallery";
 
 const AnimalDetail = () => {
   const [animal, setAnimals] = useState<Animal>();
   useEffect(() => {
     (async () => {
-      const res = await allAnimals();
-      const animals = res.map((a) => new Animal(a));
-      setAnimals(animals[0]);
+      const animalSource = await getAnimal(7);
+      setAnimals(new Animal(animalSource));
     })();
-  }, []);
+  }, [setAnimals]);
 
   if (!animal) return <></>;
 
@@ -37,10 +37,11 @@ const AnimalDetail = () => {
     status,
     wasFound, // not used in detail
     description,
+    otherPictureFileUrls,
   } = animal;
   return (
     <div>
-      <h1 className="text-center md:text-left md:pl-16 text-blue-800 font-bold py-12 text-5xl w-full  bg-gradient-to-r from-cyan-500 to-blue-500">
+      <h1 className="text-center md:text-left md:pl-16 text-[#267771] font-bold py-12 text-5xl w-full  bg-gradient-to-tr from-[#cecece] from-5% via-[#e3e5da] via-20% to-[#3f758d] to-90%">
         {name}
       </h1>
       <div className="max-w-screen-md md:flex mx-8">
@@ -56,7 +57,7 @@ const AnimalDetail = () => {
           </div>
           {dateOfAdmission && (
             <span className="text-center mb-2">
-              {formatDate(dateOfAdmission)}
+              seit {formatDate(dateOfAdmission)}
             </span>
           )}
           <span
@@ -96,7 +97,6 @@ const AnimalDetail = () => {
               </span>
             )}
             )
-            {/* <MenIcon className="mr-2" size={20} /> {gender},{type} ({kind}) */}
           </span>
           {description && (
             <div className="bg-neutral-100 mt-2 mb-4 border rounded-lg padding p-4 text-xl">
@@ -104,11 +104,18 @@ const AnimalDetail = () => {
             </div>
           )}
           <div className="mb-8">
-            <div className="date mb-2 flex items-center">
+            {/* <div className="date mb-2 flex items-center">
               <CalendarIcon className="mr-1" />{" "}
               <span className="font-bold mr-1">13.11.2023</span>vor 4 Monaten
-            </div>
-            {/* <ImageGallery items={images} /> */}
+            </div> */}
+            <ImageGallery
+              items={
+                otherPictureFileUrls?.map((url) => ({
+                  original: url,
+                  thumbnail: url,
+                })) ?? []
+              }
+            />
           </div>
         </div>
       </div>
