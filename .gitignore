@@ -44,3 +44,4 @@ node_modules
 
 # vs code
 .vscode
+/wp-plugin/shelterapp/js
