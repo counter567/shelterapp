@@ -13,6 +13,7 @@ export type AnimalStatus = (typeof AnimalStatus)[keyof typeof AnimalStatus];
 
 const statusValues = Object.values(AnimalStatus);
 const getAnimalStatusByIndex = (index: number): AnimalStatus => {
+  if (index !== 0 && !index) throw new Error("Index is not defined: " + index);
   return statusValues[index];
 };
 

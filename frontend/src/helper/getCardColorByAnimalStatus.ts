@@ -3,17 +3,27 @@ enum CardColors {
   Green = "green",
   Orange = "orange",
   Red = "red",
+  Black = "black",
 }
 
 const getCSSColorByCardColor = (status: AnimalStatus): string => {
-  const color = getCardColorByAnimalStatus(status);
-  switch (color) {
-    case CardColors.Green:
+  switch (status) {
+    case AnimalStatus.New:
+    case AnimalStatus.Searching:
       return "#5cb85c";
-    case CardColors.Orange:
+    case AnimalStatus.RequestStop:
+    case AnimalStatus.Reserved:
       return "#f0ad4e";
-    case CardColors.Red:
+    case AnimalStatus.Emergency:
       return "#d9534f";
+    case AnimalStatus.Adopted:
+      return "#333";
+    // not set yet
+    case AnimalStatus.FinalCare:
+    case AnimalStatus.CourtOfGrace:
+    case AnimalStatus.Deceased:
+    default:
+      throw console.error("Unknown status", status);
   }
 };
 
@@ -27,9 +37,10 @@ const getCardColorByAnimalStatus = (status: AnimalStatus): CardColors => {
       return CardColors.Orange;
     case AnimalStatus.Emergency:
       return CardColors.Red;
+    case AnimalStatus.Adopted:
+      return CardColors.Black;
     // not set yet
     case AnimalStatus.FinalCare:
-    case AnimalStatus.Adopted:
     case AnimalStatus.CourtOfGrace:
     case AnimalStatus.Deceased:
     default:

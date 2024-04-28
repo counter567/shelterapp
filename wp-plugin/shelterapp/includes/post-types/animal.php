@@ -52,7 +52,7 @@ class ShelterappAnimals
             array(
                 'methods' => 'GET',
                 'callback' => function ($data) {
-                    return array (
+                    return array(
                         'root' => esc_url_raw(rest_url()),
                         'nonce' => wp_create_nonce('wp_rest')
                     );
@@ -376,7 +376,6 @@ class ShelterappAnimals
 
                 $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
             }
-
         }
 
         acf_add_local_field_group($group);

@@ -29,3 +29,7 @@
 .card-orange .card-bottom {
   background-color: #f0ad4e;
 }
+
+.card-black .card-bottom {
+  background-color: #333;
+}
