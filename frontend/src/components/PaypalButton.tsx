@@ -1,3 +1,5 @@
+import getPublicUrlBase from "../service/url-helper";
+
 interface PayPalButtonProps {
   name: string;
   className?: string;
@@ -17,7 +19,7 @@ const PayPalButton = ({ name, className }: PayPalButtonProps) => (
     <input
       type="image"
       className="paypal-logo"
-      src="/paypal-donation.svg"
+      src={`${getPublicUrlBase()}/paypal-donation.svg`}
       style={{ border: 0 }}
       name="submit"
       title="Jetzt mit PayPal für dieses Tier spenden"

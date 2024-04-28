@@ -23,7 +23,8 @@ const getCSSColorByCardColor = (status: AnimalStatus): string => {
     case AnimalStatus.CourtOfGrace:
     case AnimalStatus.Deceased:
     default:
-      throw console.error("Unknown status", status);
+      console.warn("Unknown status", status);
+      return '#aaaaaa';
   }
 };
 
@@ -44,7 +45,8 @@ const getCardColorByAnimalStatus = (status: AnimalStatus): CardColors => {
     case AnimalStatus.CourtOfGrace:
     case AnimalStatus.Deceased:
     default:
-      throw console.error("Unknown status", status);
+      console.warn("Unknown status", status);
+      return CardColors.Black;
   }
 };
 

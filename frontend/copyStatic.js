@@ -18,3 +18,4 @@ function copyDir(src, dest) {
 }
 
 copyDir("build/static", "../wp-plugin/shelterapp/js/static");
+copyDir("public", "../wp-plugin/shelterapp/public");
