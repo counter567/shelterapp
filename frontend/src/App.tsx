@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import AnimalDetail from "./components/AnimalDetail";
 import AnimalList from "./components/AnimalList";
@@ -19,12 +19,12 @@ function App() {
 
   return (
     <div className="App">
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path="/" element={<AnimalList />} />
           <Route path="animal/:id" element={<AnimalDetail />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </div>
   );
 }

@@ -45,7 +45,7 @@ export default function AnimalList() {
             status,
             wasFound,
           }) => (
-            <Link to={`/animal/${id}`} key={id}>
+            <Link className="no-underline" to={`/animal/${id}`} key={id}>
               <li
                 key={id}
                 className={`p-5 border shadow w-72 rounded hover:shadow-xl cursor-pointer ${getCardClass(
