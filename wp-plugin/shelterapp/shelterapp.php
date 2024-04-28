@@ -12,8 +12,8 @@ License:
 Text Domain: shelterapp
 */
 define('SHELTERAPP_PATH', __FILE__);
-include_once(__DIR__ . '/includes/index.php');
-include_once(__DIR__ . '/blocks/index.php');
+include_once (__DIR__ . '/includes/index.php');
+include_once (__DIR__ . '/blocks/index.php');
 
 
 
@@ -51,7 +51,7 @@ add_action("send_headers", "add_cors_http_header", 99);
 
 function out(...$print)
 {
-    echo '<pre>';
+    echo '<pre style="font-family: monospace; font-size: 10px;">';
     foreach ($print as $key => $value) {
         print_r($value);
     }

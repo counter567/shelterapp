@@ -3,6 +3,9 @@ defined('ABSPATH') or die("");
 global $preventPreGetPosts;
 $preventPreGetPosts = false;
 
+$filteredMetaFields = [
+    'internalNotes'
+];
 class ShelterappAnimals
 {
     private $rest_is_init = false;
@@ -16,6 +19,19 @@ class ShelterappAnimals
 
         add_action('after_switch_theme', array($this, 'after_switch_theme'));
         add_action('switch_theme', array($this, 'switch_theme'));
+
+        add_action('save_post', array($this, 'save_post'), 10, 3);
+    }
+
+    /**
+     * @param int $post_id
+     * @param WP_Post $post
+     * @param bool $update
+     */
+    function save_post(int $post_id, $post, $update)
+    {
+        $post_value = $_POST['otherPictureFileUrls'];
+        update_post_meta($post->ID, 'otherPictureFileUrls', $post_value);
     }
 
     function init_rest()
@@ -85,6 +101,36 @@ class ShelterappAnimals
             }
             $meta[$key] = get_post_meta($post_id, $key, true);
         }
+
+        $type = wp_get_post_terms($post_id, 'shelterapp_animal_type');
+        if (isset($type) && count($type) > 0) {
+            $meta['type'] = $type[0]->name;
+        }
+
+        $illnesses = wp_get_post_terms($post_id, 'shelterapp_animal_illness');
+        $meta['illnesses'] = [];
+        foreach ($illnesses as $illness) {
+            $meta['illnesses'][] = $illness->name;
+        }
+
+        $allergies = wp_get_post_terms($post_id, 'shelterapp_animal_allergies');
+        $meta['allergies'] = [];
+        foreach ($allergies as $allergy) {
+            $meta['allergies'][] = $allergy->name;
+        }
+
+        $meta['mainPictureFileUrl'] = wp_get_attachment_url(get_post_meta($post_id, '_thumbnail_id', true));
+        $images = get_post_meta($post_id, 'otherPictureFileUrls', true);
+        $meta['otherPictureFileUrls'] = array();
+        foreach ($images as $image) {
+            $meta['otherPictureFileUrls'][] = wp_get_attachment_url($image);
+        }
+
+        global $filteredMetaFields;
+        foreach ($filteredMetaFields as $filed) {
+            unset($meta[$filed]);
+        }
+
         return $meta;
     }
 
@@ -94,8 +140,6 @@ class ShelterappAnimals
 
     function register_post_type()
     {
-        // $this->getAnimals();
-
         // Set UI labels for Custom Post Type animals
         $labels_type = array(
             'name' => _x('Tiere', 'Post Type General Name', 'shelterapp'),
@@ -147,9 +191,27 @@ class ShelterappAnimals
             'Tier Art',
             'type'
         );
+        sa_generate_taxonomy(
+            'shelterapp_animal_illness',
+            array('shelterapp_animals'),
+            'Tier Krankheit',
+            'Tier Krankheiten',
+            null,
+            false
+        );
+        sa_generate_taxonomy(
+            'shelterapp_animal_allergies',
+            array('shelterapp_animals'),
+            'Tier Allergie',
+            'Tier Allergien',
+            null,
+            false
+        );
 
 
         $this->register_custom_fields();
+
+        // $this->sync();
     }
 
     function activate_plugin()
@@ -184,9 +246,59 @@ class ShelterappAnimals
             return;
         }
 
+        $file = file_get_contents(dirname(__FILE__) . '/../../openapi.json');
+        $schema = json_decode($file, true);
+        $animalSchema = $schema['components']['schemas']['Animal']['properties'];
+        $required = $schema['components']['schemas']['Animal']['required'];
+
+        $this->get_custom_input_group('Stammdaten', [
+            'dateOfBirth',
+            'sex',
+            'color',
+            'breedOne',
+            'breedTwo',
+            'chipNumber',
+            'description',
+            'wasFound',
+            'missing',
+        ], $animalSchema, $schema, $required);
+
+        $this->get_custom_input_group('Maße', [
+            'weight',
+            'heightAtWithers',
+            'circumferenceOfNeck',
+            'lengthOfBack',
+            'circumferenceOfChest',
+        ], $animalSchema, $schema, $required);
+
+        $this->get_custom_input_group('Shelter Interner', [
+            'dateOfAdmission',
+            'dateOfLeave',
+            'dateOfDeath',
+            'status',
+            'notes',
+            'internalNotes',
+            'donationCall',
+            'successStory',
+            'privateAdoption',
+        ], $animalSchema, $schema, $required);
+
+        $this->get_custom_input_group('Medizinisches', [
+            'castrated',
+            'bloodType',
+        ], $animalSchema, $schema, $required);
+
+        /*
+        mainPictureFileUrl
+        otherPictureFileUrls
+        */
+    }
+
+    function get_custom_input_group(string $groupName, array $fields, $animalSchema, $schema, $required)
+    {
         $group = array(
-            'key' => 'group_65fc4ecf8ebee',
-            'title' => 'Animal fields',
+            'key' => 'group_' . $groupName,
+            'title' => $groupName,
             'fields' => array(),
             'location' => array(
                 array(
@@ -208,59 +320,62 @@ class ShelterappAnimals
             'show_in_rest' => 0,
         );
 
-        $file = file_get_contents(dirname(__FILE__) . '/../../openapi.json');
-        $schema = json_decode($file, true);
-        $animalSchema = $schema['components']['schemas']['Animal']['properties'];
-        $required = $schema['components']['schemas']['Animal']['required'];
+        foreach ($fields as $field) {
+            foreach ($animalSchema as $key => $_value) {
+                if ($field !== $key) {
+                    continue;
+                }
+                $value = $animalSchema[$key];
+                if (isset($value['allOf']) && is_array($value['allOf']) && count($value['allOf']) > 0) {
+                    $entry = $value['allOf'][0];
+                    if (isset($entry['$ref'])) {
+                        $value['$ref'] = $entry['$ref'];
+                    }
+                }
+                if (isset($value['$ref'])) {
+                    $name = basename($value['$ref']);
+                    $ref = $schema['components']['schemas'][$name];
+                    if ($name === 'LocalDate') {
+                        $value['type'] = 'date';
+                        $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
+                    } else if ($name === 'LocalDateTime') {
+                        $value['type'] = 'datetime';
+                        $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
+                    } else if (isset($ref['enum'])) {
+                        // this is a enum!
+                        $field = array(
+                            'key' => 'field_' . $key,
+                            'label' => $key,
+                            'name' => $key,
+                            'aria-label' => $key,
+                            'type' => 'select',
+                            'instructions' => '',
+                            'required' => in_array($key, $required) ? 1 : 0,
+                            'conditional_logic' => 0,
+                            'wrapper' => array(
+                                'width' => '',
+                                'class' => '',
+                                'id' => '',
+                            ),
+                            'choices' => array_combine($ref['enum'], $ref['enum']),
+                            'default_value' => '',
+                            'allow_null' => 0,
+                            'multiple' => 0,
+                            'ui' => 0,
+                            'ajax' => 0,
+                            'placeholder' => '',
+                            'return_format' => 'value',
+                        );
+                        $group['fields'][] = $field;
+                    } else {
+                        out($value);
+                    }
 
-        foreach ($animalSchema as $key => $_value) {
-            if (in_array($key, ['id', 'name', 'type', 'procedures'])) {
-                continue;
-            }
-            $value = $animalSchema[$key];
-            if (isset($value['$ref'])) {
-                $name = basename($value['$ref']);
-                $ref = $schema['components']['schemas'][$name];
-                if ($name === 'LocalDate') {
-                    $value['type'] = 'date';
-                    $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
-                } else if ($name === 'LocalDateTime') {
-                    $value['type'] = 'datetime';
-                    $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
-                } else if (isset($ref['enum'])) {
-                    // this is a enum!
-                    $field = array(
-                        'key' => 'field_' . $key,
-                        'label' => $key,
-                        'name' => $key,
-                        'aria-label' => $key,
-                        'type' => 'select',
-                        'instructions' => '',
-                        'required' => in_array($key, $required) ? 1 : 0,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'choices' => $ref['enum'],
-                        'default_value' => '',
-                        'allow_null' => 0,
-                        'multiple' => 0,
-                        'ui' => 0,
-                        'ajax' => 0,
-                        'placeholder' => '',
-                        'return_format' => 'value',
-                    );
-                    $group['fields'][] = $field;
-                } else {
-                    out($value);
+                    continue;
                 }
 
-                continue;
+                $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
             }
-
-            $group['fields'][] = $this->getFieldOfType($required, $value['type'], $key);
         }
 
         acf_add_local_field_group($group);
@@ -410,8 +525,6 @@ class ShelterappAnimals
 
     function sync()
     {
-        error_log('=============================================================');
-        error_log('SYNCING');
         $client = sa_get_animal_resource_client();
         if (!$client) {
             error_log('Could not get client, no token or token expired.');
@@ -419,15 +532,67 @@ class ShelterappAnimals
         }
         $animals = $this->initAnimalArray();
         $this->getAllAnimals($client, $animals);
-        out(count($animals));
-        //out($animals);
-        $animals = array_slice($animals, 0, 1);
 
         foreach ($animals as $animal) {
-            out($animal->jsonSerialize());
+            sa_sync_ensure_term($animal->getType());
+            sa_sync_ensure_illnesses($animal->getIllnesses());
+            sa_sync_ensure_allergies($animal->getAllergies());
+
+            $args = array(
+                'meta_key' => 'shelterapp_id',
+                'meta_value' => $animal->getId(),
+                'post_type' => 'shelterapp_animals',
+                'post_status' => 'any',
+                'posts_per_page' => -1
+            );
+            $posts = get_posts($args);
+            if (count($posts) > 0) {
+                // we already have a post with this link id!
+                sa_sync_update_animal($animal, $posts[0]);
+            } else {
+                sa_sync_insert_animal($animal);
+            }
         }
     }
 }
 
 global $SHELTERAPP_GLOBAL_ANIMAL;
 $SHELTERAPP_GLOBAL_ANIMAL = new ShelterappAnimals();
+
+
+
+function wporg_add_custom_box()
+{
+    $screens = ['shelterapp_animals'];
+    foreach ($screens as $screen) {
+        add_meta_box('postimagegalery', 'Galerie', 'wporg_custom_box_html', null, 'side', 'low', array('__back_compat_meta_box' => true));
+    }
+}
+add_action('add_meta_boxes', 'wporg_add_custom_box');
+
+function wporg_custom_box_html($post)
+{
+    wp_enqueue_script('image-galery-script', plugin_dir_url(SHELTERAPP_PATH) . 'js/imageGalery.js', array('jquery'), '1.0', true);
+    wp_enqueue_style('image-galery-style', plugin_dir_url(SHELTERAPP_PATH) . 'css/imageGalery.css', array(), '1.0');
+
+    $galery_ids = get_post_meta($post->ID, 'otherPictureFileUrls', true);
+    echo _wporg_custom_box_html($galery_ids, $post->ID);
+}
+
+function _wporg_custom_box_html($galery_ids = [], $post = null)
+{
+    $content = '<input type="button" id="add_image_to_galery" class="button button-primary button-large" value="Bild Hinzufügen">';
+    $content .= '<div id="image-gallery" class="image-gallery">';
+    if (isset($galery_ids) && is_array($galery_ids)) {
+        foreach ($galery_ids as $id) {
+            $content .= '<div class="image-gallery-item" data-id="' . $id . '">';
+            $content .= '<img src="' . wp_get_attachment_url($id) . '" alt="Bild">';
+            $content .= '<input type="button" class="button button-primary button-large delete" value="Löschen">';
+            $content .= '<input type="hidden" name="otherPictureFileUrls[]" value="' . $id . '">';
+            $content .= '</div>';
+        }
+    }
+    $content .= '</div>';
+
+    return $content;
+}

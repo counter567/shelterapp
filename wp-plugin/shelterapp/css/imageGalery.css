@@ -1,0 +1,26 @@
+.image-gallery {
+  padding: 1rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+}
+
+#image-gallery .image-gallery-item {
+  position: relative;
+  width: 33%;
+  padding-top: 33%;
+  height: 0;
+}
+#image-gallery .image-gallery-item img {
+  position: absolute;
+  inset: 2%;
+  object-fit: cover;
+  width: 96%;
+  height: 96%;
+}
+#image-gallery .image-gallery-item input {
+  position: absolute;
+  bottom: 8px;
+  inset: 8px 10px;
+  top: unset;
+}

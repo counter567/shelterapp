@@ -1,6 +1,6 @@
 import { AnimalSex } from "./animalSex";
 import { AnimalSource } from "./animalSource";
-import { AnimalStatus, getAnimalStatusByIndex } from "./animalStatus";
+import { AnimalStatus } from "./animalStatus";
 export class Animal {
   constructor(animalSource: AnimalSource) {
     const props = { ...animalSource.shelterapp_meta };
@@ -9,16 +9,16 @@ export class Animal {
       cType: animalSource.cType ?? "",
       id: animalSource.id,
 
-      illnesses: props.illnesses?.split(",") ?? [],
-      allergies: props.allergies?.split(",") ?? [],
-      otherPictureFileUrls: props.otherPictureFileUrls?.split(",") ?? [],
+      illnesses: props.illnesses ?? [],
+      allergies: props.allergies ?? [],
+      otherPictureFileUrls: props.otherPictureFileUrls ?? [],
       dateOfBirth: parseDate(props.dateOfBirth),
       dateOfAdmission: parseDate(props.dateOfAdmission),
       dateOfLeave: parseDate(props.dateOfLeave),
       dateOfDeath: parseDate(props.dateOfDeath),
       breedTwo: props.breedTwo ?? "",
       sex: props.sex === "0" ? AnimalSex.Male : AnimalSex.Female,
-      status: getAnimalStatusByIndex(+props.status!),
+      status: props.status,
       _public: parseBoolean(props._public!),
       isPublic: parseBoolean(props.isPublic!),
       wasFound: parseBoolean(props.wasFound!),
@@ -34,13 +34,13 @@ export class Animal {
     });
   }
 
-  toJson() {
-    return Object.assign({}, this, {
-      illnesses: this.illnesses?.join(","),
-      allergies: this.allergies?.join(","),
-      otherPictureFileUrls: this.otherPictureFileUrls?.join(","),
-    });
-  }
+  // toJson() {
+  //   return Object.assign({}, this, {
+  //     illnesses: this.illnesses?.join(","),
+  //     allergies: this.allergies?.join(","),
+  //     otherPictureFileUrls: this.otherPictureFileUrls?.join(","),
+  //   });
+  // }
 
   id: string = "";
   name: string = "";

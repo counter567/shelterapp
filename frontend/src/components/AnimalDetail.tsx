@@ -1,24 +1,28 @@
 import { useEffect, useState } from "react";
+import ImageGallery from "react-image-gallery";
 import { formatDate } from "../helper/dateFormat";
 import {
-  getCSSColorByCardColor,
   germanStatus,
+  getCSSColorByCardColor,
 } from "../helper/getCardColorByAnimalStatus";
 import CakeIcon from "../icons/cake";
-import CalendarIcon from "../icons/calendar";
 import { Animal } from "../models/animal";
 import { getAnimal } from "../service/animalapi";
 import "./AnimalDetail.css";
 import BirthDate from "./Birthdate";
 import Gender, { sexInGerman } from "./Gender";
 import PayPalButton from "./PaypalButton";
-import ImageGallery from "react-image-gallery";
+import { useParams } from "react-router-dom";
 
 const AnimalDetail = () => {
   const [animal, setAnimals] = useState<Animal>();
+  const [idValue, setId] = useState<string>("");
+  const { id } = useParams<{ id: string }>();
+  if (idValue !== id) setId(id!);
+
   useEffect(() => {
     (async () => {
-      const animalSource = await getAnimal(7);
+      const animalSource = await getAnimal(+idValue);
       setAnimals(new Animal(animalSource));
     })();
   }, [setAnimals]);
