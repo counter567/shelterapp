@@ -72,12 +72,12 @@ class AnimalResource {
             PanacheQueryParameter(Animal::name.name, nameContains, PanacheQueryParameter.Type.LIKE),
             PanacheQueryParameter(Animal::type.name, typeContains, PanacheQueryParameter.Type.LIKE),
             PanacheQueryParameter(Animal::status.name, status),
-            PanacheQueryParameter(Animal::isPublic.name, isPublic),
-            PanacheQueryParameter(Animal::isSuccessStory.name, isSuccessStory),
-            PanacheQueryParameter(Animal::isMissing.name, isMissing),
-            PanacheQueryParameter(Animal::isPrivateAdoption.name, isPrivateAdoption),
+            PanacheQueryParameter(Animal::public.name, isPublic),
+            PanacheQueryParameter(Animal::successStory.name, isSuccessStory),
+            PanacheQueryParameter(Animal::missing.name, isMissing),
+            PanacheQueryParameter(Animal::privateAdoption.name, isPrivateAdoption),
             PanacheQueryParameter(Animal::wasFound.name, wasFound),
-            PanacheQueryParameter(Animal::isCastrated.name, isCastrated),
+            PanacheQueryParameter(Animal::castrated.name, isCastrated),
             PanacheQueryParameter(Animal::id.name, id),
             PanacheQueryParameter(Animal::chipNumber.name, chipNumberContains, PanacheQueryParameter.Type.LIKE),
             PanacheQueryParameter(Animal::breedOne.name, breedOneContains, PanacheQueryParameter.Type.LIKE),
@@ -140,12 +140,12 @@ class AnimalResource {
         dbAnimal.sex = animal.sex
         dbAnimal.type = animal.type
         dbAnimal.status = animal.status
-        dbAnimal.isPublic = animal.isPublic
-        dbAnimal.isSuccessStory = animal.isSuccessStory
-        dbAnimal.isMissing = animal.isMissing
-        dbAnimal.isPrivateAdoption = animal.isPrivateAdoption
+        dbAnimal.public = animal.public
+        dbAnimal.successStory = animal.successStory
+        dbAnimal.missing = animal.missing
+        dbAnimal.privateAdoption = animal.privateAdoption
         dbAnimal.wasFound = animal.wasFound
-        dbAnimal.isCastrated = animal.isCastrated
+        dbAnimal.castrated = animal.castrated
         dbAnimal.chipNumber = animal.chipNumber
         dbAnimal.breedOne = animal.breedOne
         dbAnimal.breedTwo = animal.breedTwo
