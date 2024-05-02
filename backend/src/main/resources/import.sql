@@ -5,8 +5,8 @@ VALUES (2, '2024-03-21 11:28:19.000000', '2024-03-21 11:28:21.000000', '07f0711f
         '07f0711f-b952-4f02-9e85-f90a2a69b0e1', 'test@test.de', 'Felix', 'Specht',
         '$2a$12$krc9SDoD11UDI7YHXp7kx.QaKWzd7RhAMZ5A1D6bJeE5lh8hASn.q', 'test');
 
-INSERT INTO public."animal" (id, tenantId, name, dateOfAdmission, type, breedOne, breedTwo, sex, 
-    isPublic, status, donationCall, isMissing, isSuccessStory, isPrivateAdoption, isCastrated, dateOfBirth, color, 
+INSERT INTO public."animal" (id, tenantId, name, dateOfAdmission, type, breedOne, breedTwo, sex,
+    public, status, donationCall, missing, successStory, privateAdoption, castrated, dateOfBirth, color,
     weight, heightAtWithers, circumferenceOfNeck, lengthOfBack, circumferenceOfChest, bloodType, chipNumber, wasFound,
     notes, description, internalNotes
 ) VALUES ( '2fd779ac-28dc-4055-8a65-0c2e41832c7a', '07f0711f-b952-4f02-9e85-f90a2a69b0e1', 'Minnie', '2023-11-01T22:13:00.946Z', 'Dog', 'Husky', 'Husky', 1, true, 6, true, true, false, true, true, '2021-10-27T14:38:52.946Z', 'Purple', 36, 88, 8, 82, 67, 'B', '21fd3730-47c4-4b6c-8657-2ead96fcdb62', true, 'Lorem ipsum dolor sit amet.', 'Lorem ipsum dolor sit amet.', 'Lorem ipsum dolor sit amet.' ),
@@ -59,6 +59,7 @@ INSERT INTO public."animal" (id, tenantId, name, dateOfAdmission, type, breedOne
 ( 'da0c2f8a-b7e0-4f8f-89b3-65e4d598a3f2', '07f0711f-b952-4f02-9e85-f90a2a69b0e1', 'Harley', '2023-05-08T21:36:09.947Z', 'Dog', 'Husky', 'Husky', 0, false, 7, true, true, true, false, false, '2021-04-01T09:28:32.947Z', 'White', 10, 70, 86, 82, 19, '0', '58f635cd-9552-491d-a968-3b00ee8f9bc1', false, 'Lorem ipsum dolor sit amet.', 'Lorem ipsum dolor sit amet.', 'Lorem ipsum dolor sit amet.' ),
 ( '439cbf22-2a1c-4ff7-8e91-98bde1b4060a', '07f0711f-b952-4f02-9e85-f90a2a69b0e1', 'Luna', '2023-06-14T23:18:26.947Z', 'Dog', 'Husky', 'Husky', 0, false, 4, true, false, false, false, false, '2021-03-01T09:17:47.947Z', 'Black', 62, 5, 81, 76, 32, 'A', '13940e20-36cb-4ee6-82dd-a783f2f8a575', true, 'Lorem ipsum dolor sit amet.', 'Lorem ipsum dolor sit amet.', 'Lorem ipsum dolor sit amet.' ),
 ( 'cf01884f-3f4b-4c2e-acbe-95886b284c00', '07f0711f-b952-4f02-9e85-f90a2a69b0e1', 'Zeus', '2023-06-29T03:29:54.947Z', 'Dog', 'Husky', 'Husky', 1, true, 1, true, false, true, true, true, '2021-11-14T19:41:42.947Z', 'Black', 86, 54, 19, 4, 7, 'B', '557b8e17-67b2-4b31-80c3-68d214656a42', true, 'Lorem ipsum dolor sit amet.', 'Lorem ipsum dolor sit amet.', 'Lorem ipsum dolor sit amet.' );
+
 INSERT INTO public."animal_allergies" (animal_id, allergies) VALUES ( '6c274338-95fe-48ad-8f5e-9abc4665a4b8', 'Bacterial Allergies' ),
 ( 'b1fe94cd-7674-4481-bf59-2f6edeee3848', 'Fleas' ),
 ( 'ec109895-905c-4206-bee2-b8897373900e', 'Food Allergies' ),
@@ -113,6 +114,7 @@ INSERT INTO public."animal_allergies" (animal_id, allergies) VALUES ( '6c274338-
 ( '439cbf22-2a1c-4ff7-8e91-98bde1b4060a', 'Bacterial Allergies' ),
 ( 'cf01884f-3f4b-4c2e-acbe-95886b284c00', 'Bacterial Allergies' ),
 ( 'cf01884f-3f4b-4c2e-acbe-95886b284c00', 'Yeast Allergies' );
+
 INSERT INTO public."animal_illnesses" (animal_id, illnesses) VALUES ( '2fd779ac-28dc-4055-8a65-0c2e41832c7a', 'Feline Kidney Disease' ),
 ( '2fd779ac-28dc-4055-8a65-0c2e41832c7a', 'Feline Diabetes' ),
 ( '6c274338-95fe-48ad-8f5e-9abc4665a4b8', 'Feline Infectious Peritonitis (FIP)' ),
