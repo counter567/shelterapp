@@ -10,6 +10,7 @@ import jakarta.validation.Valid
 import jakarta.ws.rs.*
 import org.eclipse.microprofile.jwt.JsonWebToken
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 
@@ -60,6 +61,10 @@ class AnimalResource {
         @QueryParam("dateOfLeaveAfter") dateOfLeaveAfter: LocalDate?,
         @QueryParam("dateOfDeathBefore") dateOfDeathBefore: LocalDate?,
         @QueryParam("dateOfDeathAfter") dateOfDeathAfter: LocalDate?,
+        @QueryParam("createdBefore") createdBefore: LocalDateTime?,
+        @QueryParam("createdAfter") createdAfter: LocalDateTime?,
+        @QueryParam("changedBefore") changedBefore: LocalDateTime?,
+        @QueryParam("changedAfter") changedAfter: LocalDateTime?,
     ) = withPanacheSession {
         val tenantId = jwt.getTenantIdOrThrow()
         val params = listOf(
@@ -99,7 +104,11 @@ class AnimalResource {
             PanacheQueryParameter(Animal::dateOfLeave.name, dateOfLeaveAfter, PanacheQueryParameter.Type.GREATER_THAN),
             PanacheQueryParameter(Animal::dateOfDeath.name, dateOfDeathBefore, PanacheQueryParameter.Type.LESS_THAN),
             PanacheQueryParameter(Animal::dateOfDeath.name, dateOfDeathAfter, PanacheQueryParameter.Type.GREATER_THAN),
-        )
+            PanacheQueryParameter(Animal::createdAt.name, createdBefore, PanacheQueryParameter.Type.LESS_THAN),
+            PanacheQueryParameter(Animal::createdAt.name, createdAfter, PanacheQueryParameter.Type.GREATER_THAN),
+            PanacheQueryParameter(Animal::updatedAt.name, changedBefore, PanacheQueryParameter.Type.LESS_THAN),
+            PanacheQueryParameter(Animal::updatedAt.name, changedAfter, PanacheQueryParameter.Type.GREATER_THAN),
+            )
         val queryParameters = PanacheQueryParameters(params, page ?: 0, pageSize ?: 20)
         return@withPanacheSession try {
             Animal.query(queryParameters)

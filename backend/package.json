@@ -12,6 +12,7 @@
     "build-native-image": "./mvnw package -Pnative -Dquarkus.native.container-build=true",
     "generate": "mvn clean; npm run build-image",
     "pregenerate": "./tools/generate-cert.sh",
-    "postgenerate": "./tools/codegen.sh"
+    "postgenerate": "./tools/codegen.sh",
+    "clean": "./mvnw clean"
   }
 }
