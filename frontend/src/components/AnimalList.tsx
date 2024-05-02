@@ -16,13 +16,29 @@ export default function AnimalList() {
   const [animals, setAnimals] = useState<Animal[]>([]);
   useEffect(() => {
     (async () => {
-      const res = await getAnimalsPaged();
-      console.log(res._pagination.total);
-      console.log(res._pagination.totalPages);
+      // maybe outsource this to a global store?
+      // zustand or mobx are pretty EZ to use.
 
+      // get animals by search
+      const resSearch = await getAnimalsPaged(undefined, undefined, {
+        search: 'zeus',
+        search_columns: ['post_title'],
+      });
+      console.log(resSearch);
+
+      // get animals by taxonomy (shelterapp_animal_type, shelterapp_animal_illness, shelterapp_animal_allergies)
+      const resCats = await getAnimalsPaged(undefined, undefined, {
+        shelterapp_animal_type: [3], // this is the ID of the 'Cat' term
+      });
+      console.log(resCats);
+
+      // get all animals
       const resAll = await getAllanimals(50);
+      console.log(resAll);
+      console.log(resAll.length);
 
-      const animals = resAll.map((a) => new Animal(a));
+      const res = await getAnimalsPaged();
+      const animals = res.map((a) => new Animal(a));
       setAnimals(animals);
     })();
   }, []);
