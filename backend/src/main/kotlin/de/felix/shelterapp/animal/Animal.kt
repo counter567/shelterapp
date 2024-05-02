@@ -3,9 +3,7 @@ package de.felix.shelterapp.animal
 import de.felix.shelterapp.util.PagedPanacheCompanion
 import de.felix.shelterapp.util.TenantPanacheEntity
 import de.felix.shelterapp.util.utcNow
-import io.quarkus.hibernate.reactive.panache.PanacheEntity
 import jakarta.persistence.*
-import jakarta.validation.constraints.NotBlank
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -38,20 +36,22 @@ class Animal: TenantPanacheEntity() {
     var circumferenceOfNeck: Int? = null
     var lengthOfBack: Int? = null
     var circumferenceOfChest: Int? = null
-    var isCastrated: Boolean? = null
+    var castrated: Boolean? = null
     var bloodType: String? = null
     @ElementCollection(fetch = FetchType.EAGER)
     var illnesses: List<String>? = null
     @ElementCollection(fetch = FetchType.EAGER)
     var allergies: List<String>? = null
     var chipNumber: String? = null
-    var isPublic: Boolean = false
+    var public: Boolean = false
     lateinit var status: AnimalStatus
-    var wasFound: Boolean? = null
-    var isSuccessStory: Boolean = false
-    var isMissing: Boolean = false
-    var isPrivateAdoption: Boolean = false
+    var wasFound: Boolean = false
+    var successStory: Boolean = false
+    var missing: Boolean = false
+    var privateAdoption: Boolean = false
+    @Column(columnDefinition = "TEXT")
     var notes: String? = null
+    @Column(columnDefinition = "TEXT")
     var description: String? = null
     var donationCall: Boolean = false
     var internalNotes: String? = null
@@ -59,10 +59,14 @@ class Animal: TenantPanacheEntity() {
     var dateOfDeath: LocalDate? = null
     var createdAt: LocalDateTime = utcNow()
     var updatedAt: LocalDateTime = utcNow()
+    @Column(columnDefinition = "TEXT")
+    var notices: String = ""
+    @Column(columnDefinition = "TEXT")
+    var supporters: String = ""
 }
 
 enum class AnimalSex {
-    MALE, FEMALE
+    MALE, FEMALE, DIV
 }
 
 enum class AnimalStatus {
