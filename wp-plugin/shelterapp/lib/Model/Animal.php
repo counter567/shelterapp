@@ -73,17 +73,17 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'circumference_of_neck' => 'int',
         'length_of_back' => 'int',
         'circumference_of_chest' => 'int',
-        'is_castrated' => 'bool',
+        'castrated' => 'bool',
         'blood_type' => 'string',
         'illnesses' => 'string[]',
         'allergies' => 'string[]',
         'chip_number' => 'string',
-        'is_public' => 'bool',
+        'public' => 'bool',
         'status' => '\OpenAPI\Client\Model\AnimalStatus',
         'was_found' => 'bool',
-        'is_success_story' => 'bool',
-        'is_missing' => 'bool',
-        'is_private_adoption' => 'bool',
+        'success_story' => 'bool',
+        'missing' => 'bool',
+        'private_adoption' => 'bool',
         'notes' => 'string',
         'description' => 'string',
         'donation_call' => 'bool',
@@ -92,11 +92,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'date_of_death' => '\DateTime',
         'created_at' => '\DateTime',
         'updated_at' => '\DateTime',
-        'castrated' => 'bool',
-        'public' => 'bool',
-        'success_story' => 'bool',
-        'missing' => 'bool',
-        'private_adoption' => 'bool'
+        'notices' => 'string',
+        'supporters' => 'string'
     ];
 
     /**
@@ -123,17 +120,17 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'circumference_of_neck' => 'int32',
         'length_of_back' => 'int32',
         'circumference_of_chest' => 'int32',
-        'is_castrated' => null,
+        'castrated' => null,
         'blood_type' => null,
         'illnesses' => null,
         'allergies' => null,
         'chip_number' => null,
-        'is_public' => null,
+        'public' => null,
         'status' => null,
         'was_found' => null,
-        'is_success_story' => null,
-        'is_missing' => null,
-        'is_private_adoption' => null,
+        'success_story' => null,
+        'missing' => null,
+        'private_adoption' => null,
         'notes' => null,
         'description' => null,
         'donation_call' => null,
@@ -142,11 +139,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'date_of_death' => 'date',
         'created_at' => 'date-time',
         'updated_at' => 'date-time',
-        'castrated' => null,
-        'public' => null,
-        'success_story' => null,
-        'missing' => null,
-        'private_adoption' => null
+        'notices' => null,
+        'supporters' => null
     ];
 
     /**
@@ -171,17 +165,17 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'circumference_of_neck' => true,
         'length_of_back' => true,
         'circumference_of_chest' => true,
-        'is_castrated' => true,
+        'castrated' => true,
         'blood_type' => true,
         'illnesses' => true,
         'allergies' => true,
         'chip_number' => true,
-        'is_public' => false,
+        'public' => false,
         'status' => false,
-        'was_found' => true,
-        'is_success_story' => false,
-        'is_missing' => false,
-        'is_private_adoption' => false,
+        'was_found' => false,
+        'success_story' => false,
+        'missing' => false,
+        'private_adoption' => false,
         'notes' => true,
         'description' => true,
         'donation_call' => false,
@@ -190,11 +184,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'date_of_death' => true,
         'created_at' => false,
         'updated_at' => false,
-        'castrated' => true,
-        'public' => false,
-        'success_story' => false,
-        'missing' => false,
-        'private_adoption' => false
+        'notices' => false,
+        'supporters' => false
     ];
 
     /**
@@ -299,17 +290,17 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'circumference_of_neck' => 'circumferenceOfNeck',
         'length_of_back' => 'lengthOfBack',
         'circumference_of_chest' => 'circumferenceOfChest',
-        'is_castrated' => 'isCastrated',
+        'castrated' => 'castrated',
         'blood_type' => 'bloodType',
         'illnesses' => 'illnesses',
         'allergies' => 'allergies',
         'chip_number' => 'chipNumber',
-        'is_public' => 'isPublic',
+        'public' => 'public',
         'status' => 'status',
         'was_found' => 'wasFound',
-        'is_success_story' => 'isSuccessStory',
-        'is_missing' => 'isMissing',
-        'is_private_adoption' => 'isPrivateAdoption',
+        'success_story' => 'successStory',
+        'missing' => 'missing',
+        'private_adoption' => 'privateAdoption',
         'notes' => 'notes',
         'description' => 'description',
         'donation_call' => 'donationCall',
@@ -318,11 +309,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'date_of_death' => 'dateOfDeath',
         'created_at' => 'createdAt',
         'updated_at' => 'updatedAt',
-        'castrated' => 'castrated',
-        'public' => 'public',
-        'success_story' => 'successStory',
-        'missing' => 'missing',
-        'private_adoption' => 'privateAdoption'
+        'notices' => 'notices',
+        'supporters' => 'supporters'
     ];
 
     /**
@@ -347,17 +335,17 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'circumference_of_neck' => 'setCircumferenceOfNeck',
         'length_of_back' => 'setLengthOfBack',
         'circumference_of_chest' => 'setCircumferenceOfChest',
-        'is_castrated' => 'setIsCastrated',
+        'castrated' => 'setCastrated',
         'blood_type' => 'setBloodType',
         'illnesses' => 'setIllnesses',
         'allergies' => 'setAllergies',
         'chip_number' => 'setChipNumber',
-        'is_public' => 'setIsPublic',
+        'public' => 'setPublic',
         'status' => 'setStatus',
         'was_found' => 'setWasFound',
-        'is_success_story' => 'setIsSuccessStory',
-        'is_missing' => 'setIsMissing',
-        'is_private_adoption' => 'setIsPrivateAdoption',
+        'success_story' => 'setSuccessStory',
+        'missing' => 'setMissing',
+        'private_adoption' => 'setPrivateAdoption',
         'notes' => 'setNotes',
         'description' => 'setDescription',
         'donation_call' => 'setDonationCall',
@@ -366,11 +354,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'date_of_death' => 'setDateOfDeath',
         'created_at' => 'setCreatedAt',
         'updated_at' => 'setUpdatedAt',
-        'castrated' => 'setCastrated',
-        'public' => 'setPublic',
-        'success_story' => 'setSuccessStory',
-        'missing' => 'setMissing',
-        'private_adoption' => 'setPrivateAdoption'
+        'notices' => 'setNotices',
+        'supporters' => 'setSupporters'
     ];
 
     /**
@@ -395,17 +380,17 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'circumference_of_neck' => 'getCircumferenceOfNeck',
         'length_of_back' => 'getLengthOfBack',
         'circumference_of_chest' => 'getCircumferenceOfChest',
-        'is_castrated' => 'getIsCastrated',
+        'castrated' => 'getCastrated',
         'blood_type' => 'getBloodType',
         'illnesses' => 'getIllnesses',
         'allergies' => 'getAllergies',
         'chip_number' => 'getChipNumber',
-        'is_public' => 'getIsPublic',
+        'public' => 'getPublic',
         'status' => 'getStatus',
         'was_found' => 'getWasFound',
-        'is_success_story' => 'getIsSuccessStory',
-        'is_missing' => 'getIsMissing',
-        'is_private_adoption' => 'getIsPrivateAdoption',
+        'success_story' => 'getSuccessStory',
+        'missing' => 'getMissing',
+        'private_adoption' => 'getPrivateAdoption',
         'notes' => 'getNotes',
         'description' => 'getDescription',
         'donation_call' => 'getDonationCall',
@@ -414,11 +399,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'date_of_death' => 'getDateOfDeath',
         'created_at' => 'getCreatedAt',
         'updated_at' => 'getUpdatedAt',
-        'castrated' => 'getCastrated',
-        'public' => 'getPublic',
-        'success_story' => 'getSuccessStory',
-        'missing' => 'getMissing',
-        'private_adoption' => 'getPrivateAdoption'
+        'notices' => 'getNotices',
+        'supporters' => 'getSupporters'
     ];
 
     /**
@@ -494,17 +476,17 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('circumference_of_neck', $data ?? [], null);
         $this->setIfExists('length_of_back', $data ?? [], null);
         $this->setIfExists('circumference_of_chest', $data ?? [], null);
-        $this->setIfExists('is_castrated', $data ?? [], null);
+        $this->setIfExists('castrated', $data ?? [], null);
         $this->setIfExists('blood_type', $data ?? [], null);
         $this->setIfExists('illnesses', $data ?? [], null);
         $this->setIfExists('allergies', $data ?? [], null);
         $this->setIfExists('chip_number', $data ?? [], null);
-        $this->setIfExists('is_public', $data ?? [], null);
+        $this->setIfExists('public', $data ?? [], null);
         $this->setIfExists('status', $data ?? [], null);
         $this->setIfExists('was_found', $data ?? [], null);
-        $this->setIfExists('is_success_story', $data ?? [], null);
-        $this->setIfExists('is_missing', $data ?? [], null);
-        $this->setIfExists('is_private_adoption', $data ?? [], null);
+        $this->setIfExists('success_story', $data ?? [], null);
+        $this->setIfExists('missing', $data ?? [], null);
+        $this->setIfExists('private_adoption', $data ?? [], null);
         $this->setIfExists('notes', $data ?? [], null);
         $this->setIfExists('description', $data ?? [], null);
         $this->setIfExists('donation_call', $data ?? [], null);
@@ -513,11 +495,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('date_of_death', $data ?? [], null);
         $this->setIfExists('created_at', $data ?? [], null);
         $this->setIfExists('updated_at', $data ?? [], null);
-        $this->setIfExists('castrated', $data ?? [], null);
-        $this->setIfExists('public', $data ?? [], null);
-        $this->setIfExists('success_story', $data ?? [], null);
-        $this->setIfExists('missing', $data ?? [], null);
-        $this->setIfExists('private_adoption', $data ?? [], null);
+        $this->setIfExists('notices', $data ?? [], null);
+        $this->setIfExists('supporters', $data ?? [], null);
     }
 
     /**
@@ -577,6 +556,12 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         }
         if ($this->container['updated_at'] === null) {
             $invalidProperties[] = "'updated_at' can't be null";
+        }
+        if ($this->container['notices'] === null) {
+            $invalidProperties[] = "'notices' can't be null";
+        }
+        if ($this->container['supporters'] === null) {
+            $invalidProperties[] = "'supporters' can't be null";
         }
         return $invalidProperties;
     }
@@ -1101,35 +1086,35 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Gets is_castrated
+     * Gets castrated
      *
      * @return bool|null
      */
-    public function getIsCastrated()
+    public function getCastrated()
     {
-        return $this->container['is_castrated'];
+        return $this->container['castrated'];
     }
 
     /**
-     * Sets is_castrated
+     * Sets castrated
      *
-     * @param bool|null $is_castrated is_castrated
+     * @param bool|null $castrated castrated
      *
      * @return self
      */
-    public function setIsCastrated($is_castrated)
+    public function setCastrated($castrated)
     {
-        if (is_null($is_castrated)) {
-            array_push($this->openAPINullablesSetToNull, 'is_castrated');
+        if (is_null($castrated)) {
+            array_push($this->openAPINullablesSetToNull, 'castrated');
         } else {
             $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
-            $index = array_search('is_castrated', $nullablesSetToNull);
+            $index = array_search('castrated', $nullablesSetToNull);
             if ($index !== FALSE) {
                 unset($nullablesSetToNull[$index]);
                 $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
             }
         }
-        $this->container['is_castrated'] = $is_castrated;
+        $this->container['castrated'] = $castrated;
 
         return $this;
     }
@@ -1271,28 +1256,28 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Gets is_public
+     * Gets public
      *
      * @return bool|null
      */
-    public function getIsPublic()
+    public function getPublic()
     {
-        return $this->container['is_public'];
+        return $this->container['public'];
     }
 
     /**
-     * Sets is_public
+     * Sets public
      *
-     * @param bool|null $is_public is_public
+     * @param bool|null $public public
      *
      * @return self
      */
-    public function setIsPublic($is_public)
+    public function setPublic($public)
     {
-        if (is_null($is_public)) {
-            throw new \InvalidArgumentException('non-nullable is_public cannot be null');
+        if (is_null($public)) {
+            throw new \InvalidArgumentException('non-nullable public cannot be null');
         }
-        $this->container['is_public'] = $is_public;
+        $this->container['public'] = $public;
 
         return $this;
     }
@@ -1344,14 +1329,7 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
     public function setWasFound($was_found)
     {
         if (is_null($was_found)) {
-            array_push($this->openAPINullablesSetToNull, 'was_found');
-        } else {
-            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
-            $index = array_search('was_found', $nullablesSetToNull);
-            if ($index !== FALSE) {
-                unset($nullablesSetToNull[$index]);
-                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
-            }
+            throw new \InvalidArgumentException('non-nullable was_found cannot be null');
         }
         $this->container['was_found'] = $was_found;
 
@@ -1359,82 +1337,82 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Gets is_success_story
+     * Gets success_story
      *
      * @return bool|null
      */
-    public function getIsSuccessStory()
+    public function getSuccessStory()
     {
-        return $this->container['is_success_story'];
+        return $this->container['success_story'];
     }
 
     /**
-     * Sets is_success_story
+     * Sets success_story
      *
-     * @param bool|null $is_success_story is_success_story
+     * @param bool|null $success_story success_story
      *
      * @return self
      */
-    public function setIsSuccessStory($is_success_story)
+    public function setSuccessStory($success_story)
     {
-        if (is_null($is_success_story)) {
-            throw new \InvalidArgumentException('non-nullable is_success_story cannot be null');
+        if (is_null($success_story)) {
+            throw new \InvalidArgumentException('non-nullable success_story cannot be null');
         }
-        $this->container['is_success_story'] = $is_success_story;
+        $this->container['success_story'] = $success_story;
 
         return $this;
     }
 
     /**
-     * Gets is_missing
+     * Gets missing
      *
      * @return bool|null
      */
-    public function getIsMissing()
+    public function getMissing()
     {
-        return $this->container['is_missing'];
+        return $this->container['missing'];
     }
 
     /**
-     * Sets is_missing
+     * Sets missing
      *
-     * @param bool|null $is_missing is_missing
+     * @param bool|null $missing missing
      *
      * @return self
      */
-    public function setIsMissing($is_missing)
+    public function setMissing($missing)
     {
-        if (is_null($is_missing)) {
-            throw new \InvalidArgumentException('non-nullable is_missing cannot be null');
+        if (is_null($missing)) {
+            throw new \InvalidArgumentException('non-nullable missing cannot be null');
         }
-        $this->container['is_missing'] = $is_missing;
+        $this->container['missing'] = $missing;
 
         return $this;
     }
 
     /**
-     * Gets is_private_adoption
+     * Gets private_adoption
      *
      * @return bool|null
      */
-    public function getIsPrivateAdoption()
+    public function getPrivateAdoption()
     {
-        return $this->container['is_private_adoption'];
+        return $this->container['private_adoption'];
     }
 
     /**
-     * Sets is_private_adoption
+     * Sets private_adoption
      *
-     * @param bool|null $is_private_adoption is_private_adoption
+     * @param bool|null $private_adoption private_adoption
      *
      * @return self
      */
-    public function setIsPrivateAdoption($is_private_adoption)
+    public function setPrivateAdoption($private_adoption)
     {
-        if (is_null($is_private_adoption)) {
-            throw new \InvalidArgumentException('non-nullable is_private_adoption cannot be null');
+        if (is_null($private_adoption)) {
+            throw new \InvalidArgumentException('non-nullable private_adoption cannot be null');
         }
-        $this->container['is_private_adoption'] = $is_private_adoption;
+        $this->container['private_adoption'] = $private_adoption;
 
         return $this;
     }
@@ -1691,143 +1669,55 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Gets castrated
+     * Gets notices
      *
-     * @return bool|null
+     * @return string
      */
-    public function getCastrated()
+    public function getNotices()
     {
-        return $this->container['castrated'];
+        return $this->container['notices'];
     }
 
     /**
-     * Sets castrated
+     * Sets notices
      *
-     * @param bool|null $castrated castrated
+     * @param string $notices notices
      *
      * @return self
      */
-    public function setCastrated($castrated)
+    public function setNotices($notices)
     {
-        if (is_null($castrated)) {
-            array_push($this->openAPINullablesSetToNull, 'castrated');
-        } else {
-            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
-            $index = array_search('castrated', $nullablesSetToNull);
-            if ($index !== FALSE) {
-                unset($nullablesSetToNull[$index]);
-                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
-            }
+        if (is_null($notices)) {
+            throw new \InvalidArgumentException('non-nullable notices cannot be null');
         }
-        $this->container['castrated'] = $castrated;
+        $this->container['notices'] = $notices;
 
         return $this;
     }
 
     /**
-     * Gets public
+     * Gets supporters
      *
-     * @return bool|null
+     * @return string
      */
-    public function getPublic()
+    public function getSupporters()
     {
-        return $this->container['public'];
+        return $this->container['supporters'];
     }
 
     /**
-     * Sets public
+     * Sets supporters
      *
-     * @param bool|null $public public
+     * @param string $supporters supporters
      *
      * @return self
      */
-    public function setPublic($public)
+    public function setSupporters($supporters)
     {
-        if (is_null($public)) {
-            throw new \InvalidArgumentException('non-nullable public cannot be null');
+        if (is_null($supporters)) {
+            throw new \InvalidArgumentException('non-nullable supporters cannot be null');
         }
-        $this->container['public'] = $public;
-
-        return $this;
-    }
-
-    /**
-     * Gets success_story
-     *
-     * @return bool|null
-     */
-    public function getSuccessStory()
-    {
-        return $this->container['success_story'];
-    }
-
-    /**
-     * Sets success_story
-     *
-     * @param bool|null $success_story success_story
-     *
-     * @return self
-     */
-    public function setSuccessStory($success_story)
-    {
-        if (is_null($success_story)) {
-            throw new \InvalidArgumentException('non-nullable success_story cannot be null');
-        }
-        $this->container['success_story'] = $success_story;
-
-        return $this;
-    }
-
-    /**
-     * Gets missing
-     *
-     * @return bool|null
-     */
-    public function getMissing()
-    {
-        return $this->container['missing'];
-    }
-
-    /**
-     * Sets missing
-     *
-     * @param bool|null $missing missing
-     *
-     * @return self
-     */
-    public function setMissing($missing)
-    {
-        if (is_null($missing)) {
-            throw new \InvalidArgumentException('non-nullable missing cannot be null');
-        }
-        $this->container['missing'] = $missing;
-
-        return $this;
-    }
-
-    /**
-     * Gets private_adoption
-     *
-     * @return bool|null
-     */
-    public function getPrivateAdoption()
-    {
-        return $this->container['private_adoption'];
-    }
-
-    /**
-     * Sets private_adoption
-     *
-     * @param bool|null $private_adoption private_adoption
-     *
-     * @return self
-     */
-    public function setPrivateAdoption($private_adoption)
-    {
-        if (is_null($private_adoption)) {
-            throw new \InvalidArgumentException('non-nullable private_adoption cannot be null');
-        }
-        $this->container['private_adoption'] = $private_adoption;
+        $this->container['supporters'] = $supporters;
 
         return $this;
     }

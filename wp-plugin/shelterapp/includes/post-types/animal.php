@@ -41,7 +41,7 @@ class ShelterappAnimals
 
     function __construct()
     {
-        add_action('init', array($this, 'register_post_type'));
+        add_action('init', array($this, 'register_post_type'), 100);
         add_action('admin_menu', array($this, 'setup_admin'));
         add_action('rest_api_init', array($this, 'init_rest'));
         $this->register_custom_fields();
@@ -50,6 +50,7 @@ class ShelterappAnimals
         add_action('switch_theme', array($this, 'switch_theme'));
 
         add_action('save_post', array($this, 'save_post'), 10, 3);
+        add_action('add_meta_boxes', 'sa_add_custom_box_animal_galery');
     }
 
     /**
@@ -245,7 +246,7 @@ class ShelterappAnimals
 
         $this->register_custom_fields();
 
-        // $this->sync();
+        $this->sync();
     }
 
     function activate_plugin()
@@ -538,17 +539,40 @@ class ShelterappAnimals
         }
     }
 
-    function getAllAnimals(OpenAPI\Client\Api\AnimalResourceApi $client, array &$allAnimals, int $chunksize = 50, int $page = 0)
+    function getAllAnimalsFromDate(OpenAPI\Client\Api\AnimalResourceApi $client, array &$allAnimals, int $chunksize = 50, int $page = 0)
     {
         if ($page > 100) {
             throw new \Exception('To many pages');
         }
-        $animals = $client->animalsGet(page: $page, page_size: $chunksize);
+        $options = sa_get_config();
+        if (isset($options['shelterapp_sync_from'])) {
+            // get all updates from date.
+            $date = new DateTime($options['shelterapp_sync_from'], new DateTimeZone("UTC"));
+            return $this->_getAllAnimalsFromDate($client, $date, $allAnimals, $chunksize, $page + 1);
+        } else {
+            // init with all animals
+
+            return $this->_getAllAnimalsFromDate($client, NULL, $allAnimals, $chunksize, $page + 1);
+        }
+
+    }
+    function _getAllAnimalsFromDate(OpenAPI\Client\Api\AnimalResourceApi $client, $date, array &$allAnimals, int $chunksize = 50, int $page = 0)
+    {
+        if ($page > 100) {
+            throw new \Exception('To many pages');
+        }
+        if (isset($date) && !empty($date)) {
+            // get all updates from date.
+            $animals = $client->animalsGet(page: $page, page_size: $chunksize, updated_after: $date);
+        } else {
+            // init with all animals
+            $animals = $client->animalsGet(page: $page, page_size: $chunksize);
+        }
         array_push($allAnimals, ...$animals);
         if (count($animals) < $chunksize) {
             return;
         }
-        $this->getAllAnimals($client, $allAnimals, $chunksize, $page + 1);
+        $this->_getAllAnimalsFromDate($client, $date, $allAnimals, $chunksize, $page + 1);
     }
 
     /**
@@ -567,7 +591,11 @@ class ShelterappAnimals
             return;
         }
         $animals = $this->initAnimalArray();
-        $this->getAllAnimals($client, $animals);
+        $this->getAllAnimalsFromDate($client, $animals);
+
+        if (isset($animals) && is_array($animals) && count($animals) > 0) {
+            outLog($animals[0]->jsonSerialize());
+        }
 
         foreach ($animals as $animal) {
             sa_sync_ensure_term($animal->getType());
@@ -594,37 +622,3 @@ class ShelterappAnimals
 
 global $SHELTERAPP_GLOBAL_ANIMAL;
 $SHELTERAPP_GLOBAL_ANIMAL = new ShelterappAnimals();
-
-
-
-function wporg_add_custom_box()
-{
-    $screens = ['shelterapp_animals'];
-    foreach ($screens as $screen) {
-        add_meta_box('postimagegalery', 'Galerie', 'wporg_custom_box_html', null, 'side', 'low', array('__back_compat_meta_box' => true));
-    }
-}
-add_action('add_meta_boxes', 'wporg_add_custom_box');
-
-function wporg_custom_box_html($post)
-{
-    wp_enqueue_script('image-galery-script', plugin_dir_url(SHELTERAPP_PATH) . 'js/imageGalery.js', array('jquery'), '1.0', true);
-    wp_enqueue_style('image-galery-style', plugin_dir_url(SHELTERAPP_PATH) . 'css/imageGalery.css', array(), '1.0');
-
-    $galery_ids = get_post_meta($post->ID, 'otherPictureFileUrls', true);
-
-    $content = '<input type="button" id="add_image_to_galery" class="button button-primary button-large" value="Bild Hinzufügen">';
-    $content .= '<div id="image-gallery" class="image-gallery">';
-    if (isset($galery_ids) && is_array($galery_ids)) {
-        foreach ($galery_ids as $id) {
-            $content .= '<div class="image-gallery-item" data-id="' . $id . '">';
-            $content .= '<img src="' . wp_get_attachment_url($id) . '" alt="Bild">';
-            $content .= '<input type="button" class="button button-primary button-large delete" value="Löschen">';
-            $content .= '<input type="hidden" name="otherPictureFileUrls[]" value="' . $id . '">';
-            $content .= '</div>';
-        }
-    }
-    $content .= '</div>';
-
-    echo $content;
-}

@@ -46,6 +46,8 @@ class AnimalSex
 
     public const FEMALE = 'FEMALE';
 
+    public const DIV = 'DIV';
+
     /**
      * Gets allowable values of the enum
      * @return string[]
@@ -54,7 +56,8 @@ class AnimalSex
     {
         return [
             self::MALE,
-            self::FEMALE
+            self::FEMALE,
+            self::DIV
         ];
     }
 }

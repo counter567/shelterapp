@@ -57,3 +57,12 @@ function out(...$print)
     }
     echo '</pre>';
 }
+
+function outLog(...$print)
+{
+
+    foreach ($print as $key => $value) {
+        error_log($value);
+    }
+
+}
