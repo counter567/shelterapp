@@ -6,6 +6,35 @@ $preventPreGetPosts = false;
 $filteredMetaFields = [
     'internalNotes'
 ];
+
+$titleMappings = array(
+    'dateOfBirth' => 'Geburtstag',
+    'sex' => 'Geschlecht',
+    'color' => 'Farbe',
+    'breedOne' => 'Hauptrasse',
+    'breedTwo' => 'Nebenrasse',
+    'chipNumber' => 'Chip Nummer',
+    'description' => 'Beschreibung',
+    'wasFound' => 'Wurde gefunden',
+    'missing' => 'Wird vermisst',
+    'weight' => 'Gewicht',
+    'heightAtWithers' => 'Widerristhöhe',
+    'circumferenceOfNeck' => 'Halsumfang',
+    'lengthOfBack' => 'Rückenlänge',
+    'circumferenceOfChest' => 'Brustumfang',
+    'dateOfAdmission' => 'Aufnahmedatum',
+    'dateOfLeave' => 'Abgabedatum',
+    'dateOfDeath' => 'Todesdatum',
+    'status' => 'Status',
+    'notes' => 'Notizen',
+    'internalNotes' => 'Interne Notizen',
+    'donationCall' => 'Spendenaufruf',
+    'successStory' => 'Erfolgsgeschichte',
+    'privateAdoption' => 'Private Adoption',
+    'castrated' => 'Kastriert',
+    'bloodType' => 'Blutgruppe',
+);
+
 class ShelterappAnimals
 {
     private $rest_is_init = false;
@@ -256,7 +285,7 @@ class ShelterappAnimals
         $animalSchema = $schema['components']['schemas']['Animal']['properties'];
         $required = $schema['components']['schemas']['Animal']['required'];
 
-        $this->get_custom_input_group('Stammdaten', [
+        $this->get_custom_input_group('Stammdaten', 10, [
             'dateOfBirth',
             'sex',
             'color',
@@ -268,7 +297,7 @@ class ShelterappAnimals
             'missing',
         ], $animalSchema, $schema, $required);
 
-        $this->get_custom_input_group('Maße', [
+        $this->get_custom_input_group('Maße', 20, [
             'weight',
             'heightAtWithers',
             'circumferenceOfNeck',
@@ -276,7 +305,7 @@ class ShelterappAnimals
             'circumferenceOfChest',
         ], $animalSchema, $schema, $required);
 
-        $this->get_custom_input_group('Shelter Interner', [
+        $this->get_custom_input_group('Shelter Interner', 30, [
             'dateOfAdmission',
             'dateOfLeave',
             'dateOfDeath',
@@ -288,7 +317,7 @@ class ShelterappAnimals
             'privateAdoption',
         ], $animalSchema, $schema, $required);
 
-        $this->get_custom_input_group('Medizinisches', [
+        $this->get_custom_input_group('Medizinisches', 40, [
             'castrated',
             'bloodType',
         ], $animalSchema, $schema, $required);
@@ -299,10 +328,11 @@ class ShelterappAnimals
         */
     }
 
-    function get_custom_input_group(string $groupName, array $fields, $animalSchema, $schema, $required)
+    function get_custom_input_group(string $groupName, int $order, array $fields, $animalSchema, $schema, $required)
     {
+        global $titleMappings;
         $group = array(
-            'key' => 'group_' . $groupName,
+            'key' => 'group_' . sanitize_title($groupName),
             'title' => $groupName,
             'fields' => array(),
             'location' => array(
@@ -350,7 +380,7 @@ class ShelterappAnimals
                         // this is a enum!
                         $field = array(
                             'key' => 'field_' . $key,
-                            'label' => $key,
+                            'label' => isset($titleMappings[$key]) ? $titleMappings[$key] : $key,
                             'name' => $key,
                             'aria-label' => $key,
                             'type' => 'select',
@@ -391,12 +421,13 @@ class ShelterappAnimals
         string $type,
         string $key,
     ) {
+        global $titleMappings;
         switch ($type) {
             case 'string':
             case 'array':
                 $field = array(
                     'key' => 'field_' . $key,
-                    'label' => $key,
+                    'label' => isset($titleMappings[$key]) ? $titleMappings[$key] : $key,
                     'name' => $key,
                     'aria-label' => $key,
                     'type' => 'text',
@@ -419,7 +450,7 @@ class ShelterappAnimals
             case 'number':
                 $field = array(
                     'key' => 'field_' . $key,
-                    'label' => $key,
+                    'label' => isset($titleMappings[$key]) ? $titleMappings[$key] : $key,
                     'name' => $key,
                     'aria-label' => $key,
                     'type' => 'number',
@@ -443,7 +474,7 @@ class ShelterappAnimals
             case 'datetime':
                 $field = array(
                     'key' => 'field_' . $key,
-                    'label' => $key,
+                    'label' => isset($titleMappings[$key]) ? $titleMappings[$key] : $key,
                     'name' => $key,
                     'aria-label' => $key,
                     'type' => 'datetime',
@@ -463,7 +494,7 @@ class ShelterappAnimals
             case 'date':
                 $field = array(
                     'key' => 'field_' . $key,
-                    'label' => $key,
+                    'label' => isset($titleMappings[$key]) ? $titleMappings[$key] : $key,
                     'name' => $key,
                     'aria-label' => $key,
                     'type' => 'date_picker',
@@ -483,7 +514,7 @@ class ShelterappAnimals
             case 'boolean':
                 $field = array(
                     'key' => 'field_' . $key,
-                    'label' => $key,
+                    'label' => isset($titleMappings[$key]) ? $titleMappings[$key] : $key,
                     'name' => $key,
                     'aria-label' => $key,
                     'type' => 'true_false',
