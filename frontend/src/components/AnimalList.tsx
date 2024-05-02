@@ -7,7 +7,7 @@ import {
 } from "../helper/getCardColorByAnimalStatus";
 import { Animal } from "../models/animal";
 import { AnimalStatus } from "../models/animalStatus";
-import { allAnimals } from "../service/animalapi";
+import { getAllanimals, getAnimalsPaged } from "../service/animalapi";
 import "./AnimalList.css";
 import BirthDate from "./Birthdate";
 import Gender from "./Gender";
@@ -16,8 +16,13 @@ export default function AnimalList() {
   const [animals, setAnimals] = useState<Animal[]>([]);
   useEffect(() => {
     (async () => {
-      const res = await allAnimals();
-      const animals = res.map((a) => new Animal(a));
+      const res = await getAnimalsPaged();
+      console.log(res._pagination.total);
+      console.log(res._pagination.totalPages);
+
+      const resAll = await getAllanimals(50);
+
+      const animals = resAll.map((a) => new Animal(a));
       setAnimals(animals);
     })();
   }, []);
