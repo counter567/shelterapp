@@ -63,8 +63,8 @@ class AnimalResource {
         @QueryParam("dateOfDeathAfter") dateOfDeathAfter: LocalDate?,
         @QueryParam("createdBefore") createdBefore: LocalDateTime?,
         @QueryParam("createdAfter") createdAfter: LocalDateTime?,
-        @QueryParam("changedBefore") changedBefore: LocalDateTime?,
-        @QueryParam("changedAfter") changedAfter: LocalDateTime?,
+        @QueryParam("updatedBefore") updatedBefore: LocalDateTime?,
+        @QueryParam("updatedAfter") updatedAfter: LocalDateTime?,
     ) = withPanacheSession {
         val tenantId = jwt.getTenantIdOrThrow()
         val params = listOf(
@@ -106,8 +106,8 @@ class AnimalResource {
             PanacheQueryParameter(Animal::dateOfDeath.name, dateOfDeathAfter, PanacheQueryParameter.Type.GREATER_THAN),
             PanacheQueryParameter(Animal::createdAt.name, createdBefore, PanacheQueryParameter.Type.LESS_THAN),
             PanacheQueryParameter(Animal::createdAt.name, createdAfter, PanacheQueryParameter.Type.GREATER_THAN),
-            PanacheQueryParameter(Animal::updatedAt.name, changedBefore, PanacheQueryParameter.Type.LESS_THAN),
-            PanacheQueryParameter(Animal::updatedAt.name, changedAfter, PanacheQueryParameter.Type.GREATER_THAN),
+            PanacheQueryParameter(Animal::updatedAt.name, updatedBefore, PanacheQueryParameter.Type.LESS_THAN),
+            PanacheQueryParameter(Animal::updatedAt.name, updatedAfter, PanacheQueryParameter.Type.GREATER_THAN),
             )
         val queryParameters = PanacheQueryParameters(params, page ?: 0, pageSize ?: 20)
         return@withPanacheSession try {

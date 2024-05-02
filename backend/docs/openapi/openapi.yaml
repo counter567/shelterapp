@@ -223,18 +223,6 @@ paths:
         schema:
           type: string
           nullable: true
-      - name: changedAfter
-        in: query
-        schema:
-          allOf:
-          - $ref: '#/components/schemas/LocalDateTime'
-          - nullable: true
-      - name: changedBefore
-        in: query
-        schema:
-          allOf:
-          - $ref: '#/components/schemas/LocalDateTime'
-          - nullable: true
       - name: chipNumberContains
         in: query
         schema:
@@ -423,6 +411,18 @@ paths:
         schema:
           type: string
           nullable: true
+      - name: updatedAfter
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/LocalDateTime'
+          - nullable: true
+      - name: updatedBefore
+        in: query
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/LocalDateTime'
+          - nullable: true
       - name: wasFound
         in: query
         schema:
