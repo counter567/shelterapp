@@ -8,6 +8,7 @@ export class Animal {
       name: animalSource.title.rendered,
       cType: animalSource.cType ?? "",
       id: animalSource.id,
+      slug: animalSource.slug,
 
       illnesses: props.illnesses ?? [],
       allergies: props.allergies ?? [],
@@ -43,6 +44,7 @@ export class Animal {
   // }
 
   id: string = "";
+  slug: string = "";
   name: string = "";
   dateOfBirth?: Date;
   dateOfAdmission?: Date;

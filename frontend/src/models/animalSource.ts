@@ -4,6 +4,7 @@ export interface AnimalSource {
   };
   cType?: string;
   id?: number;
+  slug?: string;
   cStatus?: string;
   shelterapp_animal_type?: number[];
   shelterapp_meta: {

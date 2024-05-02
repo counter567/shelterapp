@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect } from "react";
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes, BrowserRouter, Navigate } from "react-router-dom";
 import "./App.css";
 import AnimalDetail from "./components/AnimalDetail";
 import AnimalList from "./components/AnimalList";
 import { requestData } from "./service/requestData";
+import { getRouterBasePath } from "./service/url-helper";
 
 function App() {
   useEffect(() => {
@@ -19,12 +20,12 @@ function App() {
 
   return (
     <div className="App">
-      <HashRouter>
+      <BrowserRouter basename={getRouterBasePath()}>
         <Routes>
           <Route path="/" element={<AnimalList />} />
-          <Route path="animal/:id" element={<AnimalDetail />} />
+          <Route path="/:id" element={<AnimalDetail />} />
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </div>
   );
 }

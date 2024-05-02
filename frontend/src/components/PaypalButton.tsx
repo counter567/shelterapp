@@ -1,4 +1,4 @@
-import getPublicUrlBase from "../service/url-helper";
+import { getPublicUrlBase } from "../service/url-helper";
 
 interface PayPalButtonProps {
   name: string;

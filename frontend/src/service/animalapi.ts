@@ -57,7 +57,8 @@ const getAllanimals = async (perPage = 10) => {
   return animals;
 }
 
-const getAnimal = async (id: number) => {
-  return requestData<AnimalSource>(`/wp/v2/shelterapp_animals/${id}`);
+const getAnimal = async (slug: string) => {
+  const animals = getAnimalsPaged(1, 1, { slug: slug });
+  return (await animals).pop()!;
 };
 export { getAnimalsPaged, getAnimal, getAllanimals };

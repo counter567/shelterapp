@@ -25,7 +25,7 @@ const AnimalDetail = () => {
 
   useEffect(() => {
     (async () => {
-      const animalSource = await getAnimal(+idValue);
+      const animalSource = await getAnimal(idValue);
       setAnimals(new Animal(animalSource));
     })();
   }, [idValue]);

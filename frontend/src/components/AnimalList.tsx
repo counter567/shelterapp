@@ -54,6 +54,7 @@ export default function AnimalList() {
       <ul className="grid gap-8 animals">
         {animals.map(
           ({
+            slug,
             id,
             name,
             breedOne,
@@ -66,10 +67,10 @@ export default function AnimalList() {
             status,
             wasFound,
           }) => (
-            <Link className="no-underline" to={`/animal/${id}`} key={id}>
+            <Link className="no-underline" to={`/${slug}`} key={id}>
               <li
                 key={id}
-                className={`p-5 border shadow w-72 rounded hover:shadow-xl cursor-pointer ${getCardClass(
+                className={`p-5 border shadow w-72 rounded hover:shadow-xl cursor-pointer w-full ${getCardClass(
                   status
                 )}`}
               >

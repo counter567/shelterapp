@@ -1,10 +1,11 @@
 type WPAppData = {
   publicUrlBase?: string;
+  routerBasePath?: string;
 };
 
 declare const sa_app_data: WPAppData;
 
-const getPublicUrlBase = () => {
+export const getPublicUrlBase = () => {
   if (
     (window as any).sa_app_data &&
     sa_app_data?.publicUrlBase
@@ -15,4 +16,16 @@ const getPublicUrlBase = () => {
   }
 };
 
-export default getPublicUrlBase;
+
+export const getRouterBasePath = () => {
+  if (
+    (window as any).sa_app_data &&
+    sa_app_data?.routerBasePath
+  ) {
+    return sa_app_data?.routerBasePath;
+  } else {
+    return '';
+  }
+};
+
+
