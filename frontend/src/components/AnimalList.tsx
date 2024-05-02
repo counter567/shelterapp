@@ -54,12 +54,15 @@ export default function AnimalList() {
               >
                 <div className="flex items-center flex-col ">
                   <div className="w-40 h-40 bg-gray-100 rounded-full relative flex flex-col items-center">
-                    <img
-                      className="w-32 h-32 object-cover rounded-full absolute top-4 left-4"
-                      src={mainPictureFileUrl}
-                      alt={name}
-                    />
+                    {mainPictureFileUrl && (
+                      <img
+                        className="w-32 h-32 object-cover rounded-full absolute top-4 left-4"
+                        src={mainPictureFileUrl}
+                        alt={""}
+                      />
+                    )}
                   </div>
+
                   {wasFound && (
                     <span
                       style={{ backgroundColor: "#f0ad4e" }}

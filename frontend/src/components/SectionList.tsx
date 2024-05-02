@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 
 export interface SectionListProps extends PropsWithChildren {
-  heading: string;
+  heading?: string;
   values?: string[];
   className?: string;
 }
@@ -16,7 +16,7 @@ const SectionList = ({
   if (hasValues)
     return (
       <section className={className ?? ""}>
-        <h2 className="text-xl font-bold mb-2">{heading}</h2>
+        {heading && <h2 className="text-xl font-bold mb-2">{heading}</h2>}
         <ul>
           {values.map((value) => (
             <li key={value} className="flex items-center">

@@ -13,6 +13,9 @@ import BirthDate from "./Birthdate";
 import Gender, { sexInGerman } from "./Gender";
 import PayPalButton from "./PaypalButton";
 import { useParams } from "react-router-dom";
+import CheckIcon from "../icons/check";
+import SectionList from "./SectionList";
+import InfoIcon from "../icons/infoCircle";
 
 const AnimalDetail = () => {
   const [animal, setAnimals] = useState<Animal>();
@@ -25,7 +28,7 @@ const AnimalDetail = () => {
       const animalSource = await getAnimal(+idValue);
       setAnimals(new Animal(animalSource));
     })();
-  }, [setAnimals]);
+  }, [idValue]);
 
   if (!animal) return <></>;
 
@@ -42,21 +45,21 @@ const AnimalDetail = () => {
     wasFound, // not used in detail
     description,
     otherPictureFileUrls,
+    illnesses,
   } = animal;
   return (
     <div>
-      <h1 className="text-center md:text-left md:pl-16 text-[#267771] font-bold py-12 text-5xl w-full  bg-gradient-to-tr from-[#cecece] from-5% via-[#e3e5da] via-20% to-[#3f758d] to-90%">
-        {name}
-      </h1>
-      <div className="max-w-screen-md md:flex mx-8">
-        <div className="p-4 flex flex-col size-max:sm:min-w-full sm:min-w-[320px]">
+      <div className="ml:flex">
+        <div className="p-4 mr-4 flex flex-col size-max:sm:min-w-full sm:min-w-[320px]">
           <div className="flex items-center flex-col mb-8">
             <div className="image bg-gray-100 rounded-full relative flex flex-col items-center">
-              <img
-                className="object-cover rounded-full absolute"
-                src={mainPictureFileUrl}
-                alt={name}
-              />
+              {mainPictureFileUrl && (
+                <img
+                  className="object-cover rounded-full absolute"
+                  src={mainPictureFileUrl}
+                  alt={name}
+                />
+              )}
             </div>
           </div>
           {dateOfAdmission && (
@@ -70,20 +73,26 @@ const AnimalDetail = () => {
           >
             {germanStatus(status!)}
           </span>
+          <h1 className="font-bold text-xl mb-2">Eigenschaften</h1>
           {dateOfBirth && (
             <span className="mb-2 flex items-center">
               <CakeIcon className="mr-2" />{" "}
               <BirthDate birthDate={dateOfBirth} />
             </span>
           )}
-          {/* <SectionList
+          {animal.getPersonalData().length > 0 && (
+            <SectionList className="mb-4" values={animal.getPersonalData()}>
+              <InfoIcon className="mr-2" />
+            </SectionList>
+          )}
+          <SectionList
             className="mb-4"
-            heading="Eigenschaften"
-            values={properties}
+            heading="Krankheiten"
+            values={illnesses}
           >
             <CheckIcon className="mr-2" stroke="lightgreen" />
           </SectionList>
-          <SectionList className="mb-4" heading="Hinweis" values={hints}>
+          {/*<SectionList className="mb-4" heading="Hinweis" values={[notes!]}>
             <InfoIcon className="mr-2" />
           </SectionList>
           <SectionList className="mb-4" heading="Wir danken" values={donators}>
@@ -91,7 +100,7 @@ const AnimalDetail = () => {
           </SectionList> */}
           <PayPalButton name={name!} />
         </div>
-        <div className="p-4">
+        <div className="p-4 w-full">
           <h1 className="font-bold mb-2 text-5xl w-full">{name}</h1>
           <span className="text-3xl">
             {sex && <Gender sex={sex} />} {sexInGerman(sex!)}, {cType} (
@@ -107,22 +116,24 @@ const AnimalDetail = () => {
               {description}
             </div>
           )}
-          <div className="mb-8">
-            {/* <div className="date mb-2 flex items-center">
+          {otherPictureFileUrls && otherPictureFileUrls.length > 0 && (
+            <div className="mb-8 max-[50vw] m-auto">
+              {/* <div className="date mb-2 flex items-center">
               <CalendarIcon className="mr-1" />{" "}
               <span className="font-bold mr-1">13.11.2023</span>vor 4 Monaten
             </div> */}
-            <ImageGallery
-              items={
-                otherPictureFileUrls?.map((data) => ({
-                  original: data.url,
-                  thumbnail: data.thumbnailUrl,
-                })) ?? []
-              }
-              showThumbnails={true}
-              lazyLoad={true}
-            />
-          </div>
+              <ImageGallery
+                items={
+                  otherPictureFileUrls?.map((data) => ({
+                    original: data.url,
+                    thumbnail: data.thumbnailUrl,
+                  })) ?? []
+                }
+                showThumbnails={true}
+                lazyLoad={true}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
