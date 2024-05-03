@@ -51,6 +51,55 @@ class ShelterappAnimals
 
         add_action('save_post', array($this, 'save_post'), 10, 3);
         add_action('add_meta_boxes', 'sa_add_custom_box_animal_galery');
+
+
+        add_filter('archive_template', function ($page_template) {
+            outLog('archive_template', $page_template);
+            if (is_post_type_archive('shelterapp_animals')) {
+                global $_wp_current_template_content;
+                $_wp_current_template_content = '<!-- wp:template-part {"slug":"header"} /-->
+                
+                <!-- wp:group {"align":"full","layout":{"type":"constrained"}} -->
+                <div class="wp-block-group alignfull">
+                    <!-- wp:group {"tagName":"main","align":"wide","layout":{"type":"constrained"}} -->
+                    <main class="wp-block-group alignwide">
+                        <!-- wp:create-block/shelter-block-view /-->
+                    </main>
+                    <!-- /wp:group -->
+                </div>
+                <!-- /wp:group -->
+                
+                <!-- wp:template-part {"slug":"footer"} /-->';
+            }
+            return $page_template;
+        });
+        add_filter('single_template', function ($page_template) {
+            outLog('single_template', $page_template);
+            if (is_singular('shelterapp_animals')) {
+                global $_wp_current_template_content;
+                $_wp_current_template_content = '<!-- wp:template-part {"slug":"header"} /-->
+                
+                <!-- wp:group {"align":"full","layout":{"type":"constrained"}} -->
+                <div class="wp-block-group alignfull">
+                    <!-- wp:group {"tagName":"main","align":"wide","layout":{"type":"constrained"}} -->
+                    <main class="wp-block-group alignwide">
+                        <!-- wp:create-block/shelter-block-view /-->
+                    </main>
+                    <!-- /wp:group -->
+                </div>
+                <!-- /wp:group -->
+                
+                <!-- wp:template-part {"slug":"footer"} /-->';
+            }
+            return $page_template;
+        });
+
+        add_filter('the_content', function ($content) {
+            return $content . 'I’m filtering the content inside the main loop';
+        }, 1);
+
+
+
     }
 
     /**
@@ -153,12 +202,14 @@ class ShelterappAnimals
         $meta['mainPictureFileUrl'] = wp_get_attachment_url(get_post_meta($post_id, '_thumbnail_id', true));
         $images = get_post_meta($post_id, 'otherPictureFileUrls', true);
         $meta['otherPictureFileUrls'] = array();
-        foreach ($images as $image) {
-            $meta['otherPictureFileUrls'][] = array(
-                'meta' => wp_get_attachment_metadata($image),
-                'url' => wp_get_attachment_url($image),
-                'thumbnailUrl' => wp_get_attachment_image_url($image, 'medium'),
-            );
+        if (isset($images) && is_array($images) && count($images) > 0) {
+            foreach ($images as $image) {
+                $meta['otherPictureFileUrls'][] = array(
+                    'meta' => wp_get_attachment_metadata($image),
+                    'url' => wp_get_attachment_url($image),
+                    'thumbnailUrl' => wp_get_attachment_image_url($image, 'medium'),
+                );
+            }
         }
 
         global $filteredMetaFields;
@@ -208,7 +259,7 @@ class ShelterappAnimals
             'show_in_admin_bar' => false,
             'menu_position' => 35,
             'can_export' => true,
-            'has_archive' => false,
+            'has_archive' => true,
             'exclude_from_search' => true,
             'publicly_queryable' => true,
             'rewrite' => array('slug' => 'animal'), // my custom slug
@@ -242,7 +293,6 @@ class ShelterappAnimals
             null,
             false
         );
-
 
         $this->register_custom_fields();
 
