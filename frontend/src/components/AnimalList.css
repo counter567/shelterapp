@@ -11,7 +11,6 @@
 
 .animals {
   grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
-  margin: 2rem;
 }
 
 .card-green .card-bottom {

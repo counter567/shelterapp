@@ -1,3 +1,5 @@
+const { scopedPreflightStyles, isolateInsideOfContainer } = require('tailwindcss-scoped-preflight');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   mode: "jit",
@@ -10,5 +12,9 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    scopedPreflightStyles({
+      isolationStrategy: isolateInsideOfContainer('.App'),
+    }),
+  ]
 };

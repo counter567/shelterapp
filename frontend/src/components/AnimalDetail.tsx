@@ -26,7 +26,10 @@ const AnimalDetail = () => {
   useEffect(() => {
     (async () => {
       const animalSource = await getAnimal(idValue);
-      setAnimals(new Animal(animalSource));
+      if (animalSource) {
+        // @TODO: Need fallback if not found!
+        setAnimals(new Animal(animalSource));
+      }
     })();
   }, [idValue]);
 

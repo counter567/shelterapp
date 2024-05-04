@@ -59,6 +59,6 @@ const getAllanimals = async (perPage = 10) => {
 
 const getAnimal = async (slug: string) => {
   const animals = getAnimalsPaged(1, 1, { slug: slug });
-  return (await animals).pop()!;
+  return (await animals).pop();
 };
 export { getAnimalsPaged, getAnimal, getAllanimals };
