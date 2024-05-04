@@ -2,12 +2,12 @@
 /*
 Plugin Name: Shelterapp
 Plugin URI: 
-Description: 
-Version: 0.0.1
+Description: Worpress integration of the shelterapp
+Version: 0.0.2
 Requires at least: 
-Requires PHP: 
-Author: 
-Author URI: 
+Requires PHP: 8.1
+Author: Jan Sobotta
+Author URI: https://sobotta.digital/
 License: 
 Text Domain: shelterapp
 */
@@ -60,9 +60,7 @@ function out(...$print)
 
 function outLog(...$print)
 {
-
     foreach ($print as $key => $value) {
         error_log($value);
     }
-
 }

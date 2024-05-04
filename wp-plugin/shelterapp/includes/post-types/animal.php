@@ -56,47 +56,76 @@ class ShelterappAnimals
         add_filter('archive_template', function ($page_template) {
             outLog('archive_template', $page_template);
             if (is_post_type_archive('shelterapp_animals')) {
-                global $_wp_current_template_content;
-                $_wp_current_template_content = '<!-- wp:template-part {"slug":"header"} /-->
-                
-                <!-- wp:group {"align":"full","layout":{"type":"constrained"}} -->
-                <div class="wp-block-group alignfull">
-                    <!-- wp:group {"tagName":"main","align":"wide","layout":{"type":"constrained"}} -->
-                    <main class="wp-block-group alignwide">
-                        <!-- wp:create-block/shelter-block-view /-->
-                    </main>
+                if (function_exists('wp_is_block_theme') && wp_is_block_theme()) {
+                    global $_wp_current_template_content;
+                    $_wp_current_template_content = '<!-- wp:template-part {"slug":"header"} /-->
+                    
+                    <!-- wp:group {"align":"full","layout":{"type":"constrained"}} -->
+                    <div class="wp-block-group alignfull">
+                        <!-- wp:group {"tagName":"main","align":"wide","layout":{"type":"constrained"}} -->
+                        <main class="wp-block-group alignwide">
+                            <!-- wp:create-block/shelter-block-view /-->
+                        </main>
+                        <!-- /wp:group -->
+                    </div>
                     <!-- /wp:group -->
-                </div>
-                <!-- /wp:group -->
-                
-                <!-- wp:template-part {"slug":"footer"} /-->';
+                    
+                    <!-- wp:template-part {"slug":"footer"} /-->';
+                }
             }
             return $page_template;
         });
         add_filter('single_template', function ($page_template) {
             outLog('single_template', $page_template);
             if (is_singular('shelterapp_animals')) {
-                global $_wp_current_template_content;
-                $_wp_current_template_content = '<!-- wp:template-part {"slug":"header"} /-->
-                
-                <!-- wp:group {"align":"full","layout":{"type":"constrained"}} -->
-                <div class="wp-block-group alignfull">
-                    <!-- wp:group {"tagName":"main","align":"wide","layout":{"type":"constrained"}} -->
-                    <main class="wp-block-group alignwide">
-                        <!-- wp:create-block/shelter-block-view /-->
-                    </main>
+                if (function_exists('wp_is_block_theme') && wp_is_block_theme()) {
+                    global $_wp_current_template_content;
+                    $_wp_current_template_content = '<!-- wp:template-part {"slug":"header"} /-->
+                    
+                    <!-- wp:group {"align":"full","layout":{"type":"constrained"}} -->
+                    <div class="wp-block-group alignfull">
+                        <!-- wp:group {"tagName":"main","align":"wide","layout":{"type":"constrained"}} -->
+                        <main class="wp-block-group alignwide">
+                            <!-- wp:create-block/shelter-block-view /-->
+                        </main>
+                        <!-- /wp:group -->
+                    </div>
                     <!-- /wp:group -->
-                </div>
-                <!-- /wp:group -->
-                
-                <!-- wp:template-part {"slug":"footer"} /-->';
+                    
+                    <!-- wp:template-part {"slug":"footer"} /-->';
+                }
             }
             return $page_template;
         });
 
-        add_filter('the_content', function ($content) {
-            return $content . 'I’m filtering the content inside the main loop';
-        }, 1);
+
+        add_filter('template_include', function ($template) {
+            if (is_post_type_archive('shelterapp_animals')) {
+                if (!function_exists('wp_is_block_theme') || !wp_is_block_theme()) {
+                    $new_template = plugin_dir_path(SHELTERAPP_PATH) . 'templates/archive-animal.php';
+                    if ('' != $new_template) {
+                        return $new_template;
+                    }
+                }
+            }
+            if (is_singular('shelterapp_animals')) {
+                if (!function_exists('wp_is_block_theme') || !wp_is_block_theme()) {
+                    $new_template = plugin_dir_path(SHELTERAPP_PATH) . 'templates/single-animal.php';
+                    if ('' != $new_template) {
+                        return $new_template;
+                    }
+                }
+            }
+            return $template;
+        }, 99);
+
+        /*
+        add_action('get_template_part', function ($slug, $name, $templates, $args) {
+            outLog('get_template_part', $slug, $name, $templates, $args);
+        }, 10, 4);
+        */
+
+
 
 
 
@@ -454,7 +483,7 @@ class ShelterappAnimals
                         );
                         $group['fields'][] = $field;
                     } else {
-                        out($value);
+                        outLog($value);
                     }
 
                     continue;
@@ -476,12 +505,13 @@ class ShelterappAnimals
         switch ($type) {
             case 'string':
             case 'array':
+                $filedAsArea = array('notes', 'description', 'internalNotes');
                 $field = array(
                     'key' => 'field_' . $key,
                     'label' => isset($titleMappings[$key]) ? $titleMappings[$key] : $key,
                     'name' => $key,
                     'aria-label' => $key,
-                    'type' => 'text',
+                    'type' => in_array($key, $filedAsArea) ? 'textarea' : 'text',
                     'instructions' => '',
                     'required' => in_array($key, $required) ? 1 : 0,
                     'conditional_logic' => 0,
