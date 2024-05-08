@@ -6,9 +6,8 @@ interface RequestResponseWithPagination {
   _pagination: {
     total?: number;
     totalPages?: number;
-  }
+  };
 }
-
 
 export async function requestData<T>(
   path: string | URL,
@@ -37,15 +36,16 @@ export async function requestData<T>(
   // apply data to request
   if (data) {
     // apply get variable binding if this is a GET call.
-    if (!options.method || options.method === 'GET') {
+    if (!options.method || options.method === "GET") {
       if (serachParams) {
         // join existing search params with data
         const params = new URLSearchParams(data as Record<string, string>);
         params.forEach((value, key) => serachParams?.set(key, value));
-        path += '?' + serachParams.toString();
+        path += "&" + serachParams.toString();
       } else {
         // append data as search params
-        path += '?' + new URLSearchParams(data as Record<string, string>).toString();
+        path +=
+          "&" + new URLSearchParams(data as Record<string, string>).toString();
       }
     } else {
       if (data instanceof FormData) {
@@ -66,11 +66,11 @@ export async function requestData<T>(
     }
 
     // extract pagination data: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
-    const data = await response.json() as RequestResponseWithPagination & T;
-    data['_pagination'] = {
-      total: parseHeaderNumber(response.headers.get('X-WP-Total')),
-      totalPages: parseHeaderNumber(response.headers.get('X-WP-TotalPages')),
-    }
+    const data = (await response.json()) as RequestResponseWithPagination & T;
+    data["_pagination"] = {
+      total: parseHeaderNumber(response.headers.get("X-WP-Total")),
+      totalPages: parseHeaderNumber(response.headers.get("X-WP-TotalPages")),
+    };
 
     // return data
     return data;
