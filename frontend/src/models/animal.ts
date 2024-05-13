@@ -1,12 +1,16 @@
 import { AnimalSex } from "./animalSex";
 import { AnimalSource } from "./animalSource";
 import { AnimalStatus } from "./animalStatus";
-export class Animal {
+export interface AnimalToFilterProps {
+  sex?: string;
+  type?: string;
+}
+
+export class Animal implements AnimalToFilterProps {
   constructor(animalSource: AnimalSource) {
     const props = { ...animalSource.shelterapp_meta };
     Object.assign(this, props, {
       name: animalSource.title.rendered,
-      cType: animalSource.cType ?? "",
       id: animalSource.id,
       slug: animalSource.slug,
 
@@ -18,8 +22,6 @@ export class Animal {
       dateOfLeave: parseDate(props.dateOfLeave),
       dateOfDeath: parseDate(props.dateOfDeath),
       breedTwo: props.breedTwo ?? "",
-      sex: props.sex === "0" ? AnimalSex.Male : AnimalSex.Female,
-      status: props.status,
       _public: parseBoolean(props._public!),
       isPublic: parseBoolean(props.isPublic!),
       wasFound: parseBoolean(props.wasFound!),
@@ -81,7 +83,6 @@ export class Animal {
   missing?: boolean;
   privateAdoption?: boolean;
   isCastrated?: boolean;
-  cType?: string;
   illnesses?: string[];
   allergies?: string[];
   otherPictureFileUrls?: {

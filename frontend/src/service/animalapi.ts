@@ -1,3 +1,4 @@
+import { Animal } from "../models/animal";
 import { AnimalSource } from "../models/animalSource";
 import { requestData } from "./requestData";
 
@@ -57,15 +58,16 @@ const getAnimalsPaged = async (
 
 const getAllanimals = async (perPage = 10) => {
   let page = 1;
-  const animals = [] as AnimalSource[];
+  const animalsSource = [] as AnimalSource[];
   while (true) {
     const res = await getAnimalsPaged(page, perPage);
-    animals.push(...res);
+    animalsSource.push(...res);
     if (res._pagination.totalPages === page) {
       break;
     }
     page++;
   }
+  const animals = animalsSource.map((animal) => new Animal(animal));
   return animals;
 };
 

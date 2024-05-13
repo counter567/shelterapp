@@ -2,7 +2,6 @@ export interface AnimalSource {
   title: {
     rendered: string;
   };
-  cType?: string;
   id?: number;
   slug?: string;
   cStatus?: string;

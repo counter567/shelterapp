@@ -8,7 +8,6 @@ interface GenderProps {
 }
 
 const Gender = ({ sex }: GenderProps) => {
-  // console.log("sex", sex);
   if (sex === AnimalSex.Female) {
     return <WomenIcon />;
   }

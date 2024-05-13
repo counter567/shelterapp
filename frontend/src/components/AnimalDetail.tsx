@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
 import ImageGallery from "react-image-gallery";
+import { useParams } from "react-router-dom";
 import { formatDate } from "../helper/dateFormat";
 import {
   germanStatus,
   getCSSColorByCardColor,
 } from "../helper/getCardColorByAnimalStatus";
 import CakeIcon from "../icons/cake";
+import CheckIcon from "../icons/check";
+import InfoIcon from "../icons/infoCircle";
 import { Animal } from "../models/animal";
 import { getAnimal } from "../service/animalapi";
 import "./AnimalDetail.css";
 import BirthDate from "./Birthdate";
-import Gender, { sexInGerman } from "./Gender";
+import Gender from "./Gender";
 import PayPalButton from "./PaypalButton";
-import { useParams } from "react-router-dom";
-import CheckIcon from "../icons/check";
 import SectionList from "./SectionList";
-import InfoIcon from "../icons/infoCircle";
 
 const AnimalDetail = () => {
   const [animal, setAnimals] = useState<Animal>();
@@ -43,7 +43,7 @@ const AnimalDetail = () => {
     dateOfAdmission,
     dateOfBirth,
     sex,
-    cType,
+    type,
     status,
     wasFound, // not used in detail
     description,
@@ -106,7 +106,7 @@ const AnimalDetail = () => {
         <div className="p-4 w-full">
           <h1 className="font-bold mb-2 text-5xl w-full">{name}</h1>
           <span className="text-3xl">
-            {sex && <Gender sex={sex} />} {sexInGerman(sex!)}, {cType} (
+            {sex && <Gender sex={sex} />} {type}, (
             {breedOne && (
               <span className="text-center text-gray-500 mb-2">
                 {!breedTwo ? breedOne : `${breedOne}, ${breedTwo}`}
