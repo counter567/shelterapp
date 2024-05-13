@@ -8,9 +8,37 @@ import React, {
 import { Animal, AnimalToFilterProps } from "../models/animal";
 import { AnimalSex } from "../models/animalSex";
 import { getAllanimals, getAnimalTypes } from "../service/animalapi";
-import { Cipher } from "crypto";
 
 const key = "local_animals";
+
+const now = new Date();
+const sixMonthsOld = new Date(now.setMonth(now.getMonth() - 6));
+const oneYearOld = new Date(now.setFullYear(now.getFullYear() - 1));
+now.setTime(Date.now());
+const threeYearsOld = new Date(now.setFullYear(now.getFullYear() - 3));
+now.setTime(Date.now());
+const fiveYearsOld = new Date(now.setFullYear(now.getFullYear() - 5));
+
+const getAgeFilter = (value: number, birthDate?: Date) => {
+  if (!birthDate) return false;
+
+  switch (value) {
+    case 0: // "Alter beliebig"
+      return true;
+    case 1: // "Bis 6 Monate"
+      return birthDate > sixMonthsOld;
+    case 2: // "Bis 12 Monate"
+      return birthDate < sixMonthsOld && birthDate >= oneYearOld;
+    case 3: // "1 bis 3 Jahre"
+      return birthDate < oneYearOld && birthDate >= threeYearsOld;
+    case 4: // "3 bis 5 Jahre"
+      return birthDate < threeYearsOld && birthDate >= fiveYearsOld;
+    case 5: // "Über 5 Jahre"
+      return birthDate < fiveYearsOld;
+    default:
+      return false;
+  }
+};
 
 interface FilterCriteria<T> {
   propName: keyof T;
@@ -27,6 +55,7 @@ interface DataContextType {
   entriesPerPage: number;
   currentPage: number;
   maxPages: number;
+  searchedAnimalAge?: number;
   searchedAnimalType?: number;
   searchedAnimalSex?: AnimalSex;
 }
@@ -40,6 +69,7 @@ const DataContext = createContext<DataContextType>({
   entriesPerPage: 10,
   currentPage: 1,
   maxPages: 1,
+  searchedAnimalAge: undefined,
   searchedAnimalType: undefined,
   searchedAnimalSex: undefined,
 });
@@ -51,13 +81,14 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
   const [filterCriteria, setFilterCriteria] = useState<
     FilterCriteria<AnimalToFilterProps>[]
   >([]);
-  const [entriesPerPage, setEntriesPerPage] = useState<number>(10);
+  const [entriesPerPage] = useState<number>(10);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [maxPages, setMaxPages] = useState<number>(1);
   const [searchedAnimalType, setSearchedAnimalType] = useState<number>(0);
-  const [searchedAnimalSex, setSearchedAnimalSex] = useState<
-    AnimalSex | undefined
-  >(undefined);
+  const [searchedAnimalAge, setSearchedAnimalAge] = useState<number>(0);
+  const [searchedAnimalSex, setSearchedAnimalSex] = useState<AnimalSex>(
+    AnimalSex.All
+  );
   const [animalTypes, setAnimalTypes] = useState<
     {
       id: number;
@@ -66,11 +97,10 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
   >([]);
   useEffect(() => {
     const loadData = async () => {
-      const localData = localStorage.getItem(key);
-      if (localData) {
-        const loadedAnimals = JSON.parse(localData) as Animal[];
-        setAnimals(loadedAnimals);
-        calculateMaxPages(loadedAnimals.length);
+      const localData = parseFromLocalStorage();
+      if (localData && localData.length > 0) {
+        setAnimals(localData);
+        calculateMaxPages(localData.length);
       } else {
         try {
           const loadedAnimals = await getAllanimals();
@@ -87,6 +117,23 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
 
     loadData();
   }, []);
+
+  const parseFromLocalStorage = () => {
+    const data = localStorage.getItem(key);
+    if (data) {
+      let parsed = JSON.parse(data) as Animal[];
+      parsed.forEach((item) => {
+        if (item.dateOfBirth) item.dateOfBirth = new Date(item.dateOfBirth);
+        if (item.dateOfAdmission)
+          item.dateOfAdmission = new Date(item.dateOfAdmission);
+        if (item.dateOfLeave) item.dateOfLeave = new Date(item.dateOfLeave);
+        if (item.dateOfDeath) item.dateOfDeath = new Date(item.dateOfDeath);
+      });
+      return parsed;
+    }
+    return [];
+  };
+
   const getAnimalsPaged = () => {
     const start = (currentPage - 1) * entriesPerPage;
     if (start >= animals.length || start < 0) {
@@ -112,13 +159,17 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
       if (propName === "type") {
         setSearchedAnimalType(value);
       }
+      if (propName === "dateOfBirth") {
+        setSearchedAnimalAge(value);
+      }
     });
   };
 
   const resetFilter = () => {
     setCurrentPage(1);
-    setSearchedAnimalSex(undefined);
+    setSearchedAnimalSex(AnimalSex.All);
     setSearchedAnimalType(0);
+    setSearchedAnimalAge(0);
     filter([]);
   };
 
@@ -145,7 +196,7 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
   const filter = (criteria: FilterCriteria<AnimalToFilterProps>[]) => {
     updateProperties(criteria);
     const filterCriteria = updateFilter(criteria);
-    const animals = JSON.parse(localStorage.getItem(key) || "[]") as Animal[];
+    const animals = parseFromLocalStorage();
     const filtered = animals.filter((item) => {
       return filterCriteria.every((criterion) => {
         let { propName, compare, value } = criterion;
@@ -153,6 +204,9 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
           value =
             animalTypes.find((animal) => animal.id === value)?.name ||
             undefined;
+        }
+        if (propName === "dateOfBirth" && value !== undefined) {
+          return getAgeFilter(value, item.dateOfBirth);
         }
         if (!hasValue(value)) {
           return true;
@@ -211,6 +265,7 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
         changePage,
         resetFilter,
         entriesPerPage,
+        searchedAnimalAge,
         currentPage,
         maxPages,
         searchedAnimalType,

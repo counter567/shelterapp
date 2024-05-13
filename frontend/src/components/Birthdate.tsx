@@ -5,12 +5,12 @@ interface BirthDateProps {
 }
 
 const BirthDate = ({ birthDate }: BirthDateProps) => {
-  const res = calculateAge(birthDate);
-  const showMonths = res.months > 0 && res.years !== 0;
+  const { months, years } = calculateAge(birthDate);
   return (
     <div>
       <span>
-        {res.years} Jahre {showMonths && <span>{res.months} Monate</span>}
+        {years !== 0 && <span>{years} Jahre</span>}{" "}
+        {months !== 0 && <span>{months} Monate</span>}
       </span>
     </div>
   );

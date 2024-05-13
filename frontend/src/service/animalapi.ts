@@ -90,4 +90,5 @@ const getAnimalTypes = async () => {
   );
   return response.map((item) => ({ id: item.id, name: item.name }));
 };
+
 export { getAnimalsPaged, getAnimal, getAllanimals, getAnimalTypes };

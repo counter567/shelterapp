@@ -4,6 +4,8 @@ import { AnimalStatus } from "./animalStatus";
 export interface AnimalToFilterProps {
   sex?: string;
   type?: string;
+  status?: AnimalStatus;
+  dateOfBirth?: Date;
 }
 
 export class Animal implements AnimalToFilterProps {
