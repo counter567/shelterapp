@@ -44,7 +44,7 @@ const AnimalCard = ({
     >
       <Link className="no-underline" to={`/${slug}`} key={id}>
         <div className="flex items-center flex-col ">
-          <div className="w-40 h-40 bg-gray-100 rounded-full relative flex flex-col items-center">
+          <div className="w-40 h-40 bg-gray-100 rounded-full relative -z-10 flex flex-col items-center">
             {mainPictureFileUrl && (
               <img
                 className="w-32 h-32 object-cover rounded-full absolute top-4 left-4"
@@ -57,7 +57,7 @@ const AnimalCard = ({
           {wasFound && (
             <span
               style={{ backgroundColor: "#f0ad4e" }}
-              className=" text-white py-1 px-6 rounded relative bottom-8 -mb-8"
+              className=" text-white py-1 px-6 rounded relative bottom-8 -z-10 -mb-8"
             >
               Fundtier
             </span>

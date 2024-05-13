@@ -1,6 +1,9 @@
-const { scopedPreflightStyles, isolateInsideOfContainer } = require('tailwindcss-scoped-preflight');
+const {
+  scopedPreflightStyles,
+  isolateInsideOfContainer,
+} = require("tailwindcss-scoped-preflight");
 
-const SCC_BASE = '#root';
+const SCC_BASE = "#root";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -13,11 +16,14 @@ module.exports = {
       screens: {
         ml: "1000px",
       },
+      backdropBlur: {
+        xs: "2px",
+      },
     },
   },
   plugins: [
     scopedPreflightStyles({
       isolationStrategy: isolateInsideOfContainer(SCC_BASE),
     }),
-  ]
+  ],
 };

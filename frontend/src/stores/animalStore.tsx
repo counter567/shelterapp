@@ -205,6 +205,9 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
             animalTypes.find((animal) => animal.id === value)?.name ||
             undefined;
         }
+        if (propName === "sex" && value === AnimalSex.All) {
+          return true;
+        }
         if (propName === "dateOfBirth" && value !== undefined) {
           return getAgeFilter(value, item.dateOfBirth);
         }
