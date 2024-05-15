@@ -6,6 +6,8 @@ import AnimalCard from "./AnimalCard";
 import "./AnimalList.css";
 import DropDown from "./DropDown";
 import Pagination from "./Pagination";
+import { germanStatus } from "../helper/getCardColorByAnimalStatus";
+import { statusValues } from "../models/animalStatus";
 
 const animalSex = [
   { id: AnimalSex.All, name: "Alle Geschlechter" },
@@ -13,6 +15,13 @@ const animalSex = [
   { id: AnimalSex.Female, name: "Weiblich" },
 ];
 
+const animalStatus: { id: string | number; name: string }[] = statusValues.map(
+  (status) => ({
+    id: status,
+    name: germanStatus(status),
+  })
+);
+animalStatus.unshift({ id: 0, name: "Alle Status" });
 const ageFilter = [
   { id: 0, name: "Alter beliebig" },
   { id: 1, name: "Bis 6 Monate" },
@@ -33,6 +42,7 @@ export default function AnimalList() {
     maxPages,
     searchedAnimalType,
     searchedAnimalSex,
+    searchedAnimalStatus,
   } = useData();
   const [animalTypes, setAnimalType] = useState<SelectItem[]>([]);
 
@@ -46,20 +56,20 @@ export default function AnimalList() {
 
   return (
     <div>
-      <div className="mb-4 flex space-x-8">
-        {/* <DropDown
-          items={animalTypes}
-          value={searchedAnimalType}
-          callback={(animalType) =>
+      <div className="mb-4 dropdown-buttons gap-y-6 gap-x-8 items-center justify-center">
+        <DropDown
+          items={animalStatus}
+          value={searchedAnimalStatus}
+          callback={(status) =>
             filter([
               {
                 propName: "status",
                 compare: "===",
-                value: animalType,
+                value: status,
               },
             ])
           }
-        /> */}
+        />
         <DropDown
           items={animalTypes}
           value={searchedAnimalType}
@@ -100,7 +110,7 @@ export default function AnimalList() {
           }
         />
       </div>
-      <ul className="grid gap-8 animals mb-16">
+      <ul className="grid justify-center gap-4 animals mb-12">
         {getAnimalsPaged().map((animal) => (
           <AnimalCard animal={animal} />
         ))}

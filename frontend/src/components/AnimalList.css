@@ -1,16 +1,27 @@
 @media screen and (max-width: 690px) {
   .animals {
     justify-items: center;
+    grid-template-columns: auto auto;
   }
 
   .animals li {
-    min-width: 280px;
     width: auto;
   }
 }
-
-.animals {
-  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+@media screen and (min-width: 690px) {
+  .animals {
+    grid-template-columns: repeat(auto-fit, minmax(auto, 280px));
+  }
+}
+.dropdown-buttons {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+@media screen and (min-width: 840px) {
+  .dropdown-buttons {
+    display: flex;
+    flex-direction: row;
+  }
 }
 
 .card-green .card-bottom {

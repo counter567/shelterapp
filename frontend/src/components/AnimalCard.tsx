@@ -1,4 +1,3 @@
-import { type } from "@testing-library/user-event/dist/type";
 import { Link } from "react-router-dom";
 import { formatDate } from "../helper/dateFormat";
 import {
@@ -6,9 +5,9 @@ import {
   getCardColorByAnimalStatus,
 } from "../helper/getCardColorByAnimalStatus";
 import { Animal } from "../models/animal";
+import { AnimalStatus } from "../models/animalStatus";
 import BirthDate from "./Birthdate";
 import Gender from "./Gender";
-import { AnimalStatus } from "../models/animalStatus";
 
 interface AnimalCardProps {
   animal: Animal;
@@ -38,13 +37,13 @@ const AnimalCard = ({
   return (
     <li
       key={id}
-      className={`p-5 border shadow max-w-72 rounded hover:shadow-xl cursor-pointer w-full ${getCardClass(
+      className={`pt-5 border shadow rounded hover:shadow-xl cursor-pointer ${getCardClass(
         status
       )}`}
     >
       <Link className="no-underline" to={`/${slug}`} key={id}>
-        <div className="flex items-center flex-col ">
-          <div className="w-40 h-40 bg-gray-100 rounded-full relative -z-10 flex flex-col items-center">
+        <div className="flex items-center flex-col">
+          <div className="w-40 h-40 bg-gray-100 rounded-full relative -z-10 flex flex-col items-center mx-5">
             {mainPictureFileUrl && (
               <img
                 className="w-32 h-32 object-cover rounded-full absolute top-4 left-4"
@@ -57,12 +56,14 @@ const AnimalCard = ({
           {wasFound && (
             <span
               style={{ backgroundColor: "#f0ad4e" }}
-              className=" text-white py-1 px-6 rounded relative bottom-8 -z-10 -mb-8"
+              className=" text-white h-8 py-1 px-6 rounded relative bottom-8 -z-10 -mb-8"
             >
               Fundtier
             </span>
           )}
-          <h1 className="text-center font-bold uppercase">{name}</h1>
+          <h1 className="text-center font-bold uppercase min-h-[22px]">
+            {name}
+          </h1>
           {breedOne && (
             <span className="text-center text-gray-500 mb-2">
               {!breedTwo ? breedOne : `${breedOne}, ${breedTwo}`}
@@ -78,16 +79,16 @@ const AnimalCard = ({
               <BirthDate birthDate={dateOfBirth} />
             </span>
           )}
-        </div>
-        <div className="card-bottom flex items-center flex-col rounded-b mt-4 -m-5">
-          <h3 className="text-center font-extrabold text-white">
-            {germanStatus(status!)}
-          </h3>
-          {dateOfAdmission && (
-            <span className="text-center text-white">
-              {formatDate(dateOfAdmission)}
-            </span>
-          )}
+          <div className="card-bottom flex items-center w-full relative  flex-col rounded-b mt-4">
+            <h3 className="text-center font-extrabold text-white">
+              {germanStatus(status!)}
+            </h3>
+            {dateOfAdmission && (
+              <span className="text-center text-white">
+                {formatDate(dateOfAdmission)}
+              </span>
+            )}
+          </div>
         </div>
       </Link>
     </li>

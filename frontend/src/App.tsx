@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect } from "react";
-import {
-  HashRouter,
-  Route,
-  Routes,
-  BrowserRouter,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import AnimalDetail from "./components/AnimalDetail";
 import AnimalList from "./components/AnimalList";

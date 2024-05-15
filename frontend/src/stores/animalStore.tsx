@@ -8,37 +8,80 @@ import React, {
 import { Animal, AnimalToFilterProps } from "../models/animal";
 import { AnimalSex } from "../models/animalSex";
 import { getAllanimals, getAnimalTypes } from "../service/animalapi";
+import { AnimalStatus } from "../models/animalStatus";
 
 const key = "local_animals";
 
-const now = new Date();
-const sixMonthsOld = new Date(now.setMonth(now.getMonth() - 6));
-const oneYearOld = new Date(now.setFullYear(now.getFullYear() - 1));
-now.setTime(Date.now());
-const threeYearsOld = new Date(now.setFullYear(now.getFullYear() - 3));
-now.setTime(Date.now());
-const fiveYearsOld = new Date(now.setFullYear(now.getFullYear() - 5));
+const startOfDay = (date: Date) => {
+  const newDate = new Date(date);
+  newDate.setHours(0, 0, 0, 0);
+  return newDate;
+};
+
+const calculateDateThreshold = (monthsOffset = 0, yearsOffset = 0) => {
+  const now = new Date();
+  now.setMonth(now.getMonth() + monthsOffset);
+  now.setFullYear(now.getFullYear() + yearsOffset);
+  return startOfDay(now);
+};
+
+const sixMonthsOld = calculateDateThreshold(-6, 0);
+const oneYearOld = calculateDateThreshold(0, -1);
+const threeYearsOld = calculateDateThreshold(0, -3);
+const fiveYearsOld = calculateDateThreshold(0, -5);
 
 const getAgeFilter = (value: number, birthDate?: Date) => {
-  if (!birthDate) return false;
+  if (
+    !birthDate ||
+    Object.prototype.toString.call(birthDate) !== "[object Date]" ||
+    isNaN(birthDate.getTime())
+  ) {
+    return false;
+  }
+
+  const normalizedBirthDate = startOfDay(birthDate);
+
+  const today = startOfDay(new Date());
 
   switch (value) {
-    case 0: // "Alter beliebig"
+    case 0: // "Alter beliebig" (Any age)
       return true;
-    case 1: // "Bis 6 Monate"
-      return birthDate > sixMonthsOld;
-    case 2: // "Bis 12 Monate"
-      return birthDate < sixMonthsOld && birthDate >= oneYearOld;
-    case 3: // "1 bis 3 Jahre"
-      return birthDate < oneYearOld && birthDate >= threeYearsOld;
-    case 4: // "3 bis 5 Jahre"
-      return birthDate < threeYearsOld && birthDate >= fiveYearsOld;
-    case 5: // "Über 5 Jahre"
-      return birthDate < fiveYearsOld;
+
+    case 1: // "Bis 6 Monate" (Up to 6 months)
+      return (
+        normalizedBirthDate >= sixMonthsOld && normalizedBirthDate <= today
+      );
+
+    case 2: // "Bis 12 Monate" (Up to 12 months, but more than 6 months)
+      return (
+        normalizedBirthDate > sixMonthsOld && normalizedBirthDate <= oneYearOld
+      );
+
+    case 3: // "1 bis 3 Jahre" (1 to 3 years)
+      return (
+        normalizedBirthDate > oneYearOld && normalizedBirthDate <= threeYearsOld
+      );
+
+    case 4: // "3 bis 5 Jahre" (3 to 5 years)
+      return (
+        normalizedBirthDate > threeYearsOld &&
+        normalizedBirthDate <= fiveYearsOld
+      );
+
+    case 5: // "Über 5 Jahre" (Over 5 years)
+      return normalizedBirthDate <= fiveYearsOld;
+
     default:
       return false;
   }
 };
+
+// Example usage
+console.log(getAgeFilter(1, new Date(2024, 0, 1))); // Test case within "Bis 6 Monate"
+console.log(getAgeFilter(2, new Date(2022, 0, 1))); // Test case within "Bis 12 Monate"
+console.log(getAgeFilter(3, new Date(2020, 0, 1))); // Test case within "1 bis 3 Jahre"
+console.log(getAgeFilter(4, new Date(2018, 0, 1))); // Test case within "3 bis 5 Jahre"
+console.log(getAgeFilter(5, new Date(2015, 0, 1)));
 
 interface FilterCriteria<T> {
   propName: keyof T;
@@ -58,6 +101,7 @@ interface DataContextType {
   searchedAnimalAge?: number;
   searchedAnimalType?: number;
   searchedAnimalSex?: AnimalSex;
+  searchedAnimalStatus?: AnimalStatus | number;
 }
 
 const DataContext = createContext<DataContextType>({
@@ -72,6 +116,7 @@ const DataContext = createContext<DataContextType>({
   searchedAnimalAge: undefined,
   searchedAnimalType: undefined,
   searchedAnimalSex: undefined,
+  searchedAnimalStatus: undefined,
 });
 
 export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
@@ -86,6 +131,9 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
   const [maxPages, setMaxPages] = useState<number>(1);
   const [searchedAnimalType, setSearchedAnimalType] = useState<number>(0);
   const [searchedAnimalAge, setSearchedAnimalAge] = useState<number>(0);
+  const [searchedAnimalStatus, setSearchedAnimalStatus] = useState<
+    AnimalStatus | number
+  >(0);
   const [searchedAnimalSex, setSearchedAnimalSex] = useState<AnimalSex>(
     AnimalSex.All
   );
@@ -162,6 +210,9 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
       if (propName === "dateOfBirth") {
         setSearchedAnimalAge(value);
       }
+      if (propName === "status") {
+        setSearchedAnimalStatus(value);
+      }
     });
   };
 
@@ -170,6 +221,7 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
     setSearchedAnimalSex(AnimalSex.All);
     setSearchedAnimalType(0);
     setSearchedAnimalAge(0);
+    setSearchedAnimalStatus(0);
     filter([]);
   };
 
@@ -210,6 +262,9 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
         }
         if (propName === "dateOfBirth" && value !== undefined) {
           return getAgeFilter(value, item.dateOfBirth);
+        }
+        if (propName === "status" && value === 0) {
+          return true;
         }
         if (!hasValue(value)) {
           return true;
@@ -273,6 +328,7 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
         maxPages,
         searchedAnimalType,
         searchedAnimalSex,
+        searchedAnimalStatus,
       }}
     >
       {children}

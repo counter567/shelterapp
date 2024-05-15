@@ -17,4 +17,4 @@ const getAnimalStatusByIndex = (index: number): AnimalStatus => {
   return statusValues[index];
 };
 
-export { getAnimalStatusByIndex };
+export { getAnimalStatusByIndex, statusValues };
