@@ -14,11 +14,13 @@ export async function requestData<T>(
   data?: RequestData,
   initOptions: RequestInit = {}
 ) {
-  let serachParams: URLSearchParams | undefined;
+  const { nonce, root } = await getNonce();
+  let url: URL;
   // extract path
-  if (path instanceof URL) {
-    serachParams = path.searchParams;
-    path = path.href;
+  if (typeof path === "string") {
+    url = new URL(root + path);
+  } else {
+    url = path;
   }
 
   // set header if query
@@ -30,23 +32,15 @@ export async function requestData<T>(
   } as RequestInit;
 
   // set nonce to request header
-  const { nonce, root } = await getNonce();
   headers.append("X-WP-Nonce", nonce);
 
   // apply data to request
   if (data) {
     // apply get variable binding if this is a GET call.
     if (!options.method || options.method === "GET") {
-      if (serachParams) {
-        // join existing search params with data
-        const params = new URLSearchParams(data as Record<string, string>);
-        params.forEach((value, key) => serachParams?.set(key, value));
-        path += "&" + serachParams.toString();
-      } else {
-        // append data as search params
-        path +=
-          "&" + new URLSearchParams(data as Record<string, string>).toString();
-      }
+      // join existing search params with data
+      const params = new URLSearchParams(data as Record<string, string>);
+      params.forEach((value, key) => (path as URL).searchParams?.set(key, value));
     } else {
       if (data instanceof FormData) {
         options.body = data;
@@ -59,7 +53,6 @@ export async function requestData<T>(
 
   // request stuff
   try {
-    const url = new URL(root + path, root);
     const response = await fetch(url.toString(), options);
     if (!response.ok) {
       throw new Error(`Fehler beim Abrufen der Daten: ${response.statusText}`);
