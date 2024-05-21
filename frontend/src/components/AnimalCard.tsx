@@ -37,26 +37,29 @@ const AnimalCard = ({
   return (
     <li
       key={id}
-      className={`pt-5 border shadow rounded hover:shadow-xl cursor-pointer ${getCardClass(
+      className={`border shadow rounded hover:shadow-xl cursor-pointer ${getCardClass(
         status
       )}`}
     >
       <Link className="no-underline" to={`/${slug}`} key={id}>
         <div className="flex items-center flex-col">
-          <div className="w-40 h-40 bg-gray-100 rounded-full relative -z-10 flex flex-col items-center mx-5">
+          <div className="flex items-center justify-center h-44 pt-4">
+            <div
+              style={{ aspectRatio: "1/1" }}
+              className="bg-gray-100 w-40 rounded-full flex flex-col items-center absolute"
+            ></div>
             {mainPictureFileUrl && (
               <img
-                className="w-32 h-32 object-cover rounded-full absolute top-4 left-4"
+                className="w-40 object-cover absolute rounded-full p-4"
                 src={mainPictureFileUrl}
                 alt={""}
               />
             )}
           </div>
-
           {wasFound && (
             <span
               style={{ backgroundColor: "#f0ad4e" }}
-              className=" text-white h-8 py-1 px-6 rounded relative bottom-8 -z-10 -mb-8"
+              className=" text-white h-8 py-1 px-6 rounded relative bottom-8 -mb-8"
             >
               Fundtier
             </span>

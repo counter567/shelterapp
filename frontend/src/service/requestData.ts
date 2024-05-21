@@ -40,7 +40,9 @@ export async function requestData<T>(
     if (!options.method || options.method === "GET") {
       // join existing search params with data
       const params = new URLSearchParams(data as Record<string, string>);
-      params.forEach((value, key) => (path as URL).searchParams?.set(key, value));
+      params.forEach(
+        (value, key) => (path as URL).searchParams?.set(key, value)
+      );
     } else {
       if (data instanceof FormData) {
         options.body = data;

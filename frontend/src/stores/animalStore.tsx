@@ -9,6 +9,8 @@ import { Animal, AnimalToFilterProps } from "../models/animal";
 import { AnimalSex } from "../models/animalSex";
 import { getAllanimals, getAnimalTypes } from "../service/animalapi";
 import { AnimalStatus } from "../models/animalStatus";
+import { AnimalSource } from "../models/animalSource";
+import { get } from "http";
 
 const key = "local_animals";
 
@@ -44,44 +46,37 @@ const getAgeFilter = (value: number, birthDate?: Date) => {
   const today = startOfDay(new Date());
 
   switch (value) {
-    case 0: // "Alter beliebig" (Any age)
+    case 0: // "Alter beliebig"
       return true;
 
-    case 1: // "Bis 6 Monate" (Up to 6 months)
+    case 1: // "Bis 6 Monate"
       return (
         normalizedBirthDate >= sixMonthsOld && normalizedBirthDate <= today
       );
 
-    case 2: // "Bis 12 Monate" (Up to 12 months, but more than 6 months)
+    case 2: // "Bis 12 Monate"
       return (
         normalizedBirthDate > sixMonthsOld && normalizedBirthDate <= oneYearOld
       );
 
-    case 3: // "1 bis 3 Jahre" (1 to 3 years)
+    case 3: // "1 bis 3 Jahre"
       return (
         normalizedBirthDate > oneYearOld && normalizedBirthDate <= threeYearsOld
       );
 
-    case 4: // "3 bis 5 Jahre" (3 to 5 years)
+    case 4: // "3 bis 5 Jahre"
       return (
         normalizedBirthDate > threeYearsOld &&
         normalizedBirthDate <= fiveYearsOld
       );
 
-    case 5: // "Über 5 Jahre" (Over 5 years)
+    case 5: // "Über 5 Jahre"
       return normalizedBirthDate <= fiveYearsOld;
 
     default:
       return false;
   }
 };
-
-// Example usage
-console.log(getAgeFilter(1, new Date(2024, 0, 1))); // Test case within "Bis 6 Monate"
-console.log(getAgeFilter(2, new Date(2022, 0, 1))); // Test case within "Bis 12 Monate"
-console.log(getAgeFilter(3, new Date(2020, 0, 1))); // Test case within "1 bis 3 Jahre"
-console.log(getAgeFilter(4, new Date(2018, 0, 1))); // Test case within "3 bis 5 Jahre"
-console.log(getAgeFilter(5, new Date(2015, 0, 1)));
 
 interface FilterCriteria<T> {
   propName: keyof T;
@@ -95,6 +90,7 @@ interface DataContextType {
   filter: (criteria: FilterCriteria<AnimalToFilterProps>[]) => void;
   changePage: (newPage: number) => void;
   resetFilter: () => void;
+  getAnimal: (slug: string) => Promise<Animal | undefined>;
   entriesPerPage: number;
   currentPage: number;
   maxPages: number;
@@ -110,6 +106,7 @@ const DataContext = createContext<DataContextType>({
   filter: () => {},
   changePage: () => {},
   resetFilter: () => {},
+  getAnimal: () => Promise.resolve(undefined),
   entriesPerPage: 10,
   currentPage: 1,
   maxPages: 1,
@@ -149,16 +146,15 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
       if (localData && localData.length > 0) {
         setAnimals(localData);
         calculateMaxPages(localData.length);
+        await loadAnimals();
       } else {
         try {
-          const loadedAnimals = await getAllanimals();
-          setAnimals(loadedAnimals);
-          calculateMaxPages(loadedAnimals.length);
-          localStorage.setItem(key, JSON.stringify(loadedAnimals));
+          await loadAnimals();
         } catch (error) {
           console.error("Fehler beim Fetchen der Daten:", error);
         }
       }
+
       const foundAnimalTypes = await getAnimalTypes();
       setAnimalTypes(foundAnimalTypes);
     };
@@ -166,18 +162,34 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
     loadData();
   }, []);
 
+  const loadAnimals = async () => {
+    const animalSource = await getAllanimals();
+    const animals = animalSource.map((animal) => new Animal(animal));
+    setAnimals(animals);
+    calculateMaxPages(animals.length);
+    localStorage.setItem(key, JSON.stringify(animalSource));
+  };
+
+  const getAnimal = async (slug: string) => {
+    if (animals.length === 0) {
+      await loadAnimals();
+    }
+    return animals.find((animal) => animal.slug === slug);
+  };
+
   const parseFromLocalStorage = () => {
     const data = localStorage.getItem(key);
     if (data) {
-      let parsed = JSON.parse(data) as Animal[];
-      parsed.forEach((item) => {
+      let parsed = JSON.parse(data) as AnimalSource[];
+      const allAnimals = parsed.map((animal) => new Animal(animal));
+      allAnimals.forEach((item) => {
         if (item.dateOfBirth) item.dateOfBirth = new Date(item.dateOfBirth);
         if (item.dateOfAdmission)
           item.dateOfAdmission = new Date(item.dateOfAdmission);
         if (item.dateOfLeave) item.dateOfLeave = new Date(item.dateOfLeave);
         if (item.dateOfDeath) item.dateOfDeath = new Date(item.dateOfDeath);
       });
-      return parsed;
+      return allAnimals;
     }
     return [];
   };
@@ -322,6 +334,7 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
         filter,
         changePage,
         resetFilter,
+        getAnimal,
         entriesPerPage,
         searchedAnimalAge,
         currentPage,

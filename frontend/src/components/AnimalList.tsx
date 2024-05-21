@@ -112,7 +112,7 @@ export default function AnimalList() {
       </div>
       <ul className="grid justify-center gap-4 animals mb-12">
         {getAnimalsPaged().map((animal) => (
-          <AnimalCard animal={animal} />
+          <AnimalCard key={animal.id} animal={animal} />
         ))}
       </ul>
       {getAnimalsPaged().length === 0 && (

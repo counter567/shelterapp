@@ -67,8 +67,7 @@ const getAllanimals = async (perPage = 10) => {
     }
     page++;
   }
-  const animals = animalsSource.map((animal) => new Animal(animal));
-  return animals;
+  return animalsSource;
 };
 
 const getAnimal = async (slug: string) => {

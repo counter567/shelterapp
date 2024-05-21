@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ImageGallery from "react-image-gallery";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { formatDate } from "../helper/dateFormat";
 import {
   germanStatus,
@@ -10,28 +10,29 @@ import CakeIcon from "../icons/cake";
 import CheckIcon from "../icons/check";
 import InfoIcon from "../icons/infoCircle";
 import { Animal } from "../models/animal";
-import { getAnimal } from "../service/animalapi";
 import "./AnimalDetail.css";
 import BirthDate from "./Birthdate";
 import Gender from "./Gender";
 import PayPalButton from "./PaypalButton";
 import SectionList from "./SectionList";
+import { useData } from "../stores/animalStore";
 
 const AnimalDetail = () => {
+  const navigate = useNavigate();
   const [animal, setAnimals] = useState<Animal>();
   const [idValue, setId] = useState<string>("");
   const { id } = useParams<{ id: string }>();
   if (idValue !== id) setId(id!);
+  const { getAnimal } = useData();
 
   useEffect(() => {
-    (async () => {
-      const animalSource = await getAnimal(idValue);
-      if (animalSource) {
-        // @TODO: Need fallback if not found!
-        setAnimals(new Animal(animalSource));
-      }
-    })();
-  }, [idValue]);
+    const fetchData = async () => {
+      const animal = await getAnimal(idValue);
+      if (animal) setAnimals(animal);
+      else navigate("/");
+    };
+    fetchData();
+  }, [idValue, getAnimal, navigate]);
 
   if (!animal) return <></>;
 
@@ -55,10 +56,24 @@ const AnimalDetail = () => {
       <div className="ml:flex">
         <div className="p-4 mr-4 flex flex-col size-max:sm:min-w-full sm:min-w-[320px]">
           <div className="flex items-center flex-col mb-8">
-            <div className="image bg-gray-100 rounded-full relative flex flex-col items-center">
+            {/* <div className="image bg-gray-100 rounded-full relative flex flex-col items-center">
               {mainPictureFileUrl && (
                 <img
                   className="object-cover rounded-full absolute"
+                  src={mainPictureFileUrl}
+                  alt={name}
+                />
+              )}
+            </div> */}
+            <div className="flex items-center relative w-full justify-center sm:my-[46%] py-4 my-[40%]">
+              <div
+                style={{ aspectRatio: "1/1" }}
+                className="bg-gray-100 w-full rounded-full flex flex-col items-center absolute"
+              ></div>
+              {mainPictureFileUrl && (
+                <img
+                  style={{ aspectRatio: "1/1" }}
+                  className="w-full object-cover absolute rounded-full p-4"
                   src={mainPictureFileUrl}
                   alt={name}
                 />

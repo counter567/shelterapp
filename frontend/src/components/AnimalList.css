@@ -1,11 +1,11 @@
 @media screen and (max-width: 690px) {
   .animals {
     justify-items: center;
-    grid-template-columns: auto auto;
+    grid-template-columns: 1fr 1fr;
   }
 
   .animals li {
-    width: auto;
+    width: 100%;
   }
 }
 @media screen and (min-width: 690px) {
@@ -15,7 +15,7 @@
 }
 .dropdown-buttons {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 1fr 1fr;
 }
 @media screen and (min-width: 840px) {
   .dropdown-buttons {
