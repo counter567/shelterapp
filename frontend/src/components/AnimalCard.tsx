@@ -44,13 +44,10 @@ const AnimalCard = ({
       <Link className="no-underline" to={`/${slug}`} key={id}>
         <div className="flex items-center flex-col">
           <div className="flex items-center justify-center h-44 pt-4">
-            <div
-              style={{ aspectRatio: "1/1" }}
-              className="bg-gray-100 w-40 rounded-full flex flex-col items-center absolute"
-            ></div>
+            <div className="aspect-square bg-gray-100 w-40 rounded-full flex flex-col items-center absolute"></div>
             {mainPictureFileUrl && (
               <img
-                className="w-40 object-cover absolute rounded-full p-4"
+                className="w-40 object-cover absolute rounded-full p-4 aspect-square"
                 src={mainPictureFileUrl}
                 alt={""}
               />

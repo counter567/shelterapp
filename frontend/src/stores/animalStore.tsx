@@ -168,13 +168,14 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
     setAnimals(animals);
     calculateMaxPages(animals.length);
     localStorage.setItem(key, JSON.stringify(animalSource));
+    return animals;
   };
 
   const getAnimal = async (slug: string) => {
     if (animals.length === 0) {
-      await loadAnimals();
-    }
-    return animals.find((animal) => animal.slug === slug);
+      const loadedAnimals = await loadAnimals();
+      return loadedAnimals.find((animal) => animal.slug === slug);
+    } else return animals.find((animal) => animal.slug === slug);
   };
 
   const parseFromLocalStorage = () => {

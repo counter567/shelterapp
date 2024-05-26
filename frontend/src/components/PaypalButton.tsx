@@ -2,10 +2,11 @@ import { getPublicUrlBase } from "../service/url-helper";
 
 interface PayPalButtonProps {
   name: string;
+  url: string;
   className?: string;
 }
 
-const PayPalButton = ({ name, className }: PayPalButtonProps) => (
+const PayPalButton = ({ name, url, className }: PayPalButtonProps) => (
   <form
     action="https://www.paypal.com/cgi-bin/webscr"
     method="post"
@@ -13,7 +14,7 @@ const PayPalButton = ({ name, className }: PayPalButtonProps) => (
     className={className}
   >
     <input type="hidden" name="cmd" value="_donations" />
-    <input type="hidden" name="business" value="spenden@tierheim-neuwied.de" />
+    <input type="hidden" name="business" value={url} />
     <input type="hidden" name="item_name" value={name} />
     <input type="hidden" name="currency_code" value="EUR" />
     <input

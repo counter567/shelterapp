@@ -32,7 +32,7 @@ const AnimalDetail = () => {
       else navigate("/");
     };
     fetchData();
-  }, [idValue, getAnimal, navigate]);
+  }, [idValue, getAnimal, navigate, setAnimals]);
 
   if (!animal) return <></>;
 
@@ -53,27 +53,22 @@ const AnimalDetail = () => {
   } = animal;
   return (
     <div>
+      <div className="my-4">
+        <button
+          onClick={() => navigate("/")}
+          className="text-white bg-blue-700 text-sm px-5 py-2.5 rounded-lg"
+        >
+          Zurück
+        </button>
+      </div>
       <div className="ml:flex">
         <div className="p-4 mr-4 flex flex-col size-max:sm:min-w-full sm:min-w-[320px]">
           <div className="flex items-center flex-col mb-8">
-            {/* <div className="image bg-gray-100 rounded-full relative flex flex-col items-center">
-              {mainPictureFileUrl && (
-                <img
-                  className="object-cover rounded-full absolute"
-                  src={mainPictureFileUrl}
-                  alt={name}
-                />
-              )}
-            </div> */}
             <div className="flex items-center relative w-full justify-center sm:my-[46%] py-4 my-[40%]">
-              <div
-                style={{ aspectRatio: "1/1" }}
-                className="bg-gray-100 w-full rounded-full flex flex-col items-center absolute"
-              ></div>
+              <div className="aspect-square bg-gray-100 w-full rounded-full flex flex-col items-center absolute"></div>
               {mainPictureFileUrl && (
                 <img
-                  style={{ aspectRatio: "1/1" }}
-                  className="w-full object-cover absolute rounded-full p-4"
+                  className="w-full object-cover absolute rounded-full p-4 aspect-square"
                   src={mainPictureFileUrl}
                   alt={name}
                 />
@@ -116,7 +111,7 @@ const AnimalDetail = () => {
           <SectionList className="mb-4" heading="Wir danken" values={donators}>
             <HeartIcon className="mr-2" stroke="red" fill="red" />{" "}
           </SectionList> */}
-          <PayPalButton name={name!} />
+          <PayPalButton name={name!} url="spenden@tierheim-neuwied.de" />
         </div>
         <div className="p-4 w-full">
           <h1 className="font-bold mb-2 text-5xl w-full">{name}</h1>
