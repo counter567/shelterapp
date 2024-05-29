@@ -8,6 +8,7 @@
     "scripts": {
         "dev": "npm run copy-schema; docker compose up",
         "copy-schema": "cp ../backend/docs/openapi/openapi.json ./shelterapp/openapi.json",
-        "build": "zip -rq ./shelterapp.zip ./shelterapp"
+        "build": "zip -rq ./shelterapp.zip ./shelterapp",
+        "log": "docker compose logs wordpress -f -n 10 | sed -Enu 's/wp-plugin-wordpress-1  \\| \\[.*\\](.*)(, referer:.*)?/\\1/p' | awk '{ print strftime(\"%H:%M:%S\"), $0 }'"
     }
 }

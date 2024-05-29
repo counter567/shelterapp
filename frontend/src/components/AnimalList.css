@@ -1,0 +1,45 @@
+@media screen and (max-width: 690px) {
+  .animals {
+    justify-items: center;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .animals li {
+    width: 100%;
+  }
+}
+@media screen and (min-width: 690px) {
+  .animals {
+    grid-template-columns: repeat(auto-fit, minmax(auto, 280px));
+  }
+}
+.dropdown-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+@media screen and (min-width: 840px) {
+  .dropdown-buttons {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+.card-green .card-bottom {
+  background-color: #5cb85c;
+}
+
+.card-red {
+  border: #d9534f 1px solid;
+}
+
+.card-red .card-bottom {
+  background-color: #d9534f;
+}
+
+.card-orange .card-bottom {
+  background-color: #f0ad4e;
+}
+
+.card-black .card-bottom {
+  background-color: #333;
+}
