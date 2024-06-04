@@ -9,7 +9,6 @@ services:
       QUARKUS_DATASOURCE_REACTIVE_URL: "postgresql://backend-db:5432/shelterapp"
       QUARKUS_DATASOURCE_USERNAME: shelterapp
       QUARKUS_DATASOURCE_PASSWORD: shelterapp
-      SHELTERAPP_BASEURL: "http://localhost:8081"
       QUARKUS_PROFILE: dev
       #QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION: "drop-and-create" # drop-and-create or update. Update is for when you want to keep your data
       #QUARKUS_HIBERNATE_ORM_SQL_LOAD_SCRIPT: "import.sql"
