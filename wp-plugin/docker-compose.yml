@@ -37,6 +37,7 @@ services:
       QUARKUS_DATASOURCE_PASSWORD: shelterapp
       QUARKUS_PROFILE: dev
       QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION: "drop-and-create" # drop-and-create or update. Update is for when you want to keep your data
+      QUARKUS_HIBERNATE_ORM_SQL_LOAD_SCRIPT: "import.sql"
     depends_on:
       - backend-db
 
