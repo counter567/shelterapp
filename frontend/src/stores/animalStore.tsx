@@ -10,7 +10,6 @@ import { AnimalSex } from "../models/animalSex";
 import { getAllanimals, getAnimalTypes } from "../service/animalapi";
 import { AnimalStatus } from "../models/animalStatus";
 import { AnimalSource } from "../models/animalSource";
-import { get } from "http";
 
 const key = "local_animals";
 
@@ -83,6 +82,7 @@ interface FilterCriteria<T> {
   value: any;
   compare: "===" | "!==" | "<" | "<=" | ">" | ">=";
 }
+enum FilterCompare { "===", "!==","<","<=",">",">="}
 
 interface DataContextType {
   getAnimalsPaged: () => Animal[];
@@ -157,9 +157,33 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
 
       const foundAnimalTypes = await getAnimalTypes();
       setAnimalTypes(foundAnimalTypes);
+      parse();
     };
 
     loadData();
+
+    const parse = () => {
+      const url = new URL(window.location as any);
+      const hash = url.hash;
+      if (hash) {
+        const criteria = hash.slice(1).split('&').map(c => {
+          let [propName, serializedValue] = c.split('=');
+          let [value, compare] = serializedValue.split('|') as [any, string];
+          if(propName === 'type' || propName === 'dateOfBirth') {
+            value = +value;
+          }
+          return { propName, value, compare: FilterCompare[compare as any] };
+        });
+        filter(criteria as any[], false);
+      }
+    }
+
+    window.addEventListener('popstate', () => {
+      parse();
+    });
+    window.addEventListener('load', () => {
+      parse();
+    });
   }, []);
 
   const loadAnimals = async () => {
@@ -238,7 +262,7 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
     filter([]);
   };
 
-  const updateFilter = (criteria: FilterCriteria<AnimalToFilterProps>[]) => {
+  const updateFilter = (criteria: FilterCriteria<AnimalToFilterProps>[], pushing = true) => {
     if (criteria.length === 0) {
       setFilterCriteria([]);
       return [];
@@ -255,12 +279,20 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
       }
     });
     setFilterCriteria(filterCriteriaCopy);
+    
+    if(pushing) {
+      const url = new URL(window.location as any);
+      url.hash = '#' + filterCriteriaCopy.map(c => `${c.propName}=${c.value}|${FilterCompare[c.compare]}`).join('&');
+      console.log(url.hash);
+      window.history.pushState({}, '', url.toString());
+    }
+
     return filterCriteriaCopy;
   };
 
-  const filter = (criteria: FilterCriteria<AnimalToFilterProps>[]) => {
+  const filter = (criteria: FilterCriteria<AnimalToFilterProps>[], pushing = true) => {
     updateProperties(criteria);
-    const filterCriteria = updateFilter(criteria);
+    const filterCriteria = updateFilter(criteria, pushing);
     const animals = parseFromLocalStorage();
     const filtered = animals.filter((item) => {
       return filterCriteria.every((criterion) => {
