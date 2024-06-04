@@ -42,6 +42,7 @@ class ShelterappAnimals
     function __construct()
     {
         add_action('init', array($this, 'register_post_type'), 100);
+        add_action('init', array($this, 'ensureAnimalPage'), 100);
         add_action('admin_menu', array($this, 'setup_admin'));
         add_action('rest_api_init', array($this, 'init_rest'));
         $this->register_custom_fields();
@@ -52,25 +53,19 @@ class ShelterappAnimals
         add_action('save_post', array($this, 'save_post'), 10, 3);
         add_action('add_meta_boxes', 'sa_add_custom_box_animal_galery');
 
-
+        // template stuff!
+        add_filter('template_include', array($this, 'loadAnimalTemplates'), 99);
         add_filter('archive_template', function ($page_template) {
-            outLog('archive_template', $page_template);
+            outLog('======== archive_template', $page_template);
             if (is_post_type_archive('shelterapp_animals')) {
                 if (function_exists('wp_is_block_theme') && wp_is_block_theme()) {
-                    global $_wp_current_template_content;
-                    $_wp_current_template_content = '<!-- wp:template-part {"slug":"header"} /-->
-                    
-                    <!-- wp:group {"align":"full","layout":{"type":"constrained"}} -->
-                    <div class="wp-block-group alignfull">
-                        <!-- wp:group {"tagName":"main","align":"wide","layout":{"type":"constrained"}} -->
-                        <main class="wp-block-group alignwide">
-                            <!-- wp:create-block/shelter-block-view /-->
-                        </main>
-                        <!-- /wp:group -->
-                    </div>
-                    <!-- /wp:group -->
-                    
-                    <!-- wp:template-part {"slug":"footer"} /-->';
+                    $id = get_option('sa_page_animal_archive', false);
+                    $additionalContent = '';
+                    if ($id) {
+                        $page = get_post($id);
+                        $additionalContent = $page->post_content;
+                    }
+                    $this->setCurrentTemplateContent($additionalContent);
                 }
             }
             return $page_template;
@@ -79,56 +74,86 @@ class ShelterappAnimals
             outLog('single_template', $page_template);
             if (is_singular('shelterapp_animals')) {
                 if (function_exists('wp_is_block_theme') && wp_is_block_theme()) {
-                    global $_wp_current_template_content;
-                    $_wp_current_template_content = '<!-- wp:template-part {"slug":"header"} /-->
-                    
-                    <!-- wp:group {"align":"full","layout":{"type":"constrained"}} -->
-                    <div class="wp-block-group alignfull">
-                        <!-- wp:group {"tagName":"main","align":"wide","layout":{"type":"constrained"}} -->
-                        <main class="wp-block-group alignwide">
-                            <!-- wp:create-block/shelter-block-view /-->
-                        </main>
-                        <!-- /wp:group -->
-                    </div>
-                    <!-- /wp:group -->
-                    
-                    <!-- wp:template-part {"slug":"footer"} /-->';
+                    $id = get_option('sa_page_animal_archive', false);
+                    $additionalContent = '';
+                    if ($id) {
+                        $page = get_post($id);
+                        $additionalContent = $page->post_content . "
+                        <style>
+.image-gallery-slide-wrapper {aspect-ratio: 1 / 1; padding-top: 100%;}
+.image-gallery-swipe {position: absolute; inset: 0;}
+.image-gallery-swipe, .image-gallery-slides, .image-gallery-slides > div {height: 100%; background: #eeeeee}
+.image-gallery-slides > div {display: flex; place-content: center;}
+.image-gallery-slides > div > img {max-height: 100% !important;}
+                        </style>
+                        ";
+                    }
+                    $this->setCurrentTemplateContent($additionalContent);
                 }
             }
             return $page_template;
         });
+    }
 
+    function setCurrentTemplateContent($additionalContent = '')
+    {
+        global $_wp_current_template_content;
+        $_wp_current_template_content = '<!-- wp:template-part {"slug":"header"} /-->
+        
+        ' . $additionalContent . '
 
-        add_filter('template_include', function ($template) {
-            if (is_post_type_archive('shelterapp_animals')) {
-                if (!function_exists('wp_is_block_theme') || !wp_is_block_theme()) {
-                    $new_template = plugin_dir_path(SHELTERAPP_PATH) . 'templates/archive-animal.php';
-                    if ('' != $new_template) {
-                        return $new_template;
-                    }
+        <!-- wp:group {"align":"full","layout":{"type":"constrained"}} -->
+        <div class="wp-block-group alignfull">
+            <!-- wp:group {"tagName":"main","align":"wide","layout":{"type":"constrained"}} -->
+            <main class="wp-block-group alignwide">
+                <!-- wp:create-block/shelter-block-view /-->
+            </main>
+            <!-- /wp:group -->
+        </div>
+        <!-- /wp:group -->
+        
+        <!-- wp:template-part {"slug":"footer"} /-->';
+    }
+
+    function loadAnimalTemplates($template)
+    {
+        if (is_post_type_archive('shelterapp_animals')) {
+            if (!function_exists('wp_is_block_theme') || !wp_is_block_theme()) {
+                $new_template = plugin_dir_path(SHELTERAPP_PATH) . 'templates/archive-animal.php';
+                if ('' != $new_template) {
+                    return $new_template;
                 }
             }
-            if (is_singular('shelterapp_animals')) {
-                if (!function_exists('wp_is_block_theme') || !wp_is_block_theme()) {
-                    $new_template = plugin_dir_path(SHELTERAPP_PATH) . 'templates/single-animal.php';
-                    if ('' != $new_template) {
-                        return $new_template;
-                    }
+        }
+        if (is_singular('shelterapp_animals')) {
+            if (!function_exists('wp_is_block_theme') || !wp_is_block_theme()) {
+                $new_template = plugin_dir_path(SHELTERAPP_PATH) . 'templates/single-animal.php';
+                if ('' != $new_template) {
+                    return $new_template;
                 }
             }
-            return $template;
-        }, 99);
+        }
+        return $template;
+    }
 
-        /*
-        add_action('get_template_part', function ($slug, $name, $templates, $args) {
-            outLog('get_template_part', $slug, $name, $templates, $args);
-        }, 10, 4);
-        */
+    function ensureAnimalPage()
+    {
+        if (!get_option('sa_page_animal_archive', false)) {
+            $page = array(
+                'post_title' => 'Tiere',
+                'post_name' => 'animal',
 
-
-
-
-
+                'post_content' => '',
+                'post_status' => 'publish',
+                'post_type' => 'page',
+                'post_excerpt' => '',
+                'comment_status' => 'closed',
+                'to_ping' => '',
+                'pinged' => '',
+            );
+            $page_id = wp_insert_post($page);
+            update_option('sa_page_animal_archive', $page_id);
+        }
     }
 
     /**
@@ -304,7 +329,11 @@ class ShelterappAnimals
             array('shelterapp_animals'),
             'Tier Art',
             'Tier Art',
-            'type'
+            null,
+            true,
+            false,
+            true,
+            false
         );
         sa_generate_taxonomy(
             'shelterapp_animal_illness',
@@ -312,6 +341,9 @@ class ShelterappAnimals
             'Tier Krankheit',
             'Tier Krankheiten',
             null,
+            false,
+            false,
+            false,
             false
         );
         sa_generate_taxonomy(
@@ -320,6 +352,9 @@ class ShelterappAnimals
             'Tier Allergie',
             'Tier Allergien',
             null,
+            false,
+            false,
+            false,
             false
         );
 
@@ -627,14 +662,14 @@ class ShelterappAnimals
         $options = sa_get_config();
         if (isset($options['shelterapp_sync_from'])) {
             // get all updates from date.
+            error_log('update animals');
             $date = new DateTime($options['shelterapp_sync_from'], new DateTimeZone("UTC"));
             return $this->_getAllAnimalsFromDate($client, $date, $allAnimals, $chunksize, $page + 1);
         } else {
             // init with all animals
-
+            error_log('Get all animals!');
             return $this->_getAllAnimalsFromDate($client, NULL, $allAnimals, $chunksize, $page + 1);
         }
-
     }
     function _getAllAnimalsFromDate(OpenAPI\Client\Api\AnimalResourceApi $client, $date, array &$allAnimals, int $chunksize = 50, int $page = 0)
     {
@@ -643,11 +678,14 @@ class ShelterappAnimals
         }
         if (isset($date) && !empty($date)) {
             // get all updates from date.
+            error_log('update animals');
             $animals = $client->animalsGet(page: $page, page_size: $chunksize, updated_after: $date);
         } else {
             // init with all animals
+            error_log('Get all animals!');
             $animals = $client->animalsGet(page: $page, page_size: $chunksize);
         }
+        error_log(count($animals));
         array_push($allAnimals, ...$animals);
         if (count($animals) < $chunksize) {
             return;
@@ -665,6 +703,7 @@ class ShelterappAnimals
 
     function sync()
     {
+        error_log('============================================');
         $client = sa_get_animal_resource_client();
         if (!$client) {
             error_log('Could not get client, no token or token expired.');
@@ -702,3 +741,18 @@ class ShelterappAnimals
 
 global $SHELTERAPP_GLOBAL_ANIMAL;
 $SHELTERAPP_GLOBAL_ANIMAL = new ShelterappAnimals();
+
+
+
+function custom_display_post_states($states, $post)
+{
+    $id = get_option('sa_page_animal_archive', false);
+    if ($id && $post->ID == $id) {
+        $states['page_for_animals'] = 'Seite für Tiere';
+    }
+    return $states;
+}
+
+add_filter('display_post_states', 'custom_display_post_states', 10, 2);
+
+
