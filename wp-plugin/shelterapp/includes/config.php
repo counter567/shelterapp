@@ -119,7 +119,7 @@ function shelterapp_plugin_setting_shelterapp_user_data()
 function shelterapp_plugin_setting_get_default_config()
 {
     return array(
-        'shelterapp_host' => 'http://backend:8080',
+        'shelterapp_host' => 'https://backend.shelterapp.spedat.de',
         'shelterapp_token' => '',
     );
 }
