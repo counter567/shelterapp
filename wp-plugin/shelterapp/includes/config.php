@@ -87,13 +87,13 @@ function shelterapp_plugin_setting_shelterapp_user_data()
         ?>
         <table class="form-table" role="presentation">
             <tbody>
-                <tr>
+                <!--<tr>
                     <th scope="row">Shelter App User</th>
                     <td>
                         <input autocomplete="off" id="shelterapp_plugin_setting_shelterapp_host"
                             name="shelterapp_plugin_options[shelterapp_user]" type="text" placeholder="User" />
                     </td>
-                </tr>
+                </tr>-->
                 <tr>
                     <th scope="row">Shelter App E-Mail</th>
                     <td>
@@ -150,6 +150,7 @@ function shelterapp_plugin_options_validate($input)
         if (isset($newConfig["shelterapp_user"]) && $newConfig["shelterapp_user"])
             $data['username'] = $newConfig["shelterapp_user"];
 
+        $data['permanent'] = true;
 
         // try to login and retrieve token
         $authClient = sa_get_auth_client();
