@@ -7,11 +7,10 @@ function sa_refresh_token_if_needed()
     global $validated;
     $isTokenValid = sa_validate_access_token();
     if ($isTokenValid) {
-        error_log('Token still valid.');
         return true;
     }
     if ($validated === null && !$isTokenValid) {
-        error_log('Token invalid.');
+        outLog('Token invalid.');
         $options = sa_get_config();
         $config = new OpenAPI\Client\Configuration();
         $config->setHost(isset($options['shelterapp_host']) ? $options['shelterapp_host'] : '');
@@ -26,13 +25,12 @@ function sa_refresh_token_if_needed()
             $options['shelterapp_token'] = $response->getAccessToken();
             update_option('shelterapp_plugin_options', $options);
             $validated = true;
-            error_log('Got new token.');
+            outLog('Got new token.');
         } catch (Exception $e) {
             $validated = false;
-            error_log('Unable to fetch new token: ' . $e->getMessage());
+            outLog('Unable to fetch new token: ' . $e->getMessage());
         }
     }
-    error_log('validated: ' . var_export($validated, true));
     return $validated;
 }
 

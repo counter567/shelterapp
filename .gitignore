@@ -35,9 +35,15 @@ node_modules
 .env.development.local
 .env.test.local
 .env.production.local
+**/*.pem
 
 # turbo
 .turbo
 
 # vercel
 .vercel
+
+# vs code
+.vscode
+/wp-plugin/shelterapp/js/static
+/wp-plugin/shelterapp/public
