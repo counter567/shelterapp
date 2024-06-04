@@ -33,8 +33,6 @@ class UserResource {
     @Inject
     @field: Default
     lateinit var emailService: EmailService
-    @field: ConfigProperty(name = "shelterapp.baseUrl")
-    lateinit var baseUrl: String
     @Inject
     @field: Default
     lateinit var tokenBlackList: RefreshTokenBlacklist
@@ -232,6 +230,7 @@ class UserResource {
         if(emailTaken(request.email, tenantId)) {
             throw BadRequestException("Email already taken")
         }
+        val tenant = Tenant.findById(tenantId).awaitSuspending() ?: throw NotFoundException("Tenant not found")
         val user = User.findById(jwt.getUserIdOrThrow()).awaitSuspending() ?: throw NotFoundException("User not found")
         if(!BCrypt.verifyer().verify(request.password.toCharArray(), user.password).verified) {
             throw BadRequestException()
@@ -244,7 +243,7 @@ class UserResource {
         val emailChallenge = UserEmailChangeChallengeEmail(
             newEmail = request.email,
             token = persistedEmailChange.id,
-            baseUrl = baseUrl
+            baseUrl = tenant.baseUrl
         )
         if(!emailService.sendEmail(emailChallenge)) {
             throw InternalServerErrorException("Could not send email")
@@ -302,10 +301,11 @@ class UserResource {
         }
         val user = users.first()
         var reset = PendingUserPasswordReset()
+        val tenant = Tenant.findById(user.tenantId).awaitSuspending() ?: throw NotFoundException("Tenant not found")
         reset.userId = user.id
         reset.tenantId = user.tenantId
         reset = reset.persistAndFlush<PendingUserPasswordReset>().awaitSuspending()
-        val resetUrl = "$baseUrl/password/reset/${reset.id}"
+        val resetUrl = "${tenant.baseUrl}/password/reset/${reset.id}"
         val resetEmail = PasswordResetEmail(resetUrl, user.email)
         if(!emailService.sendEmail(resetEmail)) {
             throw InternalServerErrorException("Could not send email")

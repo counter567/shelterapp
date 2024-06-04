@@ -169,6 +169,8 @@ class AnimalResource {
         dbAnimal.dateOfDeath = animal.dateOfDeath
         dbAnimal.updatedAt = utcNow()
         dbAnimal.otherPictureFileUrls = animal.otherPictureFileUrls
+        dbAnimal.supporters = animal.supporters
+        dbAnimal.notices = animal.notices
         dbAnimal.persistAndFlush<Animal>().awaitSuspending()
     }
 

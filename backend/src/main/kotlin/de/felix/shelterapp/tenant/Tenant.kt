@@ -24,4 +24,5 @@ class Tenant: PanacheEntityBase {
     lateinit var id: UUID
     lateinit var name: String
     lateinit var ownerId: UUID
+    lateinit var baseUrl: String
 }

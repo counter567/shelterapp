@@ -12,7 +12,6 @@ import io.smallrye.mutiny.coroutines.awaitSuspending
 import io.vertx.ext.web.RoutingContext
 import jakarta.enterprise.inject.Default
 import jakarta.inject.Inject
-import jakarta.persistence.Access
 import jakarta.ws.rs.*
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
@@ -48,17 +47,23 @@ class AuthResource {
             throw UnauthorizedException()
         }
         val refreshTokenId = UUID.randomUUID()
-        val refreshToken = createRefreshToken(user.username, refreshTokenId, context.request().remoteAddress().host(), user.id, user.tenantId)
+        val refreshExpirationDateTime = if (loginRequest.permanent) {
+            LocalDateTime.now(ZoneId.of("UTC")).plusYears(99)
+        } else {
+            LocalDateTime.now(ZoneId.of("UTC")).plusDays(60)
+        }
+        val refreshToken = createRefreshToken(user.username, refreshTokenId, context.request().remoteAddress().host(), user.id, user.tenantId, refreshExpirationDateTime)
         val accessToken = createAccessToken(refreshTokenId, user.username, user.role, user.tenantId, context.request().remoteAddress().host(), user.id)
         val response = LoginResponse(refreshToken, accessToken)
         val refreshTokenEntry = UserRefreshToken()
         refreshTokenEntry.id = refreshTokenId
-        refreshTokenEntry.expirationDate = LocalDateTime.now(ZoneId.of("UTC")).plusDays(60).toLocalDate()
+        refreshTokenEntry.expirationDate = refreshExpirationDateTime
         user.refreshTokens += refreshTokenEntry
         user.lastLogin = LocalDateTime.now(ZoneId.of("UTC"))
         user.persistAndFlush<User>().awaitSuspending()
         return@withPanacheSession response
     }
+
 
     @Path("refresh")
     @GET
