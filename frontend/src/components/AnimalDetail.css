@@ -19,3 +19,25 @@
   flex-wrap: wrap;
   justify-content: center;
 }
+
+.image-gallery-slide-wrapper {
+  aspect-ratio: 1 / 1;
+  padding-top: 100%;
+}
+.image-gallery-swipe {
+  position: absolute;
+  inset: 0;
+}
+.image-gallery-swipe,
+.image-gallery-slides,
+.image-gallery-slides > div {
+  height: 100%;
+  background: #eeeeee;
+}
+.image-gallery-slides > div {
+  display: flex;
+  place-content: center;
+}
+.image-gallery-slides > div > img {
+  max-height: 100% !important;
+}
