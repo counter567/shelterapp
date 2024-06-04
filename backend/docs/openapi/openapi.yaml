@@ -1278,6 +1278,8 @@ components:
           nullable: true
         password:
           type: string
+        permanent:
+          type: boolean
     LoginResponse:
       required:
       - refreshToken
@@ -1300,6 +1302,7 @@ components:
       - id
       - name
       - ownerId
+      - baseUrl
       type: object
       properties:
         id:
@@ -1311,6 +1314,8 @@ components:
           type: string
         ownerId:
           $ref: '#/components/schemas/UUID'
+        baseUrl:
+          type: string
     UUID:
       format: uuid
       pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"

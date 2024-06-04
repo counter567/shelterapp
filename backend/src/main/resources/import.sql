@@ -1,5 +1,5 @@
-INSERT INTO public.tenant (id, ownerid, name)
-VALUES ('07f0711f-b952-4f02-9e85-f90a2a69b0e1', '07f0711f-b952-4f02-9e85-f90a2a69b0e1', 'test');
+INSERT INTO public.tenant (id, ownerid, name, baseUrl)
+VALUES ('07f0711f-b952-4f02-9e85-f90a2a69b0e1', '07f0711f-b952-4f02-9e85-f90a2a69b0e1', 'test', 'http://localhost:8080');
 INSERT INTO public."user" (role, createdat, lastlogin, id, tenantid, email, firstname, lastname, password, username)
 VALUES (2, '2024-03-21 11:28:19.000000', '2024-03-21 11:28:21.000000', '07f0711f-b952-4f02-9e85-f90a2a69b0e1',
         '07f0711f-b952-4f02-9e85-f90a2a69b0e1', 'test@test.de', 'Felix', 'Specht',

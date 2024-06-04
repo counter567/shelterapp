@@ -46,7 +46,7 @@ enum class UserRole {
 @Embeddable
 class UserRefreshToken {
     lateinit var id: UUID
-    lateinit var expirationDate: LocalDate
+    lateinit var expirationDate: LocalDateTime
 }
 
 fun Iterable<UserRefreshToken>.containsToken(id: UUID) = this.any { it.id == id }
