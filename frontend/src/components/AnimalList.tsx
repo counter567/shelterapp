@@ -25,7 +25,7 @@ animalStatus.unshift({ id: 0, name: "Alle Status" });
 const ageFilter = [
   { id: 0, name: "Alter beliebig" },
   { id: 1, name: "Bis 6 Monate" },
-  { id: 2, name: "Bis 12 Monate" },
+  { id: 2, name: "Von 6 bis 12 Monate" },
   { id: 3, name: "1 bis 3 Jahre" },
   { id: 4, name: "3 bis 5 Jahre" },
   { id: 5, name: "Über 5 Jahre" },
