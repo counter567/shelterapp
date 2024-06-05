@@ -23,7 +23,7 @@
   },
   "scripts": {
     "dev": "react-app-rewired start",
-    "watch": "npx nodemon --watch src --exec \"npm run build\" -e ts,tsx,css,scss",
+    "watch": "npx nodemon --watch src --exec \"react-app-rewired build; node copyStatic.js\" -e ts,tsx,css,scss",
     "build": "react-app-rewired build",
     "postbuild": "node copyStatic.js",
     "test": "react-app-rewired test",
