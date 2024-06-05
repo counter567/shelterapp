@@ -171,8 +171,8 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
           return { propName, value, compare: FilterCompare[compare as any] };
         });
         filter(criteria as any[], false);
-        setReady(true);
       }
+      setReady(true);
     }
 
     // Also listen to pop state so returning to an earlier filter is possible.
