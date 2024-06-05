@@ -11,7 +11,8 @@ import { getAllanimals, getAnimalTypes } from "../service/animalapi";
 import { AnimalStatus } from "../models/animalStatus";
 import { AnimalSource } from "../models/animalSource";
 
-const key = "local_animals";
+const keyAnimals = "local_animals";
+const keyTypes = "local_animal_types";
 
 const startOfDay = (date: Date) => {
   const newDate = new Date(date);
@@ -83,8 +84,10 @@ interface FilterCriteria<T> {
   compare: "===" | "!==" | "<" | "<=" | ">" | ">=";
 }
 enum FilterCompare { "===", "!==","<","<=",">",">="}
+type AnimalType = { id: number;name: string;}
 
 interface DataContextType {
+  getAnimalTypes: () => AnimalType[];
   getAnimalsPaged: () => Animal[];
   updateData: (newData: Animal[]) => void;
   filter: (criteria: FilterCriteria<AnimalToFilterProps>[]) => void;
@@ -101,6 +104,7 @@ interface DataContextType {
 }
 
 const DataContext = createContext<DataContextType>({
+  getAnimalTypes: () => [],
   getAnimalsPaged: () => [],
   updateData: () => {},
   filter: () => {},
@@ -119,7 +123,7 @@ const DataContext = createContext<DataContextType>({
 export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
   children,
 }) => {
-  const [animals, setAnimals] = useState<Animal[]>([]);
+  const [animals, setAnimals] = useState<Animal[]>(parseAnimalsFromLocalStorage());
   const [filterCriteria, setFilterCriteria] = useState<
     FilterCriteria<AnimalToFilterProps>[]
   >([]);
@@ -139,38 +143,27 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
       id: number;
       name: string;
     }[]
-  >([]);
+  >(parseAnimalTypesFromLocalStorage());
+
   useEffect(() => {
     const loadData = async () => {
-      const localData = parseFromLocalStorage();
-      if (localData && localData.length > 0) {
-        setAnimals(localData);
-        calculateMaxPages(localData.length);
-        await loadAnimals();
-      } else {
-        try {
-          await loadAnimals();
-        } catch (error) {
-          console.error("Fehler beim Fetchen der Daten:", error);
-        }
-      }
-
-      const foundAnimalTypes = await getAnimalTypes();
+      const [animals, foundAnimalTypes] = await Promise.all([loadAnimals(), getAnimalTypes()]);
+      storeAnimalTypesFromLocalStorage(foundAnimalTypes);
       setAnimalTypes(foundAnimalTypes);
-      parse();
+      calculateMaxPages(animals.length);
+      parseHashFilters();
     };
 
-    loadData();
-
-    const parse = () => {
+    // parsing the hash filters from url and applying filters.
+    const parseHashFilters = () => {
       const url = new URL(window.location as any);
       const hash = url.hash;
       if (hash) {
         const criteria = hash.slice(1).split('&').map(c => {
           let [propName, serializedValue] = c.split('=');
           let [value, compare] = serializedValue.split('|') as [any, string];
-          if(propName === 'type' || propName === 'dateOfBirth') {
-            value = +value;
+          if(propName === 'type' || propName === 'dateOfBirth' || propName === 'status') {
+            value = Number.isInteger(parseInt(value)) ? parseInt(value) : value;
           }
           return { propName, value, compare: FilterCompare[compare as any] };
         });
@@ -178,12 +171,12 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
       }
     }
 
-    window.addEventListener('popstate', () => {
-      parse();
-    });
-    window.addEventListener('load', () => {
-      parse();
-    });
+    // Also listen to pop state so returning to an earlier filter is possible.
+    window.addEventListener('popstate', parseHashFilters);
+    // Also parse on entering the site.
+    window.addEventListener('load', parseHashFilters);
+    
+    loadData();
   }, []);
 
   const loadAnimals = async () => {
@@ -191,7 +184,7 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
     const animals = animalSource.map((animal) => new Animal(animal));
     setAnimals(animals);
     calculateMaxPages(animals.length);
-    localStorage.setItem(key, JSON.stringify(animalSource));
+    localStorage.setItem(keyAnimals, JSON.stringify(animalSource));
     return animals;
   };
 
@@ -200,23 +193,6 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
       const loadedAnimals = await loadAnimals();
       return loadedAnimals.find((animal) => animal.slug === slug);
     } else return animals.find((animal) => animal.slug === slug);
-  };
-
-  const parseFromLocalStorage = () => {
-    const data = localStorage.getItem(key);
-    if (data) {
-      let parsed = JSON.parse(data) as AnimalSource[];
-      const allAnimals = parsed.map((animal) => new Animal(animal));
-      allAnimals.forEach((item) => {
-        if (item.dateOfBirth) item.dateOfBirth = new Date(item.dateOfBirth);
-        if (item.dateOfAdmission)
-          item.dateOfAdmission = new Date(item.dateOfAdmission);
-        if (item.dateOfLeave) item.dateOfLeave = new Date(item.dateOfLeave);
-        if (item.dateOfDeath) item.dateOfDeath = new Date(item.dateOfDeath);
-      });
-      return allAnimals;
-    }
-    return [];
   };
 
   const getAnimalsPaged = () => {
@@ -293,7 +269,7 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
   const filter = (criteria: FilterCriteria<AnimalToFilterProps>[], pushing = true) => {
     updateProperties(criteria);
     const filterCriteria = updateFilter(criteria, pushing);
-    const animals = parseFromLocalStorage();
+    const animals = parseAnimalsFromLocalStorage();
     const filtered = animals.filter((item) => {
       return filterCriteria.every((criterion) => {
         let { propName, compare, value } = criterion;
@@ -356,12 +332,21 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
   const updateData = (newData: Animal[]) => {
     console.info("Updating data");
     setAnimals(newData);
-    localStorage.setItem(key, JSON.stringify(newData));
+    localStorage.setItem(keyAnimals, JSON.stringify(newData));
   };
+
+  const getAnimalTypesLocal = () => {
+    return animalTypes;
+  }
+
+  // calculateMaxPages(animals.length);
+
+
 
   return (
     <DataContext.Provider
       value={{
+        getAnimalTypes: getAnimalTypesLocal,
         getAnimalsPaged,
         updateData,
         filter,
@@ -383,3 +368,24 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
 };
 
 export const useData = () => useContext(DataContext);
+
+const parseAnimalsFromLocalStorage = () => {
+  const data = localStorage.getItem(keyAnimals);
+  if (data) {
+    let parsed = JSON.parse(data) as AnimalSource[];
+    const allAnimals = parsed.map((animal) => new Animal(animal));
+    return allAnimals;
+  }
+  return [];
+};
+const parseAnimalTypesFromLocalStorage = () => {
+  const data = localStorage.getItem(keyTypes);
+  if (data) {
+    let parsed = JSON.parse(data) as AnimalType[];
+    return parsed;
+  }
+  return [];
+};
+const storeAnimalTypesFromLocalStorage = (types: AnimalType[]) => {
+  localStorage.setItem(keyTypes, JSON.stringify(types));
+};

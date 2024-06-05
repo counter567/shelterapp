@@ -33,6 +33,7 @@ const ageFilter = [
 
 export default function AnimalList() {
   const {
+    getAnimalTypes,
     getAnimalsPaged,
     filter,
     changePage,
@@ -44,15 +45,6 @@ export default function AnimalList() {
     searchedAnimalSex,
     searchedAnimalStatus,
   } = useData();
-  const [animalTypes, setAnimalType] = useState<SelectItem[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      const foundAnimalTypes = await getAnimalTypes();
-      foundAnimalTypes.unshift({ id: 0, name: "Alle Tierarten" });
-      setAnimalType(foundAnimalTypes);
-    })();
-  }, []);
 
   return (
     <div>
@@ -71,7 +63,7 @@ export default function AnimalList() {
           }
         />
         <DropDown
-          items={animalTypes}
+          items={Array.prototype.concat([], [{ id: 0, name: "Alle Tierarten" }], getAnimalTypes())}
           value={searchedAnimalType}
           callback={(animalType) =>
             filter([
