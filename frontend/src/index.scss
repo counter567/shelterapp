@@ -20,3 +20,7 @@ code {
 #root {
   margin: 1rem;
 }
+
+#root :is(.bg-blue-700) {
+  background-color: var(--e-global-color-primary, var(--wp--preset--color--custom-primary, rgb(29 78 216 / var(--tw-bg-opacity))));
+}
