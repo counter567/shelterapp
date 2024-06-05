@@ -35,7 +35,7 @@ const fiveYearsOld = calculateDateThreshold(0, -5);
 const getAgeFilter = (value: number, birthDate?: Date) => {
   if (
     !birthDate ||
-    Object.prototype.toString.call(birthDate) !== "[object Date]" ||
+    !(birthDate instanceof Date) ||
     isNaN(birthDate.getTime())
   ) {
     return false;
@@ -56,7 +56,7 @@ const getAgeFilter = (value: number, birthDate?: Date) => {
 
     case 2: // "Bis 12 Monate"
       return (
-        normalizedBirthDate > sixMonthsOld && normalizedBirthDate <= oneYearOld
+        normalizedBirthDate <= sixMonthsOld && normalizedBirthDate >= oneYearOld
       );
 
     case 3: // "1 bis 3 Jahre"
@@ -187,9 +187,9 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
   const loadAnimals = async () => {
     const animalSource = await getAllanimals();
     const animals = animalSource.map((animal) => new Animal(animal));
-    setAnimals(animals);
     calculateMaxPages(animals.length);
     localStorage.setItem(keyAnimals, JSON.stringify(animalSource));
+    filter(filterCriteria);
     return animals;
   };
 
@@ -317,8 +317,6 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
         }
       });
     });
-    console.log(animals);
-    console.log(filtered);
 
     setAnimals(filtered);
     setCurrentPage(1);
