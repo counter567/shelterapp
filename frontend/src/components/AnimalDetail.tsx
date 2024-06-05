@@ -23,7 +23,7 @@ const AnimalDetail = () => {
   const [idValue, setId] = useState<string>("");
   const { id } = useParams<{ id: string }>();
   if (idValue !== id) setId(id!);
-  const { getAnimal } = useData();
+  const { getAnimal, getOriginalTitle } = useData();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,6 +33,17 @@ const AnimalDetail = () => {
     };
     fetchData();
   }, [idValue, getAnimal, navigate, setAnimals]);
+
+  useEffect(() => {
+    if(animal) {
+      document.title = `${getOriginalTitle()} - ${animal.name} - ${animal.type} - ${!breedTwo ? breedOne : `${breedOne}, ${breedTwo}`}`;
+    } else {
+      document.title = getOriginalTitle();
+    }
+    return () => {
+      document.title = getOriginalTitle();
+    }
+  });
 
   if (!animal) return <></>;
 
@@ -51,6 +62,7 @@ const AnimalDetail = () => {
     otherPictureFileUrls,
     illnesses,
   } = animal;
+
   return (
     <div>
       <div className="my-4">

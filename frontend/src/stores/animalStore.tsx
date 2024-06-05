@@ -10,6 +10,7 @@ import { AnimalSex } from "../models/animalSex";
 import { getAllanimals, getAnimalTypes } from "../service/animalapi";
 import { AnimalStatus } from "../models/animalStatus";
 import { AnimalSource } from "../models/animalSource";
+import { ageFilter, animalSex, animalStatus } from "../components/AnimalList";
 
 const keyAnimals = "local_animals";
 const keyTypes = "local_animal_types";
@@ -87,6 +88,8 @@ enum FilterCompare { "===", "!==","<","<=",">",">="}
 type AnimalType = { id: number;name: string;}
 
 interface DataContextType {
+  getOriginalTitle: () => string;
+  getTitle: () => string;
   getAnimalTypes: () => AnimalType[];
   getAnimalsPaged: () => Animal[];
   updateData: (newData: Animal[]) => void;
@@ -105,6 +108,8 @@ interface DataContextType {
 }
 
 const DataContext = createContext<DataContextType>({
+  getOriginalTitle: () => document.title,
+  getTitle: () => '',
   getAnimalTypes: () => [],
   getAnimalsPaged: () => [],
   updateData: () => {},
@@ -126,6 +131,7 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
   children,
 }) => {
   const [ready, setReady] = useState<boolean>(false);
+  const [title] = useState<string>(document.title);
   const [animals, setAnimals] = useState<Animal[]>(parseAnimalsFromLocalStorage());
   const [filterCriteria, setFilterCriteria] = useState<
     FilterCriteria<AnimalToFilterProps>[]
@@ -274,6 +280,7 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
   const filter = (criteria: FilterCriteria<AnimalToFilterProps>[], pushing = true) => {
     updateProperties(criteria);
     const filterCriteria = updateFilter(criteria, pushing);
+
     const animals = parseAnimalsFromLocalStorage();
     const filtered = animals.filter((item) => {
       return filterCriteria.every((criterion) => {
@@ -323,6 +330,45 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
     calculateMaxPages(filtered.length);
   };
 
+  const getTitle = () => {
+    let newTitle = title;
+    const order = [
+      "type",
+      "sex",
+      "status",
+      "dateOfBirth"
+    ];
+    filterCriteria.slice().sort((a,b)=> order.indexOf(a.propName) - order.indexOf(b.propName)).forEach((criterion) => {
+      let { propName, compare, value } = criterion;
+      console.log(propName, compare, value);
+      if (propName === "type" && value !== undefined) {
+        value = animalTypes.find((animal) => animal.id === value)?.name || undefined;
+        if(value) {
+          newTitle += ` - ${value}`;
+        }
+      }
+      if (propName === "sex" && value != AnimalSex.All) {
+        const entry = animalSex.filter(e => e.id == value).pop();
+        if(entry) {
+          newTitle += ` - ${entry?.name}`;
+        }
+      }
+      if (propName === "dateOfBirth" && value !== undefined && value !== 0) {
+        const entry = ageFilter.filter(e => e.id === value).pop();
+        if(entry) {
+          newTitle += ` - ${entry?.name}`;
+        }
+      }
+      if (propName === "status" && value !== 0) {
+        const entry = animalStatus.filter(e => e.id === value).pop();
+        if(entry) {
+          newTitle += ` - ${entry?.name}`;
+        }
+      }
+    });
+    return newTitle;
+  }
+
   const changePage = (newPage: number) => {
     if (newPage < 1 || newPage > maxPages) {
       return;
@@ -352,6 +398,8 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
   return (
     <DataContext.Provider
       value={{
+        getOriginalTitle: () => title,
+        getTitle,
         getAnimalTypes: getAnimalTypesLocal,
         getAnimalsPaged,
         updateData,

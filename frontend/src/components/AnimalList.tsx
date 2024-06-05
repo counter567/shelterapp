@@ -9,20 +9,20 @@ import Pagination from "./Pagination";
 import { germanStatus } from "../helper/getCardColorByAnimalStatus";
 import { statusValues } from "../models/animalStatus";
 
-const animalSex = [
+export const animalSex = [
   { id: AnimalSex.All, name: "Alle Geschlechter" },
   { id: AnimalSex.Male, name: "Männlich" },
   { id: AnimalSex.Female, name: "Weiblich" },
 ];
 
-const animalStatus: { id: string | number; name: string }[] = statusValues.map(
+export const animalStatus: { id: string | number; name: string }[] = statusValues.map(
   (status) => ({
     id: status,
     name: germanStatus(status),
   })
 );
 animalStatus.unshift({ id: 0, name: "Alle Status" });
-const ageFilter = [
+export const ageFilter = [
   { id: 0, name: "Alter beliebig" },
   { id: 1, name: "Bis 6 Monate" },
   { id: 2, name: "Von 6 bis 12 Monate" },
@@ -33,6 +33,8 @@ const ageFilter = [
 
 export default function AnimalList() {
   const {
+    getOriginalTitle,
+    getTitle,
     getAnimalTypes,
     getAnimalsPaged,
     filter,
@@ -46,6 +48,13 @@ export default function AnimalList() {
     searchedAnimalStatus,
     ready,
   } = useData();
+
+  useEffect(() => {
+    document.title = getTitle();
+    return () => {
+      document.title = getOriginalTitle();
+    }
+  });
 
   return (
     <div>
