@@ -101,6 +101,7 @@ interface DataContextType {
   searchedAnimalType?: number;
   searchedAnimalSex?: AnimalSex;
   searchedAnimalStatus?: AnimalStatus | number;
+  ready: boolean;
 }
 
 const DataContext = createContext<DataContextType>({
@@ -118,11 +119,13 @@ const DataContext = createContext<DataContextType>({
   searchedAnimalType: undefined,
   searchedAnimalSex: undefined,
   searchedAnimalStatus: undefined,
+  ready: false,
 });
 
 export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
   children,
 }) => {
+  const [ready, setReady] = useState<boolean>(false);
   const [animals, setAnimals] = useState<Animal[]>(parseAnimalsFromLocalStorage());
   const [filterCriteria, setFilterCriteria] = useState<
     FilterCriteria<AnimalToFilterProps>[]
@@ -168,6 +171,7 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
           return { propName, value, compare: FilterCompare[compare as any] };
         });
         filter(criteria as any[], false);
+        setReady(true);
       }
     }
 
@@ -177,6 +181,7 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
     window.addEventListener('load', parseHashFilters);
     
     loadData();
+    parseHashFilters();
   }, []);
 
   const loadAnimals = async () => {
@@ -312,6 +317,9 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
         }
       });
     });
+    console.log(animals);
+    console.log(filtered);
+
     setAnimals(filtered);
     setCurrentPage(1);
     calculateMaxPages(filtered.length);
@@ -360,6 +368,7 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
         searchedAnimalType,
         searchedAnimalSex,
         searchedAnimalStatus,
+        ready,
       }}
     >
       {children}

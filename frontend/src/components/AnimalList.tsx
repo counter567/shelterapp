@@ -44,6 +44,7 @@ export default function AnimalList() {
     searchedAnimalType,
     searchedAnimalSex,
     searchedAnimalStatus,
+    ready,
   } = useData();
 
   return (
@@ -103,11 +104,11 @@ export default function AnimalList() {
         />
       </div>
       <ul className="grid justify-center gap-4 animals mb-12">
-        {getAnimalsPaged().map((animal) => (
+        {ready && getAnimalsPaged().map((animal) => (
           <AnimalCard key={animal.id} animal={animal} />
         ))}
       </ul>
-      {getAnimalsPaged().length === 0 && (
+      {ready && getAnimalsPaged().length === 0 && (
         <div className="text-center mt-20">
           <h1 className="text-4xl font-bold mb-4">Keine Tiere gefunden</h1>
           <button
@@ -118,7 +119,7 @@ export default function AnimalList() {
           </button>
         </div>
       )}
-      {getAnimalsPaged().length > 0 && (
+      {ready && getAnimalsPaged().length > 0 && (
         <Pagination
           currentPage={currentPage}
           maxPages={maxPages}
