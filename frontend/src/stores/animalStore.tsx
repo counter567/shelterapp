@@ -61,13 +61,13 @@ const getAgeFilter = (value: number, birthDate?: Date) => {
 
     case 3: // "1 bis 3 Jahre"
       return (
-        normalizedBirthDate > oneYearOld && normalizedBirthDate <= threeYearsOld
+        normalizedBirthDate <= oneYearOld && normalizedBirthDate >= threeYearsOld
       );
 
     case 4: // "3 bis 5 Jahre"
       return (
-        normalizedBirthDate > threeYearsOld &&
-        normalizedBirthDate <= fiveYearsOld
+        normalizedBirthDate <= threeYearsOld &&
+        normalizedBirthDate >= fiveYearsOld
       );
 
     case 5: // "Über 5 Jahre"
