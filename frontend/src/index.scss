@@ -24,3 +24,6 @@ code {
 #root :is(.bg-blue-700) {
   background-color: var(--e-global-color-primary, var(--wp--preset--color--custom-primary, rgb(29 78 216 / var(--tw-bg-opacity))));
 }
+#root :is(.hover\:bg-blue-800:hover) {
+  background-color: color-mix(in srgb, var(--e-global-color-primary, var(--wp--preset--color--custom-primary, rgb(29 78 216 / var(--tw-bg-opacity)))) 80%, black) !important;
+}
