@@ -270,7 +270,6 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
     if(pushing) {
       const url = new URL(window.location as any);
       url.hash = '#' + filterCriteriaCopy.map(c => `${c.propName}=${c.value}|${FilterCompare[c.compare]}`).join('&');
-      console.log(url.hash);
       window.history.pushState({}, '', url.toString());
     }
 
@@ -340,7 +339,6 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
     ];
     filterCriteria.slice().sort((a,b)=> order.indexOf(a.propName) - order.indexOf(b.propName)).forEach((criterion) => {
       let { propName, compare, value } = criterion;
-      console.log(propName, compare, value);
       if (propName === "type" && value !== undefined) {
         value = animalTypes.find((animal) => animal.id === value)?.name || undefined;
         if(value) {
