@@ -6,6 +6,8 @@ export interface AnimalToFilterProps {
   type?: string;
   status?: AnimalStatus;
   dateOfBirth?: Date;
+  donationCall?: boolean;
+  wasFound?: boolean;
 }
 
 export class Animal implements AnimalToFilterProps {

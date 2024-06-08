@@ -19,6 +19,7 @@ code {
 
 #root {
   margin: 1rem;
+  max-width: unset !important;
 }
 
 #root :is(.bg-blue-700) {

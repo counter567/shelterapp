@@ -4,14 +4,22 @@ import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+let roots = document.querySelectorAll('.shelterblock-root');
+if(roots.length === 0) {
+  roots = document.querySelectorAll('#root');
+}
+roots.forEach((rootElement) => {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <App
+        type={parseInt(rootElement.getAttribute('data-type') || '-1')}
+        status={rootElement.getAttribute('data-status') || ''}
+        hideFilters={rootElement.getAttribute('data-hideFilters') === 'true'}
+      />
+    </React.StrictMode>
+  );
+});
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

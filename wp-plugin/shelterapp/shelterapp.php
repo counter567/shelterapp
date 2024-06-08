@@ -3,7 +3,7 @@
 Plugin Name: Shelterapp
 Plugin URI: 
 Description: Worpress integration of the shelterapp
-Version: 0.1.0
+Version: 0.1.10
 Requires at least: 
 Requires PHP: 8.1
 Author: Jan Sobotta

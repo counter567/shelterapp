@@ -31,7 +31,11 @@ export const ageFilter = [
   { id: 5, name: "Über 5 Jahre" },
 ];
 
-export default function AnimalList() {
+interface AnimalListProps {
+  hideFilters?: boolean;
+}
+
+export default function AnimalList({ hideFilters = false }: AnimalListProps) {
   const {
     getOriginalTitle,
     getTitle,
@@ -47,6 +51,7 @@ export default function AnimalList() {
     searchedAnimalSex,
     searchedAnimalStatus,
     ready,
+    loaded,
   } = useData();
 
   useEffect(() => {
@@ -58,6 +63,7 @@ export default function AnimalList() {
 
   return (
     <div>
+      {!hideFilters && (
       <div className="mb-4 dropdown-buttons gap-y-6 gap-x-8 items-center justify-center">
         <DropDown
           items={animalStatus}
@@ -112,12 +118,13 @@ export default function AnimalList() {
           }
         />
       </div>
+      )}
       <ul className="grid justify-center gap-4 animals mb-12">
         {ready && getAnimalsPaged().map((animal) => (
           <AnimalCard key={animal.id} animal={animal} />
         ))}
       </ul>
-      {ready && getAnimalsPaged().length === 0 && (
+      {ready && loaded && getAnimalsPaged().length === 0 && (
         <div className="text-center mt-20">
           <h1 className="text-4xl font-bold mb-4">Keine Tiere gefunden</h1>
           <button
@@ -128,7 +135,12 @@ export default function AnimalList() {
           </button>
         </div>
       )}
-      {ready && getAnimalsPaged().length > 0 && (
+      {ready && !loaded && getAnimalsPaged().length === 0 && (
+        <div className="text-center mt-20">
+          <h1 className="text-4xl font-bold mb-4">Lade ...</h1>
+        </div>
+      )}
+      {ready && maxPages > 1 && (
         <Pagination
           currentPage={currentPage}
           maxPages={maxPages}

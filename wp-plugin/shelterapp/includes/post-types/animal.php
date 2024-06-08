@@ -38,6 +38,7 @@ $titleMappings = array(
 class ShelterappAnimals
 {
     private $rest_is_init = false;
+    public $blockView = 0;
 
     function __construct()
     {
@@ -52,6 +53,11 @@ class ShelterappAnimals
 
         add_action('save_post', array($this, 'save_post'), 10, 3);
         add_action('add_meta_boxes', 'sa_add_custom_box_animal_galery');
+
+        add_shortcode('shelterapp_view', array($this, 'doShortcode')); 
+
+        
+        add_action( 'elementor/widgets/register', array($this, 'register_elementor_widget') );
 
         // template stuff!
         add_filter('template_include', array($this, 'loadAnimalTemplates'), 99);
@@ -93,6 +99,22 @@ class ShelterappAnimals
             }
             return $page_template;
         });
+    }
+
+    function register_elementor_widget( $widgets_manager ) {
+
+        require_once( plugin_dir_path(SHELTERAPP_PATH) . '/widgets/shelterapp_elementor_widget.php' );
+    
+        $widgets_manager->register( new \Shelterapp_Elementor_Widget() );
+    
+    }
+
+    function doShortcode($atts, $content = ""){
+        ob_start();
+        if(isset($atts['type']) && !empty($atts['type'])) $attributes['type'] = $atts['type'];
+        if(isset($atts['status']) && !empty($atts['status'])) $attributes['status'] = $atts['status'];
+        include (plugin_dir_path(SHELTERAPP_PATH) . 'blocks/shelter-block-view/render.php');
+        return ob_get_clean();
     }
 
     function setCurrentTemplateContent($additionalContent = '')
@@ -703,6 +725,7 @@ class ShelterappAnimals
 
     function sync()
     {
+        return;
         error_log('============================================');
         $client = sa_get_animal_resource_client();
         if (!$client) {
