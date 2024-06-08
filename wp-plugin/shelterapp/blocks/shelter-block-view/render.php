@@ -16,6 +16,7 @@ wp_localize_script(
 		'block' => $block,
 		'routerBasePath' => '/animal',
 		'publicUrlBase' => plugin_dir_url(SHELTERAPP_PATH) . 'public',
+		'paypalAdress' => get_option('shelterapp_plugin_options')['shelterapp_paypal'],
 	)
 );
 

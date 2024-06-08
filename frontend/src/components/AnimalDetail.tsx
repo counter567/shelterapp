@@ -16,6 +16,7 @@ import Gender from "./Gender";
 import PayPalButton from "./PaypalButton";
 import SectionList from "./SectionList";
 import { useData } from "../stores/animalStore";
+import { getPaypalAdress } from "../service/config-helper";
 
 const AnimalDetail = () => {
   const navigate = useNavigate();
@@ -123,7 +124,7 @@ const AnimalDetail = () => {
           <SectionList className="mb-4" heading="Wir danken" values={donators}>
             <HeartIcon className="mr-2" stroke="red" fill="red" />{" "}
           </SectionList> */}
-          <PayPalButton name={name!} url="spenden@tierheim-neuwied.de" />
+          <PayPalButton name={name!} adress={getPaypalAdress()} />
         </div>
         <div className="p-4 w-full">
           <h1 className="font-bold mb-2 text-5xl w-full">{name}</h1>
