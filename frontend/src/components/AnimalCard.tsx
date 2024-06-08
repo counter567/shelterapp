@@ -8,6 +8,7 @@ import { Animal } from "../models/animal";
 import { AnimalStatus } from "../models/animalStatus";
 import BirthDate from "./Birthdate";
 import Gender from "./Gender";
+import { getRouterBasePath } from "../service/url-helper";
 
 interface AnimalCardProps {
   animal: Animal;
@@ -41,7 +42,7 @@ const AnimalCard = ({
         status
       )}`}
     >
-      <Link className="no-underline" to={`/${slug}`} key={id}>
+      <Link className="no-underline" to={`${getRouterBasePath()}/${slug}`} key={id}>
         <div className="flex items-center flex-col">
           <div className="flex items-center justify-center h-44 pt-4">
             <div className="aspect-square bg-gray-100 w-40 rounded-full flex flex-col items-center absolute"></div>
