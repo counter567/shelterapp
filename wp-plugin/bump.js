@@ -19,8 +19,6 @@ const {
 let data = fs.readFileSync('./shelterapp/shelterapp.php').toString();
 
 data = data.replace(/Version: (\d+\.\d+\.\d+)/, (match, version) => {
-  console.log(values);
-
   const newVersion = version.split('.');
   console.log('Bump version from', newVersion.join('.'));
   if(values.major) {
