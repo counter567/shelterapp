@@ -94,14 +94,25 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
 
 	protected function content_template() {
 		?>
-		<#
-		if ( '' === settings.title ) {
-			return;
-		}
-		#>
-		<p style="padding:2rem; background: #ddd; color: black; font-weight: bold; margin: 0; text-align: center;">
-			Shelterapp Elementor Widget
-		</p>
+		<div style="padding:2rem; background: #ddd; color: black; font-weight: bold; margin: 0; text-align: center;">
+			<h3>
+				Shelterapp Elementor Widget
+			</h3>
+			<#
+			if ( settings.type != 0 ) {
+				#>
+				<p>{{{ settings.type }}}</p>
+				<#
+			}
+			#>
+			<#
+			if ( settings.status != 0 ) {
+				#>
+				<p>{{{ settings.status }}}</p>
+				<#
+			}
+			#>
+		</div>
 		<?php
 	}
 }

@@ -293,6 +293,8 @@ class ShelterappAnimals
             unset($meta[$filed]);
         }
 
+        // @todo: Filter out private fields
+
         return $meta;
     }
 
