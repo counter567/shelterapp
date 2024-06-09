@@ -7,6 +7,9 @@ function sa_generate_taxonomy(
     $plural,
     $slug = null,
     $show_admin_column = true,
+    $public = true,
+    $hierarchical = true,
+    $show_in_nav_menus = true,
 ) {
     if ($slug === null) {
         $slug = $taxonomy;
@@ -26,12 +29,14 @@ function sa_generate_taxonomy(
     );
 
     $args_tax = array(
-        'hierarchical' => true,
+        'hierarchical' => $hierarchical,
         'labels' => $labels_tax,
         'show_ui' => true,
         'show_admin_column' => $show_admin_column,
         'query_var' => true,
         'show_in_rest' => true,
+        'public' => $public,
+        'show_in_nav_menus' => $show_in_nav_menus,
         'rewrite' => array('slug' => $slug)
     );
 

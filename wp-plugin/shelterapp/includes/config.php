@@ -1,14 +1,16 @@
 <?php
 
-function dbi_register_settings()
+function shelterapp_register_base_settings()
 {
     register_setting('shelterapp_plugin_options', 'shelterapp_plugin_options', 'shelterapp_plugin_options_validate');
     add_settings_section('shelterapp_settings', 'Shelter App Settings', 'shelterapp_plugin_setting_shelterapp_text', 'shelterapp_plugin');
 
     add_settings_field('shelterapp_plugin_setting_shelterapp_host', 'Shelter App Host', 'shelterapp_plugin_setting_shelterapp_host', 'shelterapp_plugin', 'shelterapp_settings');
     add_settings_section('shelterapp_settings_user', '', 'shelterapp_plugin_setting_shelterapp_user_data', 'shelterapp_plugin');
+
+    add_settings_field('shelterapp_plugin_setting_shelterapp_paypal_link', 'Paypal Adresse', 'shelterapp_plugin_setting_shelterapp_paypal_link', 'shelterapp_plugin', 'shelterapp_settings');
 }
-add_action('admin_init', 'dbi_register_settings');
+add_action('admin_init', 'shelterapp_register_base_settings');
 
 function shelterapp_add_settings_page()
 {
@@ -17,9 +19,17 @@ function shelterapp_add_settings_page()
 add_action('admin_menu', 'shelterapp_add_settings_page');
 
 
+
+
 function sa_get_config()
 {
     return get_option('shelterapp_plugin_options', shelterapp_plugin_setting_get_default_config());
+}
+function sa_set_config($config)
+{
+    // merge existing config with new config
+    $newConfig = array_replace(sa_get_config(), $config);
+    update_option('shelterapp_plugin_options', $newConfig);
 }
 
 // Layout
@@ -27,12 +37,19 @@ function sa_get_config()
 function shelterapp_render_plugin_settings_page()
 {
     ?>
-    <form action="options.php" method="post" autocomplete='off' style="margin: 0 auto; max-width: 800px">
-        <?php
-        settings_fields('shelterapp_plugin_options');
-        do_settings_sections('shelterapp_plugin'); ?>
-        <input name="submit" class="button button-primary" type="submit" value="<?php esc_attr_e('Save'); ?>" />
-    </form>
+    <div class="wrap">
+        <form action="options.php" method="post" autocomplete='off'>
+            <?php
+            settings_fields('shelterapp_plugin_options');
+            do_settings_sections('shelterapp_plugin'); ?>
+            <input name="submit" class="button button-primary" type="submit" value="<?php esc_attr_e('Save'); ?>" />
+            <style>
+                .wrap input[type="text"] {
+                    min-width:50vw;
+                }
+            </style>
+        </form>
+    </div>
     <?php
 }
 
@@ -87,24 +104,24 @@ function shelterapp_plugin_setting_shelterapp_user_data()
         ?>
         <table class="form-table" role="presentation">
             <tbody>
-                <tr>
+                <!--<tr>
                     <th scope="row">Shelter App User</th>
                     <td>
                         <input autocomplete="off" id="shelterapp_plugin_setting_shelterapp_host"
                             name="shelterapp_plugin_options[shelterapp_user]" type="text" placeholder="User" />
                     </td>
-                </tr>
+                </tr>-->
                 <tr>
                     <th scope="row">Shelter App E-Mail</th>
                     <td>
-                        <input autocomplete="off" id="shelterapp_plugin_setting_shelterapp_host"
+                        <input autocomplete="off" id="shelterapp_plugin_setting_shelterapp_host" class="regular-text"
                             name="shelterapp_plugin_options[shelterapp_mail]" type="text" placeholder="E-Mail" />
                     </td>
                 </tr>
                 <tr>
                     <th scope="row">Shelter App Passwort</th>
                     <td>
-                        <input autocomplete="off" id="shelterapp_plugin_setting_shelterapp_host"
+                        <input autocomplete="off" id="shelterapp_plugin_setting_shelterapp_host" class="regular-text"
                             name="shelterapp_plugin_options[shelterapp_password]" type="text" placeholder="Passwort" />
                     </td>
                 </tr>
@@ -119,8 +136,9 @@ function shelterapp_plugin_setting_shelterapp_user_data()
 function shelterapp_plugin_setting_get_default_config()
 {
     return array(
-        'shelterapp_host' => 'http://backend:8080',
+        'shelterapp_host' => 'https://backend.shelterapp.spedat.de',
         'shelterapp_token' => '',
+        'shelterapp_paypal' => '',
     );
 }
 
@@ -128,6 +146,12 @@ function shelterapp_plugin_setting_shelterapp_host()
 {
     $options = sa_get_config();
     echo "<input autocomplete='off' id='shelterapp_plugin_setting_shelterapp_host' name='shelterapp_plugin_options[shelterapp_host]' type='text' value='" . esc_attr($options['shelterapp_host']) . "' placeholder='Host' />";
+}
+
+function shelterapp_plugin_setting_shelterapp_paypal_link()
+{
+    $options = sa_get_config();
+    echo "<input autocomplete='off' id='shelterapp_plugin_setting_shelterapp_paypal_link' name='shelterapp_plugin_options[shelterapp_paypal]' type='text' value='" . esc_attr($options['shelterapp_paypal']) . "' placeholder='Paypal Link' />";
 }
 
 
@@ -150,6 +174,7 @@ function shelterapp_plugin_options_validate($input)
         if (isset($newConfig["shelterapp_user"]) && $newConfig["shelterapp_user"])
             $data['username'] = $newConfig["shelterapp_user"];
 
+        $data['permanent'] = true;
 
         // try to login and retrieve token
         $authClient = sa_get_auth_client();

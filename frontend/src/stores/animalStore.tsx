@@ -10,9 +10,11 @@ import { AnimalSex } from "../models/animalSex";
 import { getAllanimals, getAnimalTypes } from "../service/animalapi";
 import { AnimalStatus } from "../models/animalStatus";
 import { AnimalSource } from "../models/animalSource";
-import { get } from "http";
+import { ageFilter, animalSex, animalStatus } from "../components/AnimalList";
+import { AppProps } from "../App";
 
-const key = "local_animals";
+const keyAnimals = "local_animals";
+const keyTypes = "local_animal_types";
 
 const startOfDay = (date: Date) => {
   const newDate = new Date(date);
@@ -35,7 +37,7 @@ const fiveYearsOld = calculateDateThreshold(0, -5);
 const getAgeFilter = (value: number, birthDate?: Date) => {
   if (
     !birthDate ||
-    Object.prototype.toString.call(birthDate) !== "[object Date]" ||
+    !(birthDate instanceof Date) ||
     isNaN(birthDate.getTime())
   ) {
     return false;
@@ -56,22 +58,21 @@ const getAgeFilter = (value: number, birthDate?: Date) => {
 
     case 2: // "Bis 12 Monate"
       return (
-        normalizedBirthDate > sixMonthsOld && normalizedBirthDate <= oneYearOld
+        normalizedBirthDate <= sixMonthsOld && normalizedBirthDate >= oneYearOld
       );
 
     case 3: // "1 bis 3 Jahre"
       return (
-        normalizedBirthDate > oneYearOld && normalizedBirthDate <= threeYearsOld
+        normalizedBirthDate <= oneYearOld && normalizedBirthDate >= threeYearsOld
       );
 
     case 4: // "3 bis 5 Jahre"
       return (
-        normalizedBirthDate > threeYearsOld &&
-        normalizedBirthDate <= fiveYearsOld
+        normalizedBirthDate <= threeYearsOld && normalizedBirthDate >= fiveYearsOld
       );
 
     case 5: // "Über 5 Jahre"
-      return normalizedBirthDate <= fiveYearsOld;
+      return normalizedBirthDate >= fiveYearsOld;
 
     default:
       return false;
@@ -83,8 +84,13 @@ interface FilterCriteria<T> {
   value: any;
   compare: "===" | "!==" | "<" | "<=" | ">" | ">=";
 }
+enum FilterCompare { "===", "!==","<","<=",">",">="}
+type AnimalType = { id: number;name: string;}
 
 interface DataContextType {
+  getOriginalTitle: () => string;
+  getTitle: () => string;
+  getAnimalTypes: () => AnimalType[];
   getAnimalsPaged: () => Animal[];
   updateData: (newData: Animal[]) => void;
   filter: (criteria: FilterCriteria<AnimalToFilterProps>[]) => void;
@@ -98,9 +104,14 @@ interface DataContextType {
   searchedAnimalType?: number;
   searchedAnimalSex?: AnimalSex;
   searchedAnimalStatus?: AnimalStatus | number;
+  ready: boolean;
+  loaded: boolean;
 }
 
 const DataContext = createContext<DataContextType>({
+  getOriginalTitle: () => document.title,
+  getTitle: () => '',
+  getAnimalTypes: () => [],
   getAnimalsPaged: () => [],
   updateData: () => {},
   filter: () => {},
@@ -114,12 +125,21 @@ const DataContext = createContext<DataContextType>({
   searchedAnimalType: undefined,
   searchedAnimalSex: undefined,
   searchedAnimalStatus: undefined,
+  ready: false,
+  loaded: false,
 });
 
-export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
+export const AnimalProvider: React.FC<PropsWithChildren<{
+  props?: AppProps;
+}>> = ({
   children,
+  props,
 }) => {
-  const [animals, setAnimals] = useState<Animal[]>([]);
+
+  const [ready, setReady] = useState<boolean>(false);
+  const [loaded, setLoaded] = useState<boolean>(false);
+  const [title] = useState<string>(document.title);
+  const [animals, setAnimals] = useState<Animal[]>(parseAnimalsFromLocalStorage());
   const [filterCriteria, setFilterCriteria] = useState<
     FilterCriteria<AnimalToFilterProps>[]
   >([]);
@@ -139,35 +159,55 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
       id: number;
       name: string;
     }[]
-  >([]);
+  >(parseAnimalTypesFromLocalStorage());
+
   useEffect(() => {
     const loadData = async () => {
-      const localData = parseFromLocalStorage();
-      if (localData && localData.length > 0) {
-        setAnimals(localData);
-        calculateMaxPages(localData.length);
-        await loadAnimals();
-      } else {
-        try {
-          await loadAnimals();
-        } catch (error) {
-          console.error("Fehler beim Fetchen der Daten:", error);
-        }
-      }
-
-      const foundAnimalTypes = await getAnimalTypes();
+      const [animals, foundAnimalTypes] = await Promise.all([loadAnimals(), getAnimalTypes()]);
+      storeAnimalTypesToLocalStorage(foundAnimalTypes);
       setAnimalTypes(foundAnimalTypes);
+      calculateMaxPages(animals.length);
+      parseHashFilters();
+      setLoaded(true);
     };
 
+    // parsing the hash filters from url and applying filters.
+    const parseHashFilters = () => {
+      if(props && props.hideFilters){
+        filter(initFiltersFromAppProps(props));
+      } else {
+        const url = new URL(window.location as any);
+        const hash = url.hash;
+        if (hash) {
+          const criteria = hash.slice(1).split('&').map(c => {
+            let [propName, serializedValue] = c.split('=');
+            let [value, compare] = serializedValue.split('|') as [any, string];
+            if(propName === 'type' || propName === 'dateOfBirth' || propName === 'status') {
+              value = Number.isInteger(parseInt(value)) ? parseInt(value) : value;
+            }
+            return { propName, value, compare: FilterCompare[compare as any] };
+          });
+          filter(criteria as any[], false);
+        }
+      }
+      setReady(true);
+    }
+
+    // Also listen to pop state so returning to an earlier filter is possible.
+    window.addEventListener('popstate', parseHashFilters);
+    // Also parse on entering the site.
+    window.addEventListener('load', parseHashFilters);
+    
     loadData();
+    parseHashFilters();
   }, []);
 
   const loadAnimals = async () => {
-    const animalSource = await getAllanimals();
+    const animalSource = await getAllanimals(50);
     const animals = animalSource.map((animal) => new Animal(animal));
-    setAnimals(animals);
     calculateMaxPages(animals.length);
-    localStorage.setItem(key, JSON.stringify(animalSource));
+    localStorage.setItem(keyAnimals, JSON.stringify(animalSource));
+    // filter([]);
     return animals;
   };
 
@@ -178,24 +218,8 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
     } else return animals.find((animal) => animal.slug === slug);
   };
 
-  const parseFromLocalStorage = () => {
-    const data = localStorage.getItem(key);
-    if (data) {
-      let parsed = JSON.parse(data) as AnimalSource[];
-      const allAnimals = parsed.map((animal) => new Animal(animal));
-      allAnimals.forEach((item) => {
-        if (item.dateOfBirth) item.dateOfBirth = new Date(item.dateOfBirth);
-        if (item.dateOfAdmission)
-          item.dateOfAdmission = new Date(item.dateOfAdmission);
-        if (item.dateOfLeave) item.dateOfLeave = new Date(item.dateOfLeave);
-        if (item.dateOfDeath) item.dateOfDeath = new Date(item.dateOfDeath);
-      });
-      return allAnimals;
-    }
-    return [];
-  };
-
   const getAnimalsPaged = () => {
+    const animals = parseAnimalsFromLocalStorage();
     const start = (currentPage - 1) * entriesPerPage;
     if (start >= animals.length || start < 0) {
       return [];
@@ -238,7 +262,7 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
     filter([]);
   };
 
-  const updateFilter = (criteria: FilterCriteria<AnimalToFilterProps>[]) => {
+  const updateFilter = (criteria: FilterCriteria<AnimalToFilterProps>[], pushing = true) => {
     if (criteria.length === 0) {
       setFilterCriteria([]);
       return [];
@@ -255,13 +279,23 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
       }
     });
     setFilterCriteria(filterCriteriaCopy);
+    
+    // disable pushstate if hideFilters is set.
+    if(pushing && !props?.hideFilters) {
+      const url = new URL(window.location as any);
+      url.hash = '#' + filterCriteriaCopy.map(c => `${c.propName}=${c.value}|${FilterCompare[c.compare]}`).join('&');
+      window.history.pushState({}, '', url.toString());
+    }
+
     return filterCriteriaCopy;
   };
 
-  const filter = (criteria: FilterCriteria<AnimalToFilterProps>[]) => {
+  const filter = (criteria: FilterCriteria<AnimalToFilterProps>[], pushing = true) => {
     updateProperties(criteria);
-    const filterCriteria = updateFilter(criteria);
-    const animals = parseFromLocalStorage();
+    const filterCriteria = updateFilter(criteria, pushing);
+
+    const animals = parseAnimalsFromLocalStorage();
+    const animalTypes = parseAnimalTypesFromLocalStorage();
     const filtered = animals.filter((item) => {
       return filterCriteria.every((criterion) => {
         let { propName, compare, value } = criterion;
@@ -277,6 +311,9 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
           return getAgeFilter(value, item.dateOfBirth);
         }
         if (propName === "status" && value === 0) {
+          return true;
+        }
+        if (propName === "donationCall" && value === 0) {
           return true;
         }
         if (!hasValue(value)) {
@@ -309,6 +346,44 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
     calculateMaxPages(filtered.length);
   };
 
+  const getTitle = () => {
+    let newTitle = title;
+    const order = [
+      "type",
+      "sex",
+      "status",
+      "dateOfBirth"
+    ];
+    filterCriteria.slice().sort((a,b)=> order.indexOf(a.propName) - order.indexOf(b.propName)).forEach((criterion) => {
+      let { propName, compare, value } = criterion;
+      if (propName === "type" && value !== undefined) {
+        value = animalTypes.find((animal) => animal.id === value)?.name || undefined;
+        if(value) {
+          newTitle += ` - ${value}`;
+        }
+      }
+      if (propName === "sex" && value != AnimalSex.All) {
+        const entry = animalSex.filter(e => e.id == value).pop();
+        if(entry) {
+          newTitle += ` - ${entry?.name}`;
+        }
+      }
+      if (propName === "dateOfBirth" && value !== undefined && value !== 0) {
+        const entry = ageFilter.filter(e => e.id === value).pop();
+        if(entry) {
+          newTitle += ` - ${entry?.name}`;
+        }
+      }
+      if (propName === "status" && value !== 0) {
+        const entry = animalStatus.filter(e => e.id === value).pop();
+        if(entry) {
+          newTitle += ` - ${entry?.name}`;
+        }
+      }
+    });
+    return newTitle;
+  }
+
   const changePage = (newPage: number) => {
     if (newPage < 1 || newPage > maxPages) {
       return;
@@ -322,14 +397,20 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
   };
 
   const updateData = (newData: Animal[]) => {
-    console.info("Updating data");
     setAnimals(newData);
-    localStorage.setItem(key, JSON.stringify(newData));
+    localStorage.setItem(keyAnimals, JSON.stringify(newData));
   };
+
+  const getAnimalTypesLocal = () => {
+    return animalTypes;
+  }
 
   return (
     <DataContext.Provider
       value={{
+        getOriginalTitle: () => title,
+        getTitle,
+        getAnimalTypes: getAnimalTypesLocal,
         getAnimalsPaged,
         updateData,
         filter,
@@ -343,6 +424,8 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
         searchedAnimalType,
         searchedAnimalSex,
         searchedAnimalStatus,
+        ready,
+        loaded,
       }}
     >
       {children}
@@ -351,3 +434,45 @@ export const AnimalProvider: React.FC<PropsWithChildren<{}>> = ({
 };
 
 export const useData = () => useContext(DataContext);
+
+const parseAnimalsFromLocalStorage = () => {
+  const data = localStorage.getItem(keyAnimals);
+  if (data) {
+    let parsed = JSON.parse(data) as AnimalSource[];
+    const allAnimals = parsed.map((animal) => new Animal(animal));
+    return allAnimals;
+  }
+  return [];
+};
+
+const parseAnimalTypesFromLocalStorage = () => {
+  const data = localStorage.getItem(keyTypes);
+  if (data) {
+    let parsed = JSON.parse(data) as AnimalType[];
+    return parsed;
+  }
+  return [];
+};
+const storeAnimalTypesToLocalStorage = (types: AnimalType[]) => {
+  localStorage.setItem(keyTypes, JSON.stringify(types));
+};
+
+
+const initFiltersFromAppProps = (props: AppProps) => {
+  const filters = [];
+  if (props.type !== undefined && props.type!==-1) {
+    filters.push({
+      propName: "type",
+      compare: "===",
+      value: props.type,
+    } as FilterCriteria<AnimalToFilterProps>);
+  }
+  if (props.status) {
+    filters.push({
+      propName: "status",
+      compare: "===",
+      value: props.status,
+    } as FilterCriteria<AnimalToFilterProps>);
+  }
+  return filters;
+}

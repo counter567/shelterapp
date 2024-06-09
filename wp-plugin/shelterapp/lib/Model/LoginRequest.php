@@ -59,7 +59,8 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
     protected static $openAPITypes = [
         'username' => 'string',
         'email' => 'string',
-        'password' => 'string'
+        'password' => 'string',
+        'permanent' => 'bool'
     ];
 
     /**
@@ -72,7 +73,8 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
     protected static $openAPIFormats = [
         'username' => null,
         'email' => null,
-        'password' => null
+        'password' => null,
+        'permanent' => null
     ];
 
     /**
@@ -83,7 +85,8 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
     protected static array $openAPINullables = [
         'username' => true,
         'email' => true,
-        'password' => false
+        'password' => false,
+        'permanent' => false
     ];
 
     /**
@@ -174,7 +177,8 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
     protected static $attributeMap = [
         'username' => 'username',
         'email' => 'email',
-        'password' => 'password'
+        'password' => 'password',
+        'permanent' => 'permanent'
     ];
 
     /**
@@ -185,7 +189,8 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
     protected static $setters = [
         'username' => 'setUsername',
         'email' => 'setEmail',
-        'password' => 'setPassword'
+        'password' => 'setPassword',
+        'permanent' => 'setPermanent'
     ];
 
     /**
@@ -196,7 +201,8 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
     protected static $getters = [
         'username' => 'getUsername',
         'email' => 'getEmail',
-        'password' => 'getPassword'
+        'password' => 'getPassword',
+        'permanent' => 'getPermanent'
     ];
 
     /**
@@ -259,6 +265,7 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('username', $data ?? [], null);
         $this->setIfExists('email', $data ?? [], null);
         $this->setIfExists('password', $data ?? [], null);
+        $this->setIfExists('permanent', $data ?? [], null);
     }
 
     /**
@@ -397,6 +404,33 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable password cannot be null');
         }
         $this->container['password'] = $password;
+
+        return $this;
+    }
+
+    /**
+     * Gets permanent
+     *
+     * @return bool|null
+     */
+    public function getPermanent()
+    {
+        return $this->container['permanent'];
+    }
+
+    /**
+     * Sets permanent
+     *
+     * @param bool|null $permanent permanent
+     *
+     * @return self
+     */
+    public function setPermanent($permanent)
+    {
+        if (is_null($permanent)) {
+            throw new \InvalidArgumentException('non-nullable permanent cannot be null');
+        }
+        $this->container['permanent'] = $permanent;
 
         return $this;
     }

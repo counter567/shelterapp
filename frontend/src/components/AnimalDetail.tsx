@@ -16,6 +16,7 @@ import Gender from "./Gender";
 import PayPalButton from "./PaypalButton";
 import SectionList from "./SectionList";
 import { useData } from "../stores/animalStore";
+import { getPaypalAdress } from "../service/config-helper";
 
 const AnimalDetail = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const AnimalDetail = () => {
   const [idValue, setId] = useState<string>("");
   const { id } = useParams<{ id: string }>();
   if (idValue !== id) setId(id!);
-  const { getAnimal } = useData();
+  const { getAnimal, getOriginalTitle } = useData();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,6 +34,17 @@ const AnimalDetail = () => {
     };
     fetchData();
   }, [idValue, getAnimal, navigate, setAnimals]);
+
+  useEffect(() => {
+    if(animal) {
+      document.title = `${getOriginalTitle()} - ${animal.name} - ${animal.type} - ${!breedTwo ? breedOne : `${breedOne}, ${breedTwo}`}`;
+    } else {
+      document.title = getOriginalTitle();
+    }
+    return () => {
+      document.title = getOriginalTitle();
+    }
+  });
 
   if (!animal) return <></>;
 
@@ -51,6 +63,7 @@ const AnimalDetail = () => {
     otherPictureFileUrls,
     illnesses,
   } = animal;
+
   return (
     <div>
       <div className="my-4">
@@ -111,7 +124,7 @@ const AnimalDetail = () => {
           <SectionList className="mb-4" heading="Wir danken" values={donators}>
             <HeartIcon className="mr-2" stroke="red" fill="red" />{" "}
           </SectionList> */}
-          <PayPalButton name={name!} url="spenden@tierheim-neuwied.de" />
+          <PayPalButton name={name!} adress={getPaypalAdress()} />
         </div>
         <div className="p-4 w-full">
           <h1 className="font-bold mb-2 text-5xl w-full">{name}</h1>
