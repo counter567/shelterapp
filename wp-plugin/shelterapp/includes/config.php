@@ -25,6 +25,12 @@ function sa_get_config()
 {
     return get_option('shelterapp_plugin_options', shelterapp_plugin_setting_get_default_config());
 }
+function sa_set_config($config)
+{
+    // merge existing config with new config
+    $newConfig = array_replace(sa_get_config(), $config);
+    update_option('shelterapp_plugin_options', $newConfig);
+}
 
 // Layout
 
