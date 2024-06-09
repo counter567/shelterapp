@@ -203,7 +203,7 @@ export const AnimalProvider: React.FC<PropsWithChildren<{
   }, []);
 
   const loadAnimals = async () => {
-    const animalSource = await getAllanimals();
+    const animalSource = await getAllanimals(50);
     const animals = animalSource.map((animal) => new Animal(animal));
     calculateMaxPages(animals.length);
     localStorage.setItem(keyAnimals, JSON.stringify(animalSource));
@@ -219,6 +219,7 @@ export const AnimalProvider: React.FC<PropsWithChildren<{
   };
 
   const getAnimalsPaged = () => {
+    const animals = parseAnimalsFromLocalStorage();
     const start = (currentPage - 1) * entriesPerPage;
     if (start >= animals.length || start < 0) {
       return [];
@@ -340,9 +341,6 @@ export const AnimalProvider: React.FC<PropsWithChildren<{
         }
       });
     });
-
-    console.log(filterCriteria, filtered);
-
     setAnimals(filtered);
     setCurrentPage(1);
     calculateMaxPages(filtered.length);
