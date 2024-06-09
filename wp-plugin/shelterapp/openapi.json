@@ -1845,6 +1845,9 @@
           },
           "password" : {
             "type" : "string"
+          },
+          "permanent" : {
+            "type" : "boolean"
           }
         }
       },
@@ -1870,7 +1873,7 @@
         }
       },
       "Tenant" : {
-        "required" : [ "id", "name", "ownerId" ],
+        "required" : [ "id", "name", "ownerId", "baseUrl" ],
         "type" : "object",
         "properties" : {
           "id" : {
@@ -1885,6 +1888,9 @@
           },
           "ownerId" : {
             "$ref" : "#/components/schemas/UUID"
+          },
+          "baseUrl" : {
+            "type" : "string"
           }
         }
       },

@@ -1,0 +1,40 @@
+image:
+  repository: registry.shelterapp.spedat.de/counbellian7/shelterapp-backend
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: latest
+
+imagePullSecrets:
+  - name: regcred
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: test.de
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: shelterapp-backend-tls
+      hosts:
+        - test.de
+database:
+  host: shelterapp-test-backend-postgresql
+  port: 5432
+  name: shelterapp
+  username: shelterapp
+  password: shelterapp
+profile: prod
+swaggerui:
+  enabled: true
+postgresql:
+  auth:
+    username: shelterapp
+    password: shelterapp
+    database: shelterapp
+  primary:
+    persistence:
+      enabled: true
+      size: 20Gi

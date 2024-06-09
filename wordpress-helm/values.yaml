@@ -1,0 +1,27 @@
+image:
+  repository: wordpress
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: 6.2.1-apache
+
+imagePullSecrets: []
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: test.de
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: wordpress-test-backend-tls
+      hosts:
+        - test.de
+database:
+  host: wordpress-db-mariadb.wordpress-db.svc
+  port: 3306
+  name: test
+  username: test
+  password: test

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "shelterapp-backend.fullname" . }}
+  labels:
+    {{- include "shelterapp-backend.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "shelterapp-backend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "shelterapp-backend.labels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: QUARKUS_HTTP_PORT
+              value: "8080"
+            - name: QUARKUS_DATASOURCE_REACTIVE_URL
+              value: "postgresql://{{ .Values.database.host }}:{{ .Values.database.port }}/{{ .Values.database.name }}"
+            - name: QUARKUS_DATASOURCE_USERNAME
+              value: {{ .Values.database.username | quote }}
+            - name: QUARKUS_DATASOURCE_PASSWORD
+              value: {{ .Values.database.password | quote }}
+            - name: QUARKUS_PROFILE
+              value: {{ .Values.profile | quote }}
+            - name: QUARKUS_SWAGGER_UI_ENABLE
+              value: {{ .Values.swaggerui.enabled | quote }}

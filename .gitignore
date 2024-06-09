@@ -47,3 +47,7 @@ node_modules
 .vscode
 /wp-plugin/shelterapp/js/static
 /wp-plugin/shelterapp/public
+/wordpress-helm/*.tgz
+/backend/src/main/helm/charts/*
+/backend/src/main/helm/Chart.lock
+/backend/src/main/helm/*.tgz
