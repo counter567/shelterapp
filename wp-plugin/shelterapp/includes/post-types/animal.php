@@ -20,7 +20,7 @@ class ShelterappAnimals
         // plugin init hooks
         add_action('init', array($this, 'register_post_type'), 100);
         add_action('init', array($this, 'ensureAnimalPage'), 100);
-        add_action('admin_menu', array($this, 'setup_admin'));
+        // add_action('admin_menu', array($this, 'setup_admin'));
         add_action('rest_api_init', array($this, 'init_rest'));
         $this->register_custom_fields();
 
@@ -726,14 +726,6 @@ class ShelterappAnimals
         $this->_getAllAnimalsFromDate($client, $date, $allAnimals, $chunksize, $page + 1);
     }
 
-    /**
-     * @return \OpenAPI\Client\Model\Animal[]
-     */
-    function initAnimalArray()
-    {
-        return array();
-    }
-
     function cron_perform_sync()
     {
         error_log('============================================');
@@ -742,36 +734,47 @@ class ShelterappAnimals
             outLog('Could not get client, no token or token expired.');
             return;
         }
-        $animals = $this->initAnimalArray();
+
+        /** @var \OpenAPI\Client\Model\Animal[] */
+        $animals = array();
         $this->getAllAnimalsFromDate($client, $animals);
 
-        if (!isset($animals) && is_array($animals) && count($animals) > 0) {
-            outLog('No Animal');
-            return;
-        }
-
-        foreach ($animals as $animal) {
-            sa_sync_ensure_term($animal->getType());
-            sa_sync_ensure_illnesses($animal->getIllnesses());
-            sa_sync_ensure_allergies($animal->getAllergies());
-
-            $args = array(
-                'meta_key' => 'shelterapp_id',
-                'meta_value' => $animal->getId(),
-                'post_type' => 'shelterapp_animals',
-                'post_status' => 'any',
-                'posts_per_page' => -1
-            );
-            $posts = get_posts($args);
-            if (count($posts) > 0) {
-                // we already have a post with this link id!
-                // outLog('Update animal: ' . $animal->getId());
-                sa_sync_update_animal($animal, $posts[0]);
-            } else {
-                // outLog('Insert new animal: ' . $animal->getId());
-                sa_sync_insert_animal($animal);
+        if (isset($animals) && is_array($animals) && !empty($animals)) {
+            outLog('updating animals from shelterapp backend');
+            foreach ($animals as $animal) {
+                sa_sync_ensure_term($animal->getType());
+                sa_sync_ensure_illnesses($animal->getIllnesses());
+                sa_sync_ensure_allergies($animal->getAllergies());
+    
+                $args = array(
+                    'meta_key' => 'shelterapp_id',
+                    'meta_value' => $animal->getId(),
+                    'post_type' => 'shelterapp_animals',
+                    'post_status' => 'any',
+                    'posts_per_page' => -1
+                );
+                $posts = get_posts($args);
+                if (count($posts) > 0) {
+                    // we already have a post with this link id!
+                    // outLog('Update animal: ' . $animal->getId());
+                    sa_sync_update_animal($animal, $posts[0]);
+                } else {
+                    // outLog('Insert new animal: ' . $animal->getId());
+                    sa_sync_insert_animal($animal);
+                }
             }
         }
+
+        $args = array(
+            'meta_key' => 'shelterapp_id',
+            'meta_value' => '',
+            'post_type' => 'shelterapp_animals',
+            'post_status' => 'any',
+            'posts_per_page' => -1
+        );
+        $posts = get_posts($args);
+        outLog('check for orphaned animals');
+        outLog(count($posts));
     }
 }
 
