@@ -132,6 +132,7 @@ function shelterapp_plugin_setting_get_default_config()
     return array(
         'shelterapp_host' => 'https://backend.shelterapp.spedat.de',
         'shelterapp_token' => '',
+        'shelterapp_paypal' => '',
     );
 }
 
