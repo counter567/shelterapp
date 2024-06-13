@@ -1273,9 +1273,6 @@ components:
         username:
           type: string
           nullable: true
-        email:
-          type: string
-          nullable: true
         password:
           type: string
         permanent:

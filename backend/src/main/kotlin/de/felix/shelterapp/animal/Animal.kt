@@ -28,8 +28,10 @@ class Animal: TenantPanacheEntity() {
     var breedTwo: String? = null
     lateinit var sex: AnimalSex
     var color: String? = null
+    @Column(columnDefinition = "TEXT")
     var mainPictureFileUrl: String? = null
     @ElementCollection(fetch = FetchType.EAGER)
+    @Column(columnDefinition = "TEXT")
     var otherPictureFileUrls: List<String>? = null
     var weight: Float? = null
     var heightAtWithers: Int? = null
