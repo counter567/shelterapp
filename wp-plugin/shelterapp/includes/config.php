@@ -104,13 +104,13 @@ function shelterapp_plugin_setting_shelterapp_user_data()
         ?>
         <table class="form-table" role="presentation">
             <tbody>
-                <!--<tr>
+                <tr>
                     <th scope="row">Shelter App User</th>
                     <td>
                         <input autocomplete="off" id="shelterapp_plugin_setting_shelterapp_host"
                             name="shelterapp_plugin_options[shelterapp_user]" type="text" placeholder="User" />
                     </td>
-                </tr>-->
+                </tr>
                 <tr>
                     <th scope="row">Shelter App E-Mail</th>
                     <td>
