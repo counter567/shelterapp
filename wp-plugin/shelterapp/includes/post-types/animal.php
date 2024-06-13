@@ -12,6 +12,7 @@ class SaDateTime extends DateTime
 
 class ShelterappAnimals
 {
+    private $isSyncing = false;
     private $rest_is_init = false;
     public $blockView = 0;
 
@@ -19,8 +20,6 @@ class ShelterappAnimals
     {
         // plugin init hooks
         add_action('init', array($this, 'register_post_type'), 100);
-        add_action('init', array($this, 'ensureAnimalPage'), 100);
-        // add_action('admin_menu', array($this, 'setup_admin'));
         add_action('rest_api_init', array($this, 'init_rest'));
         $this->register_custom_fields();
 
@@ -38,10 +37,18 @@ class ShelterappAnimals
         add_shortcode('shelterapp_view', array($this, 'doShortcode'));
 
         // cronjob stuff
-        add_filter( 'cron_schedules', array($this, 'example_add_cron_interval'), 99);
-        add_action( 'sa_cron_perform_sync', array($this, 'cron_perform_sync') );
+        add_filter( 'cron_schedules', array($this, 'example_add_cron_interval'), 1000);
+        // add_action( 'sa_cron_perform_sync', array($this, 'cron_perform_sync') );
+        add_action( 'sa_cron_perform_sync', function(){} );
 
         // ensure cronjob is set
+        // check if the wp-cron.php is executed
+        add_action('init', function(){
+            if (defined('DOING_CRON') && DOING_CRON) {
+                // outLog('Doing cron');
+                $this->cron_perform_sync();
+            }
+        }, 101);
         if( !wp_next_scheduled( 'sa_cron_perform_sync' ) ){
             wp_schedule_event( time(), 'five_minutes', 'sa_cron_perform_sync' );
         }
@@ -49,7 +56,7 @@ class ShelterappAnimals
 
     function example_add_cron_interval( $schedules ) {
         $schedules['five_minutes'] = array(
-            'interval' => 1, //*60,
+            'interval' => 5*60,
             'display' => esc_html__( 'Every Five Minutes' ),
         );
         return $schedules;
@@ -177,10 +184,23 @@ class ShelterappAnimals
      */
     function save_post(int $post_id, $post, $update)
     {
+        if($this->isSyncing) {
+            return;
+        }
+        if($post->post_type !== 'shelterapp_animals'){
+            return;
+        }
+        
         $post_value = $_POST['otherPictureFileUrls'];
-        update_post_meta($post->ID, 'otherPictureFileUrls', $post_value);
+        if(isset($post_value)) {
+            update_post_meta($post->ID, 'otherPictureFileUrls', $post_value);
+        }
 
+        outLog('***********************************************');
         outLog('saving a post! Update to backend!');
+        outLog($post_id);
+        outLog($post);
+        outLog($update);
     }
 
     function init_rest()
@@ -676,105 +696,34 @@ class ShelterappAnimals
         }
     }
 
-    function getAllAnimalsFromDate(OpenAPI\Client\Api\AnimalResourceApi $client, array &$allAnimals, int $chunksize = 50, int $page = 0)
-    {
-        if ($page > 100) {
-            throw new \Exception('To many pages');
-        }
-        $options = sa_get_config();
-        if (isset($options['shelterapp_sync_from'])) {
-            // get all updates from date.
-            $date = SaDateTime::createFromFormat('U', $options['shelterapp_sync_from']);
-            $date->setTimezone(new DateTimeZone("UTC"));
-            error_log('Update animals from date: ' . $date->format('Y-m-d\\TH:i:s'));
-
-            // update shelterapp_sync_from
-            $date2 = new DateTime('now', new DateTimeZone("UTC"));
-            $options['shelterapp_sync_from'] = $date2->getTimestamp();
-            sa_set_config($options);
-
-            return $this->_getAllAnimalsFromDate($client, $date, $allAnimals, $chunksize, $page);
-        } else {
-            // init with all animals
-            error_log('Get all animals!');
-
-            // update shelterapp_sync_from
-            $date = new DateTime('now', new DateTimeZone("UTC"));
-            $options['shelterapp_sync_from'] = $date->getTimestamp();
-            sa_set_config($options);
-
-            return $this->_getAllAnimalsFromDate($client, null, $allAnimals, $chunksize, $page);
-        }
-    }
-    function _getAllAnimalsFromDate(OpenAPI\Client\Api\AnimalResourceApi $client, DateTime $date = null, array &$allAnimals, int $chunksize = 50, int $page = 0)
-    {
-        if ($page > 100) {
-            throw new \Exception('To many pages');
-        }
-        if (isset($date) && !empty($date)) {
-            // get all updates from date.
-            $animals = $client->animalsGet(page: $page, page_size: $chunksize, updated_after: $date);
-        } else {
-            // init with all animals
-            $animals = $client->animalsGet(page: $page, page_size: $chunksize);
-        }
-        // error_log(count($animals));
-        array_push($allAnimals, ...$animals);
-        if (count($animals) < $chunksize) {
-            return;
-        }
-        $this->_getAllAnimalsFromDate($client, $date, $allAnimals, $chunksize, $page + 1);
-    }
-
     function cron_perform_sync()
     {
+        $this->isSyncing = true;
         error_log('============================================');
-        $client = sa_get_animal_resource_client();
-        if (!$client) {
-            outLog('Could not get client, no token or token expired.');
-            return;
-        }
 
-        /** @var \OpenAPI\Client\Model\Animal[] */
-        $animals = array();
-        $this->getAllAnimalsFromDate($client, $animals);
-
-        if (isset($animals) && is_array($animals) && !empty($animals)) {
-            outLog('updating animals from shelterapp backend');
-            foreach ($animals as $animal) {
-                sa_sync_ensure_term($animal->getType());
-                sa_sync_ensure_illnesses($animal->getIllnesses());
-                sa_sync_ensure_allergies($animal->getAllergies());
-    
-                $args = array(
-                    'meta_key' => 'shelterapp_id',
-                    'meta_value' => $animal->getId(),
-                    'post_type' => 'shelterapp_animals',
-                    'post_status' => 'any',
-                    'posts_per_page' => -1
-                );
-                $posts = get_posts($args);
-                if (count($posts) > 0) {
-                    // we already have a post with this link id!
-                    // outLog('Update animal: ' . $animal->getId());
-                    sa_sync_update_animal($animal, $posts[0]);
-                } else {
-                    // outLog('Insert new animal: ' . $animal->getId());
-                    sa_sync_insert_animal($animal);
-                }
+        if(true){
+            error_log('Delete old animals...');
+            // @REMOVE: clear animals for debug
+            $args = array(
+                'post_type' => 'shelterapp_animals',
+                'post_status' => 'any',
+                'posts_per_page' => -1,
+            );
+            $posts = get_posts($args);
+            foreach ($posts as $post) {
+                // delete the post
+                wp_delete_post($post->ID, true);
             }
         }
 
-        $args = array(
-            'meta_key' => 'shelterapp_id',
-            'meta_value' => '',
-            'post_type' => 'shelterapp_animals',
-            'post_status' => 'any',
-            'posts_per_page' => -1
-        );
-        $posts = get_posts($args);
-        outLog('check for orphaned animals');
-        outLog(count($posts));
+
+
+        error_log('Import animals...');
+        try{
+            sa_sync_sync_animals();
+        } catch(Exception $e) {
+            $this->isSyncing = false;
+        }
     }
 }
 
@@ -823,3 +772,16 @@ $titleMappings = array(
     'castrated' => 'Kastriert',
     'bloodType' => 'Blutgruppe',
 );
+
+
+// delte all attachments of post of type shelterapp_animals on delete
+add_action('before_delete_post', function($post_id){
+    $post = get_post($post_id);
+    if($post->post_type === 'shelterapp_animals'){
+        outLog('Deleting all attachments of post ' . $post_id);
+        $attachments = get_attached_media('image', $post_id);
+        foreach ($attachments as $attachment) {
+            wp_delete_attachment($attachment->ID, true);
+        }
+    }
+});
