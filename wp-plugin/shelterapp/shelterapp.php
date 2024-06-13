@@ -61,6 +61,10 @@ function out(...$print)
 function outLog(...$print)
 {
     foreach ($print as $key => $value) {
-        error_log($value);
+        $out = print_r($value, true);
+        $lines = explode("\n", $out);
+        foreach ($lines as $line) {
+            error_log($line);
+        }
     }
 }
