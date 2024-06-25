@@ -68,7 +68,7 @@ class Animal: TenantPanacheEntity() {
 }
 
 enum class AnimalSex {
-    MALE, FEMALE, DIV
+    MALE, FEMALE, DIV, GROUP
 }
 
 enum class AnimalStatus {

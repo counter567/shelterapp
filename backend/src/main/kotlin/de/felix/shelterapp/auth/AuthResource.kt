@@ -33,11 +33,15 @@ class AuthResource {
     @Path("login")
     @POST
     fun login(loginRequest: LoginRequest) = withPanacheSession {
-        if(loginRequest.email == null && loginRequest.username == null)
+        if(loginRequest.username == null)
             throw BadRequestException("Username or email must be provided")
+        val parameter = if(loginRequest.username.contains("@")) {
+            User::email.name
+        } else {
+            User::username.name
+        }
         val parameters = PanacheQueryParameters(mutableListOf(
-            PanacheQueryParameter(User::username.name, loginRequest.username),
-            PanacheQueryParameter(User::email.name, loginRequest.email)
+            PanacheQueryParameter(parameter, loginRequest.username)
         ))
         val usersResult = User.query(parameters)
         if(usersResult.isEmpty())

@@ -12,14 +12,14 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   hosts:
-    - host: backend.shelterapp.spedat.de
+    - host: test.de
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls:
     - secretName: shelterapp-backend-tls
       hosts:
-        - backend.shelterapp.spedat.de
+        - test.de
 database:
   host: shelterapp-test-backend-postgresql
   port: 5432
