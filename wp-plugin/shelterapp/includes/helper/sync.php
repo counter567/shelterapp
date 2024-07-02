@@ -26,6 +26,7 @@ function sa_sync_sync_animals(){
             outLog('updating animals from shelterapp backend: ' . count($animals));
             foreach ($animals as $animal) {
                 outLog('*****************************************');
+                outLog($animal->getName() . ' ' . $animal->getId() . ' ' . ($animal->getUpdatedAt() !== null ? $animal->getUpdatedAt()->format('Y-m-d H:i:s') : 'no date'));
                 sa_sync_ensure_term($animal->getType());
                 sa_sync_ensure_illnesses($animal->getIllnesses());
                 sa_sync_ensure_allergies($animal->getAllergies());
@@ -37,6 +38,7 @@ function sa_sync_sync_animals(){
                     'post_status' => 'any',
                     'posts_per_page' => -1
                 );
+                /** @var array<WP_Post> */
                 $posts = get_posts($args);
                 if (count($posts) > 0) {
                     // we already have a post with this link id!
@@ -66,8 +68,7 @@ function sa_sync_sync_animals(){
         );
         /** @var array<WP_Post> */
         $posts = get_posts($args);
-        outLog('Check for orphaned animals');
-        outLog(count($posts));
+        outLog('Check for orphaned animals ' . count($posts));
         
         foreach ($posts as $post) {
             // send animal to backend
@@ -80,9 +81,6 @@ function sa_sync_sync_animals(){
             } catch (Exception $e) {
                 outLog('Error while sending animal to backend: ' . $e->getMessage());
             }
-
-
-            
         }
 }
 
@@ -109,14 +107,14 @@ function sa_sync_map_post_to_animal(WP_Post $post){
         if(isset($type) && is_array($type) && count($type) > 0) {
         $animal->setAllergies(array_map(function ($term) {
             return $term->name;
-        }, $allergies));
+        }, $allergies ? $allergies : array()));
     }
 
     $illnesses = get_the_terms($post->ID, 'shelterapp_animal_illness');
         if(isset($type) && is_array($type) && count($type) > 0) {
         $animal->setIllnesses(array_map(function ($term) {
             return $term->name;
-        }, $illnesses));
+        }, $illnesses ? $illnesses : array()));
     }
 
     $animal->setPublic($post->post_status === 'publish');
@@ -157,7 +155,9 @@ function sa_sync_getAllAnimalsFromDate(OpenAPI\Client\Api\AnimalResourceApi $cli
         throw new \Exception('To many pages');
     }
     $options = sa_get_config();
-    unset($options['shelterapp_sync_from']);
+    if(isDebug()){
+        unset($options['shelterapp_sync_from']);
+    }
 
     if (isset($options['shelterapp_sync_from'])) {
         // get all updates from date.
@@ -293,7 +293,16 @@ function sa_sync_set_taxonomies(int $id, $animal)
  */
 function sa_sync_update_animal($animal, $post)
 {
-    outLog('Update animal');
+    // if the animal is updated AFTER the last WP update, we update the WP post
+    $postModified = new DateTime($post->post_modified);
+    $postModified->setTimezone(new DateTimeZone("UTC"));
+
+    if ($animal->getUpdatedAt() < $postModified) {
+        outLog('Animal up to date.');
+        return;
+    }
+
+    outLog('Update animal.');
     global $sa_sync_config;
     $update = array(
         'ID' => $post->ID,
@@ -381,16 +390,22 @@ function sa_sync_update_post_other_images($post, $animal){
     $otherImagesSources = array();
     $otherImagesIds = array();
     $images = get_post_meta($post->ID, 'otherPictureFileUrls', true);
+    
     if (isset($images) && is_array($images) && count($images) > 0) {
         foreach ($images as $image) {
             $attachment = get_post($image);
             $source = get_post_meta($attachment->ID, 'shelterapp_source', true);
+            if(!$source){
+                $source = wp_get_attachment_image_url($image, 'full');
+            }
             array_push($otherImagesSources, $source);
             array_push($otherImagesIds, $image);
         }
     }
+
     // check if other images are the same order independent
     $newOtherImages = $animal->getOtherPictureFileUrls();
+    
     sort($otherImagesSources);
     sort($newOtherImages);
     if($otherImagesSources !== $newOtherImages){
@@ -431,7 +446,7 @@ function sa_sync_update_post_other_images($post, $animal){
                 require_once(ABSPATH . 'wp-admin/includes/image.php');
                 $attach_data = wp_generate_attachment_metadata($attach_id, $file);
                 wp_update_attachment_metadata($attach_id, $attach_data);
-                update_post_meta($attach_id, 'shelterapp_source', $animal->getMainPictureFileUrl());
+                update_post_meta($attach_id, 'shelterapp_source', $image);
                 array_push($otherImagesIds, $attach_id);
             }
         }
