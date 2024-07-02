@@ -58,7 +58,6 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPITypes = [
         'username' => 'string',
-        'email' => 'string',
         'password' => 'string',
         'permanent' => 'bool'
     ];
@@ -72,7 +71,6 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPIFormats = [
         'username' => null,
-        'email' => null,
         'password' => null,
         'permanent' => null
     ];
@@ -84,7 +82,6 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static array $openAPINullables = [
         'username' => true,
-        'email' => true,
         'password' => false,
         'permanent' => false
     ];
@@ -176,7 +173,6 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $attributeMap = [
         'username' => 'username',
-        'email' => 'email',
         'password' => 'password',
         'permanent' => 'permanent'
     ];
@@ -188,7 +184,6 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $setters = [
         'username' => 'setUsername',
-        'email' => 'setEmail',
         'password' => 'setPassword',
         'permanent' => 'setPermanent'
     ];
@@ -200,7 +195,6 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $getters = [
         'username' => 'getUsername',
-        'email' => 'getEmail',
         'password' => 'getPassword',
         'permanent' => 'getPermanent'
     ];
@@ -263,7 +257,6 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
     public function __construct(array $data = null)
     {
         $this->setIfExists('username', $data ?? [], null);
-        $this->setIfExists('email', $data ?? [], null);
         $this->setIfExists('password', $data ?? [], null);
         $this->setIfExists('permanent', $data ?? [], null);
     }
@@ -343,40 +336,6 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
             }
         }
         $this->container['username'] = $username;
-
-        return $this;
-    }
-
-    /**
-     * Gets email
-     *
-     * @return string|null
-     */
-    public function getEmail()
-    {
-        return $this->container['email'];
-    }
-
-    /**
-     * Sets email
-     *
-     * @param string|null $email email
-     *
-     * @return self
-     */
-    public function setEmail($email)
-    {
-        if (is_null($email)) {
-            array_push($this->openAPINullablesSetToNull, 'email');
-        } else {
-            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
-            $index = array_search('email', $nullablesSetToNull);
-            if ($index !== FALSE) {
-                unset($nullablesSetToNull[$index]);
-                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
-            }
-        }
-        $this->container['email'] = $email;
 
         return $this;
     }

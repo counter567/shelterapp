@@ -48,6 +48,8 @@ class AnimalSex
 
     public const DIV = 'DIV';
 
+    public const GROUP = 'GROUP';
+
     /**
      * Gets allowable values of the enum
      * @return string[]
@@ -57,7 +59,8 @@ class AnimalSex
         return [
             self::MALE,
             self::FEMALE,
-            self::DIV
+            self::DIV,
+            self::GROUP
         ];
     }
 }
