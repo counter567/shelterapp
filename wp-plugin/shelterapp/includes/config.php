@@ -9,6 +9,8 @@ function shelterapp_register_base_settings()
     add_settings_section('shelterapp_settings_user', '', 'shelterapp_plugin_setting_shelterapp_user_data', 'shelterapp_plugin');
 
     add_settings_field('shelterapp_plugin_setting_shelterapp_paypal_link', 'Paypal Adresse', 'shelterapp_plugin_setting_shelterapp_paypal_link', 'shelterapp_plugin', 'shelterapp_settings');
+
+    // add_settings_field('shelterapp_plugin_setting_shelterapp_persync', 'Sync per update', 'shelterapp_plugin_setting_shelterapp_persync', 'shelterapp_plugin', 'shelterapp_settings');
 }
 add_action('admin_init', 'shelterapp_register_base_settings');
 
@@ -71,25 +73,30 @@ function shelterapp_plugin_setting_shelterapp_user_data()
 
     if (isset($config["shelterapp_token"]) && isset($config["shelterapp_refresh"])) {
         ?>
-        <table class="form-table" role="presentation">
+        <div style="margin:2rem 0; background: #c6f29ad6; padding: 1rem 0.5rem">
+        <table class="form-table" role="presentation" >
             <tbody>
                 <tr>
-                    <th colspan="2" scope="row">Die Shelterapp ist aktiviert.</th>
-
+                    <th colspan="2" scope="row" style="padding: 0.25rem;"><h1 style="padding:0 0 1rem 0">Die Shelterapp ist aktiviert.</h1></th>
                 </tr>
                 <tr>
-                    <th scope="row">Access Token</th>
-                    <td>
+                    <th scope="row" style="padding: 0.25rem;">Access Token</th>
+                    <td style="padding: 0.25rem;">
                         <?php echo substr($config["shelterapp_token"], 0, 10); ?>********<?php echo substr($config["shelterapp_token"], -10, 10); ?>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Refresh Token</th>
-                    <td>
-
+                    <th scope="row" style="padding: 0.25rem;">Refresh Token</th>
+                    <td style="padding: 0.25rem;">
                         <?php echo substr($config["shelterapp_refresh"], 0, 10); ?>********<?php echo substr($config["shelterapp_refresh"], -10, 10); ?>
                     </td>
                 </tr>
+            </tbody>
+        </table>
+        </div>
+        
+        <table class="form-table" role="presentation">
+            <tbody>
                 <tr>
                     <td colspan="2">
                         <input class="button button-link-delete" name="shelterapp_plugin_options[shelterapp_reset]"
@@ -109,13 +116,6 @@ function shelterapp_plugin_setting_shelterapp_user_data()
                     <td>
                         <input autocomplete="off" id="shelterapp_plugin_setting_shelterapp_host"
                             name="shelterapp_plugin_options[shelterapp_user]" type="text" placeholder="User" />
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">Shelter App E-Mail</th>
-                    <td>
-                        <input autocomplete="off" id="shelterapp_plugin_setting_shelterapp_host" class="regular-text"
-                            name="shelterapp_plugin_options[shelterapp_mail]" type="text" placeholder="E-Mail" />
                     </td>
                 </tr>
                 <tr>
@@ -139,6 +139,7 @@ function shelterapp_plugin_setting_get_default_config()
         'shelterapp_host' => 'https://backend.shelterapp.spedat.de',
         'shelterapp_token' => '',
         'shelterapp_paypal' => '',
+        'shelterapp_persync' => 10,
     );
 }
 
@@ -151,7 +152,19 @@ function shelterapp_plugin_setting_shelterapp_host()
 function shelterapp_plugin_setting_shelterapp_paypal_link()
 {
     $options = sa_get_config();
-    echo "<input autocomplete='off' id='shelterapp_plugin_setting_shelterapp_paypal_link' name='shelterapp_plugin_options[shelterapp_paypal]' type='text' value='" . esc_attr($options['shelterapp_paypal']) . "' placeholder='Paypal Link' />";
+    echo "<input autocomplete='off' id='shelterapp_plugin_setting_shelterapp_paypal_link' name='shelterapp_plugin_options[shelterapp_paypal]' type='text' value='" . esc_attr($options['shelterapp_paypal']) . "' placeholder='Paypal Link' />" . 
+    "<p>Geben sie hier die Adresse zu ihrer Paypal spenden Seite an.</p>";
+}
+
+function shelterapp_plugin_setting_shelterapp_persync()
+{
+    $options = sa_get_config();
+    echo "<input autocomplete='off' id='shelterapp_plugin_setting_shelterapp_persync' name='shelterapp_plugin_options[shelterapp_persync]' type='number' value='" .
+    esc_attr($options['shelterapp_persync'] ? $options['shelterapp_persync'] : 10) .
+    "' placeholder='Sync per update' />" . 
+    "<p>Wie viele Tiere sollen pro Update synchronisiert werden?</p>" . 
+    "<p>Wenn sie während des Updateprozesses Timeouts erleben, reduzieren sie diese Nummer.</p>" . 
+    "<p>Empfohlen: 10</p>";
 }
 
 
@@ -170,7 +183,7 @@ function shelterapp_plugin_options_validate($input)
             'password' => $newConfig["shelterapp_password"],
         ];
         if (isset($newConfig["shelterapp_mail"]) && $newConfig["shelterapp_mail"])
-            $data['email'] = $newConfig["shelterapp_mail"];
+            $data['username'] = $newConfig["shelterapp_mail"];
         if (isset($newConfig["shelterapp_user"]) && $newConfig["shelterapp_user"])
             $data['username'] = $newConfig["shelterapp_user"];
 
