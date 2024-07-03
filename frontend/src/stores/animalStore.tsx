@@ -219,13 +219,13 @@ export const AnimalProvider: React.FC<PropsWithChildren<{
   };
 
   const getAnimalsPaged = () => {
-    const animals = parseAnimalsFromLocalStorage();
+    const animalsFiltered = animals;
     const start = (currentPage - 1) * entriesPerPage;
-    if (start >= animals.length || start < 0) {
+    if (start >= animalsFiltered.length || start < 0) {
       return [];
     }
-    const end = Math.min(start + entriesPerPage, animals.length);
-    const animalsPaged = animals.slice(start, end);
+    const end = Math.min(start + entriesPerPage, animalsFiltered.length);
+    const animalsPaged = animalsFiltered.slice(start, end);
     return animalsPaged;
   };
 
