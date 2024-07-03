@@ -47,12 +47,13 @@ export interface PostFilter {
 const getAnimalsPaged = async (
   page = 1,
   perPage = 10,
-  filter: PostFilter = {}
+  filter: PostFilter & {meta_status?: AnimalStatus | AnimalStatus[]} = {}
 ) => {
   return requestData<AnimalSource[]>("/wp/v2/shelterapp_animals", {
     page: page,
     per_page: perPage,
     ...filter,
+    meta_status: filter.meta_status ? JSON.stringify(filter.meta_status) : undefined,
   });
 };
 
@@ -60,7 +61,7 @@ const getAllanimals = async (perPage = 10) => {
   let page = 1;
   const animalsSource = [] as AnimalSource[];
   while (true) {
-    const res = await getAnimalsPaged(page, perPage);
+    const res = await getAnimalsPaged(page, perPage, {meta_status: [AnimalStatus.New, AnimalStatus.Searching, AnimalStatus.RequestStop, AnimalStatus.Emergency, AnimalStatus.Reserved, AnimalStatus.FinalCare, AnimalStatus.CourtOfGrace]});
     animalsSource.push(...res);
     if (res._pagination.totalPages === page) {
       break;

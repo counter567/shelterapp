@@ -3,6 +3,9 @@ defined('ABSPATH') or die("");
 global $preventPreGetPosts;
 $preventPreGetPosts = false;
 
+global $importedAnimals;
+$importedAnimals = 0;
+
 class SaDateTime extends DateTime
 {
     function format($format) {
@@ -60,6 +63,33 @@ class ShelterappAnimals
             }
         }
 
+        add_filter( 'rest_shelterapp_animals_query', 'filter_posts_by_source_field', 999, 2 );
+        function filter_posts_by_source_field( $args, $request ) {
+            if ( ! isset( $request['meta_status'] )  ) {
+                return $args;
+            }
+            
+            $status_value = json_decode(sanitize_text_field( $request['meta_status'] ));
+            
+            $statusCompare = '=';
+            if(is_array($status_value)){
+                $statusCompare = 'IN';
+            }
+            $status_meta_query = array(
+                'key' => 'status',
+                'value' => $status_value,
+                'compare' => $statusCompare,
+            );
+            
+            if ( isset( $args['meta_query'] ) ) {
+                $args['meta_query']['relation'] = 'AND';
+                $args['meta_query'][] = $status_meta_query;
+            } else {
+                $args['meta_query'] = array();
+                $args['meta_query'][] = $status_meta_query;
+            }
+            return $args;
+        }
         
     }
 
@@ -234,6 +264,53 @@ class ShelterappAnimals
                         'root' => esc_url_raw(rest_url()),
                         'nonce' => wp_create_nonce('wp_rest'),
                         'publicUrlBase' => plugin_dir_url(SHELTERAPP_PATH) . 'public'
+                    );
+                },
+                'permission_callback' => function () {
+                    return true;
+                }
+            )
+        );
+        register_rest_route(
+            'sa/v1',
+            '/update',
+            array(
+                'login_user_id' => get_current_user_id(), // This will be pass to the rest API callback
+                'methods' => 'GET',
+                'callback' => function ($data) {
+                    $attrs =  $data->get_attributes();
+                    if( !isset($attrs['login_user_id']) || intval($attrs['login_user_id']) === 0  ) {
+                        return array (
+                            'success' => false,
+                        );
+                    }
+                    $user_id        = intval($attrs['login_user_id']);
+                    $current_user   = get_user_by( 'id', $user_id );
+                    if ($current_user === false || $current_user === null || !in_array('administrator', $current_user->roles)) {
+                        return array (
+                            'success' => false,
+                        );
+                    }
+                    if(isset($_GET['delete']) && is_user_admin()) {
+                        $args = array(
+                            'post_type' => 'shelterapp_animals',
+                            'post_status' => 'any',
+                            'posts_per_page' => -1,
+                        );
+                        $posts = get_posts($args);
+                        foreach ($posts as $post) {
+                            // delete the post
+                            wp_delete_post($post->ID, true);
+                        }
+                    }
+                    $success = false;
+                    $success = $this->cron_perform_sync();
+                    global $importedAnimals;
+                    return array (
+                        'success' => $success,
+                        'processed' => $importedAnimals,
+                        'data' => $_GET,
+                        'current_user' => $current_user,
                     );
                 },
                 'permission_callback' => function () {
@@ -725,13 +802,18 @@ class ShelterappAnimals
             }
         }
 
-
-
         error_log('Import animals...');
         try{
             sa_sync_sync_animals();
+            return true;
         } catch(Exception $e) {
+            outLog('There was an error during sync:');
+            outLog($e->getMessage());
+            outLog(array_map(function($entry){
+                return $entry['function'];
+            }, $e->getTrace()));
             $this->isSyncing = false;
+            return false;
         }
     }
 }
