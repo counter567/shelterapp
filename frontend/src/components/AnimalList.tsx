@@ -119,6 +119,11 @@ export default function AnimalList({ hideFilters = false }: AnimalListProps) {
         />
       </div>
       )}
+      <Pagination
+        currentPage={currentPage}
+        maxPages={maxPages}
+        onPageChange={changePage}
+      ></Pagination>
       <ul className="grid justify-center gap-4 animals mb-12">
         {ready && getAnimalsPaged().map((animal) => (
           <AnimalCard key={animal.id} animal={animal} />
@@ -140,13 +145,12 @@ export default function AnimalList({ hideFilters = false }: AnimalListProps) {
           <h1 className="text-4xl font-bold mb-4">Lade ...</h1>
         </div>
       )}
-      {ready && maxPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          maxPages={maxPages}
-          onPageChange={changePage}
-        ></Pagination>
-      )}
+      
+      <Pagination
+        currentPage={currentPage}
+        maxPages={maxPages}
+        onPageChange={changePage}
+      ></Pagination>
     </div>
   );
 }

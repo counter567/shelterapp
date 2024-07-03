@@ -188,6 +188,8 @@ export const AnimalProvider: React.FC<PropsWithChildren<{
             return { propName, value, compare: FilterCompare[compare as any] };
           });
           filter(criteria as any[], false);
+        } else {
+          calculateMaxPages(animals.length);
         }
       }
       setReady(true);

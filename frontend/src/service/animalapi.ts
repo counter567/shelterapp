@@ -1,5 +1,6 @@
 import { Animal } from "../models/animal";
 import { AnimalSource } from "../models/animalSource";
+import { AnimalStatus, statusValues } from "../models/animalStatus";
 import { requestData } from "./requestData";
 
 export interface PostFilter {

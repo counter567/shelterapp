@@ -16,12 +16,12 @@ const getCSSColorByCardColor = (status: AnimalStatus): string => {
       return "#f0ad4e";
     case AnimalStatus.Emergency:
       return "#d9534f";
-    case AnimalStatus.Adopted:
-      return "#333";
+    // case AnimalStatus.Adopted:
+    // return "#333";
     // not set yet
     case AnimalStatus.FinalCare:
     case AnimalStatus.CourtOfGrace:
-    case AnimalStatus.Deceased:
+    // case AnimalStatus.Deceased:
     default:
       console.warn("Unknown status", status);
       return '#aaaaaa';
@@ -38,12 +38,12 @@ const getCardColorByAnimalStatus = (status: AnimalStatus): CardColors => {
       return CardColors.Orange;
     case AnimalStatus.Emergency:
       return CardColors.Red;
-    case AnimalStatus.Adopted:
-      return CardColors.Black;
+    // case AnimalStatus.Adopted:
+      // return CardColors.Black;
     // not set yet
     case AnimalStatus.FinalCare:
     case AnimalStatus.CourtOfGrace:
-    case AnimalStatus.Deceased:
+    // case AnimalStatus.Deceased:
     default:
       console.warn("Unknown status", status);
       return CardColors.Black;
@@ -62,14 +62,14 @@ const germanStatus = (status: AnimalStatus): string => {
       return "Notfall";
     case AnimalStatus.Reserved:
       return "Reserviert";
-    case AnimalStatus.Adopted:
-      return "Vermittelt";
+    // case AnimalStatus.Adopted:
+      // return "Vermittelt";
     case AnimalStatus.FinalCare:
       return "Endpflege";
     case AnimalStatus.CourtOfGrace:
       return "Gnadenhof";
-    case AnimalStatus.Deceased:
-      return "Verstorben";
+    // case AnimalStatus.Deceased:
+      // return "Verstorben";
     default:
       throw console.error("Unknown status", status);
   }
