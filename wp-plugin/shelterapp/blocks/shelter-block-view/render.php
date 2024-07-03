@@ -7,8 +7,8 @@
 global $SHELTERAPP_GLOBAL_ANIMAL;
 $view = $SHELTERAPP_GLOBAL_ANIMAL->blockView++;
 
-wp_enqueue_style('shelter-app-frontend-style', plugins_url('js/static/css/main.css', SHELTERAPP_PATH), array(), '1.0', 'all');
-wp_enqueue_script('shelter-app-frontend', plugins_url('js/static/js/main.js', SHELTERAPP_PATH), array('wp-api-fetch'), '1.0', true);
+wp_enqueue_style('shelter-app-frontend-style', plugins_url('js/static/css/main.css', SHELTERAPP_PATH), array(), SHELTERAPP_VERSION, 'all');
+wp_enqueue_script('shelter-app-frontend', plugins_url('js/static/js/main.js', SHELTERAPP_PATH), array('wp-api-fetch'), SHELTERAPP_VERSION, true);
 wp_localize_script(
 	'shelter-app-frontend',
 	'sa_app_data',
