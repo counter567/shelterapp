@@ -34,9 +34,11 @@ class AuthRequestFilters(
 
         val parsedToken = jwtParser.parse(jwt.substring(7))
         if(parsedToken.getType() != TokenType.REFRESH && !blacklist.check(parsedToken)) {
+            println("Rejected token from $ipAddress because it is blacklisted")
             return@coroutineAsUni Response.status(Response.Status.UNAUTHORIZED).build()
         }
         if(!checkIpAddress(parsedToken, ipAddress)) {
+            println("IP Address mismatch: $ipAddress != ${parsedToken.claim<String>("ipAddress").getOrNull()}")
             return@coroutineAsUni Response.status(Response.Status.UNAUTHORIZED).build()
         }
         return@coroutineAsUni null
