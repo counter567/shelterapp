@@ -152,8 +152,9 @@ function shelterapp_plugin_setting_shelterapp_host()
 function shelterapp_plugin_setting_shelterapp_paypal_link()
 {
     $options = sa_get_config();
-    echo "<input autocomplete='off' id='shelterapp_plugin_setting_shelterapp_paypal_link' name='shelterapp_plugin_options[shelterapp_paypal]' type='text' value='" . esc_attr($options['shelterapp_paypal']) . "' placeholder='Paypal Link' />" . 
-    "<p>Geben sie hier die Adresse zu ihrer Paypal spenden Seite an.</p>";
+    echo "<input autocomplete='off' id='shelterapp_plugin_setting_shelterapp_paypal_link' name='shelterapp_plugin_options[shelterapp_paypal]' type='text' value='" . esc_attr($options['shelterapp_paypal']) . "' placeholder='Paypal Adresse' />" . 
+    "<p>Geben sie hier die Adresse zu ihrer Paypal spenden Seite an.</p>".
+    "<p>Beispiel: mein-tierheim@mail.de</p>";
 }
 
 function shelterapp_plugin_setting_shelterapp_persync()
