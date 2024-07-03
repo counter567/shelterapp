@@ -159,21 +159,21 @@ function sa_sync_getAllAnimalsFromDate(OpenAPI\Client\Api\AnimalResourceApi $cli
         unset($options['shelterapp_sync_from']);
     }
 
-    if (isset($options['shelterapp_sync_from'])) {
-        // get all updates from date.
-        $date = SaDateTime::createFromFormat('U', $options['shelterapp_sync_from']);
-        $date->setTimezone(new DateTimeZone("UTC"));
-        error_log('Update animals from date: ' . $date->format('Y-m-d\\TH:i:s'));
+    // if (isset($options['shelterapp_sync_from'])) {
+    //     // get all updates from date.
+    //     $date = SaDateTime::createFromFormat('U', $options['shelterapp_sync_from']);
+    //     $date->setTimezone(new DateTimeZone("UTC"));
+    //     error_log('Update animals from date: ' . $date->format('Y-m-d\\TH:i:s'));
 
-        // update shelterapp_sync_from
-        $date2 = new DateTime('now', new DateTimeZone("UTC"));
-        $options['shelterapp_sync_from'] = $date2->getTimestamp();
-        sa_set_config($options);
+    //     // update shelterapp_sync_from
+    //     $date2 = new DateTime('now', new DateTimeZone("UTC"));
+    //     $options['shelterapp_sync_from'] = $date2->getTimestamp();
+    //     sa_set_config($options);
 
-        return sa_sync_doGetAllAnimalsFromDate($client, $date, $allAnimals, $chunksize, $page);
-    } else {
+    //     return sa_sync_doGetAllAnimalsFromDate($client, $date, $allAnimals, $chunksize, $page);
+    // } else {
         // init with all animals
-        error_log('Initialy get all animals.');
+        error_log('Get all animals.');
 
         // update shelterapp_sync_from
         $date = new DateTime('now', new DateTimeZone("UTC"));
@@ -181,7 +181,7 @@ function sa_sync_getAllAnimalsFromDate(OpenAPI\Client\Api\AnimalResourceApi $cli
         sa_set_config($options);
 
         return sa_sync_doGetAllAnimalsFromDate($client, null, $allAnimals, $chunksize, $page);
-    }
+    // }
 }
 
 function sa_sync_doGetAllAnimalsFromDate(OpenAPI\Client\Api\AnimalResourceApi $client, DateTime $date = null, array &$allAnimals, int $chunksize = 50, int $page = 0)
