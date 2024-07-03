@@ -2,6 +2,7 @@ package de.felix.shelterapp.animal
 
 import de.felix.shelterapp.util.*
 import io.smallrye.mutiny.coroutines.awaitSuspending
+import io.vertx.core.json.Json
 import jakarta.annotation.security.RolesAllowed
 import jakarta.enterprise.inject.Default
 import jakarta.inject.Inject
@@ -110,7 +111,11 @@ class AnimalResource {
             )
         val queryParameters = PanacheQueryParameters(params, page ?: 0, pageSize ?: 20)
         return@withPanacheSession try {
-            Animal.query(queryParameters)
+            val result = Animal.query(queryParameters)
+            val encoded  = Json.encode(result)
+            println(encoded)
+            println(encoded.length)
+            result
         } catch (e: IllegalArgumentException) {
             throw BadRequestException(e.message)
         }

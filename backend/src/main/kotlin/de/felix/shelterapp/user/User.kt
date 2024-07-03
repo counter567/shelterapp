@@ -17,14 +17,15 @@ import java.util.*
 class User: TenantPanacheEntity() {
     companion object: PagedPanacheCompanion<User>
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     @NotEmpty
     lateinit var username: String
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     @Email
     lateinit var email: String
     @NotEmpty
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(nullable = false)
     lateinit var password: String
     @set: JsonIgnore
     @get: JsonProperty
@@ -45,7 +46,9 @@ enum class UserRole {
 }
 @Embeddable
 class UserRefreshToken {
+    @Column(nullable = false)
     lateinit var id: UUID
+    @Column(nullable = false)
     lateinit var expirationDate: LocalDateTime
 }
 
