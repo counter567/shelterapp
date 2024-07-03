@@ -1059,6 +1059,7 @@ components:
     Animal:
       required:
       - id
+      - tenantId
       - name
       - dateOfAdmission
       - type
@@ -1072,6 +1073,11 @@ components:
       type: object
       properties:
         id:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          readOnly: true
+        tenantId:
           type: string
           allOf:
           - $ref: '#/components/schemas/UUID'
@@ -1188,11 +1194,17 @@ components:
     AnimalEvent:
       required:
       - id
+      - tenantId
       - animalId
       - title
       type: object
       properties:
         id:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          readOnly: true
+        tenantId:
           type: string
           allOf:
           - $ref: '#/components/schemas/UUID'
@@ -1222,12 +1234,18 @@ components:
     AnimalProcedure:
       required:
       - id
+      - tenantId
       - title
       - date
       - animalId
       type: object
       properties:
         id:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          readOnly: true
+        tenantId:
           type: string
           allOf:
           - $ref: '#/components/schemas/UUID'
@@ -1323,6 +1341,7 @@ components:
     User:
       required:
       - id
+      - tenantId
       - username
       - email
       - password
@@ -1331,6 +1350,11 @@ components:
       type: object
       properties:
         id:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          readOnly: true
+        tenantId:
           type: string
           allOf:
           - $ref: '#/components/schemas/UUID'
