@@ -56,8 +56,8 @@ class AuthResource {
         } else {
             LocalDateTime.now(ZoneId.of("UTC")).plusDays(60)
         }
-        val refreshToken = createRefreshToken(user.username, refreshTokenId, context.request().remoteAddress().host(), user.id, user.tenantId, refreshExpirationDateTime)
-        val accessToken = createAccessToken(refreshTokenId, user.username, user.role, user.tenantId, context.request().remoteAddress().host(), user.id)
+        val refreshToken = createRefreshToken(user.username, refreshTokenId, getIpFromHeaderOrContext(context), user.id, user.tenantId, refreshExpirationDateTime)
+        val accessToken = createAccessToken(refreshTokenId, user.username, user.role, user.tenantId, getIpFromHeaderOrContext(context), user.id)
         val response = LoginResponse(refreshToken, accessToken)
         val refreshTokenEntry = UserRefreshToken()
         refreshTokenEntry.id = refreshTokenId
@@ -66,6 +66,10 @@ class AuthResource {
         user.lastLogin = LocalDateTime.now(ZoneId.of("UTC"))
         user.persistAndFlush<User>().awaitSuspending()
         return@withPanacheSession response
+    }
+
+    private fun getIpFromHeaderOrContext(context: RoutingContext): String {
+        return context.request().getHeader("X-Forwarded-For")?: context.request().remoteAddress().host()
     }
 
 

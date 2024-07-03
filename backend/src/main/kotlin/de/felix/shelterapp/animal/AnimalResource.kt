@@ -1,7 +1,6 @@
 package de.felix.shelterapp.animal
 
 import de.felix.shelterapp.util.*
-import io.quarkus.security.Authenticated
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import jakarta.annotation.security.RolesAllowed
 import jakarta.enterprise.inject.Default
@@ -22,7 +21,7 @@ class AnimalResource {
 
 
     @GET
-    @Authenticated
+    @RolesAllowed("CARETAKER", "ADMIN", "SUPER_ADMIN", "SUPER_DUPER_ADMIN")
     fun getAnimals(
         @QueryParam("page") page: Int?,
         @QueryParam("pageSize") pageSize: Int?,

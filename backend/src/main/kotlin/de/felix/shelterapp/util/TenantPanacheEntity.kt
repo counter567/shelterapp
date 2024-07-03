@@ -16,6 +16,7 @@ open class TenantPanacheEntity: PanacheEntityBase {
     @set: JsonIgnore
     @get: JsonProperty
     open lateinit var id: UUID
-    @JsonIgnore
+    @set: JsonIgnore
+    @get: JsonProperty
     open lateinit var tenantId: UUID
 }
