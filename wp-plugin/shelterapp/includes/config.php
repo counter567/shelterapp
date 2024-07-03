@@ -10,7 +10,7 @@ function shelterapp_register_base_settings()
 
     add_settings_field('shelterapp_plugin_setting_shelterapp_paypal_link', 'Paypal Adresse', 'shelterapp_plugin_setting_shelterapp_paypal_link', 'shelterapp_plugin', 'shelterapp_settings');
 
-    // add_settings_field('shelterapp_plugin_setting_shelterapp_persync', 'Sync per update', 'shelterapp_plugin_setting_shelterapp_persync', 'shelterapp_plugin', 'shelterapp_settings');
+    add_settings_field('shelterapp_plugin_setting_shelterapp_persync', 'Sync per update', 'shelterapp_plugin_setting_shelterapp_persync', 'shelterapp_plugin', 'shelterapp_settings');
 }
 add_action('admin_init', 'shelterapp_register_base_settings');
 
@@ -25,7 +25,7 @@ add_action('admin_menu', 'shelterapp_add_settings_page');
 
 function sa_get_config()
 {
-    return get_option('shelterapp_plugin_options', shelterapp_plugin_setting_get_default_config());
+    return get_option('shelterapp_plugin_options', shelterapp_plugin_setting_get_default_config()) + shelterapp_plugin_setting_get_default_config();
 }
 function sa_set_config($config)
 {
@@ -100,7 +100,67 @@ function shelterapp_plugin_setting_shelterapp_user_data()
                 <tr>
                     <td colspan="2">
                         <input class="button button-link-delete" name="shelterapp_plugin_options[shelterapp_reset]"
-                            type="submit" value="Löschen" onclick="deleteConfig()">
+                            type="submit" value="Löschen">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input class="button button-link-delete" id="sa-update" name="shelterapp_plugin_options[shelterapp_force_update]"
+                            type="button" value="Full update"> <span id="sa-update-spinner" class=""></span>
+                        <style>
+                            .loader {
+                                width: 30px;
+                                height: 30px;
+                                border-radius: 50%;
+                                position: relative;
+                                display: inline-block;
+                                animation: rotate 1s linear infinite
+                            }
+                            .loader::before {
+                                content: "";
+                                box-sizing: border-box;
+                                position: absolute;
+                                inset: 0px;
+                                border-radius: 50%;
+                                border: 5px solid #444444;
+                                animation: prixClipFix 2s linear infinite ;
+                            }
+
+                            @keyframes rotate {
+                                100%   {transform: rotate(360deg)}
+                            }
+
+                            @keyframes prixClipFix {
+                                0%   {clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)}
+                                25%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)}
+                                50%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)}
+                                75%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%)}
+                                100% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0)}
+                            }
+                        </style>
+                        <script>
+                            const button = document.getElementById('sa-update');
+                            const spinner = document.getElementById('sa-update-spinner');
+                            function sa_update(ev) {
+                                button.disabled = true;
+                                spinner.classList.add('loader');
+                                ev.preventDefault();
+                                sa_do_update().catch(console.error).finally(() => {
+                                    button.disabled = false;
+                                    spinner.classList.remove('loader');
+                                })
+                            }
+                            async function sa_do_update(){
+                                while (true) {
+                                    const response = await fetch('/wp-json/sa/v1/update?test=1');
+                                    const data = await response.json();
+                                    if(!data.success || data.processed == 0) {
+                                        break;
+                                    }
+                                }
+                            }
+                            button.addEventListener('click', sa_update);
+                        </script>
                     </td>
                 </tr>
             </tbody>
@@ -139,7 +199,7 @@ function shelterapp_plugin_setting_get_default_config()
         'shelterapp_host' => 'https://backend.shelterapp.spedat.de',
         'shelterapp_token' => '',
         'shelterapp_paypal' => '',
-        'shelterapp_persync' => 10,
+        'shelterapp_persync' => 5,
     );
 }
 
@@ -175,6 +235,11 @@ function shelterapp_plugin_options_validate($input)
     $options = sa_get_config();
     $newConfig = array_replace([], $input);
 
+    if (isset($newConfig["shelterapp_force_update"])) {
+        global $SHELTERAPP_GLOBAL_ANIMAL;
+        $SHELTERAPP_GLOBAL_ANIMAL->cron_perform_sync();
+    }
+    
     if (
         isset($newConfig["shelterapp_password"]) && (
             isset($newConfig["shelterapp_mail"]) || isset($newConfig["shelterapp_user"])
@@ -210,6 +275,7 @@ function shelterapp_plugin_options_validate($input)
     unset($newConfig["shelterapp_mail"]);
     unset($newConfig["shelterapp_user"]);
     unset($newConfig["shelterapp_reset"]);
+    unset($newConfig["shelterapp_force_update"]);
 
     return $newConfig;
 }

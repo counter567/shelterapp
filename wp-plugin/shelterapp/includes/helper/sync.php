@@ -22,11 +22,12 @@ function sa_sync_sync_animals(){
         $animals = array();
         sa_sync_getAllAnimalsFromDate($client, $animals);
 
+        $options = sa_get_config();
+        $i = 0;
+
         if (isset($animals) && is_array($animals) && !empty($animals)) {
             outLog('updating animals from shelterapp backend: ' . count($animals));
             foreach ($animals as $animal) {
-                outLog('*****************************************');
-                outLog($animal->getName() . ' ' . $animal->getId() . ' ' . ($animal->getUpdatedAt() !== null ? $animal->getUpdatedAt()->format('Y-m-d H:i:s') : 'no date'));
                 sa_sync_ensure_term($animal->getType());
                 sa_sync_ensure_illnesses($animal->getIllnesses());
                 sa_sync_ensure_allergies($animal->getAllergies());
@@ -42,9 +43,14 @@ function sa_sync_sync_animals(){
                 $posts = get_posts($args);
                 if (count($posts) > 0) {
                     // we already have a post with this link id!
-                    sa_sync_update_animal($animal, $posts[0]);
+                    sa_sync_update_animal($animal, $posts[0], $i);
                 } else {
-                    sa_sync_insert_animal($animal);
+                    sa_sync_insert_animal($animal, $i);
+                }
+
+                if($i >= $options['shelterapp_persync']) {
+                    outLog('Max '.$options['shelterapp_persync'].' animals per sync reached.');
+                    return;
                 }
             }
         }
@@ -151,9 +157,6 @@ function sa_sync_map_post_to_animal(WP_Post $post){
 
 function sa_sync_getAllAnimalsFromDate(OpenAPI\Client\Api\AnimalResourceApi $client, array &$allAnimals, int $chunksize = 50, int $page = 0)
 {
-    if ($page > 100) {
-        throw new \Exception('To many pages');
-    }
     $options = sa_get_config();
     if(isDebug()){
         unset($options['shelterapp_sync_from']);
@@ -186,19 +189,24 @@ function sa_sync_getAllAnimalsFromDate(OpenAPI\Client\Api\AnimalResourceApi $cli
 
 function sa_sync_doGetAllAnimalsFromDate(OpenAPI\Client\Api\AnimalResourceApi $client, DateTime $date = null, array &$allAnimals, int $chunksize = 50, int $page = 0)
 {
-    if ($page > 100) {
+    if ($page > 1000) {
         throw new \Exception('To many pages');
     }
-    if (isset($date) && !empty($date)) {
-        // get all updates from date.
-        $animals = $client->animalsGet(page: $page, page_size: $chunksize, updated_after: $date);
-    } else {
-        // init with all animals
-        $animals = $client->animalsGet(page: $page, page_size: $chunksize);
-    }
-    // error_log(count($animals));
-    array_push($allAnimals, ...$animals);
-    if (count($animals) < $chunksize) {
+    try{
+        if (isset($date) && !empty($date)) {
+            // get all updates from date.
+            $animals = $client->animalsGet(page: $page, page_size: $chunksize, updated_after: $date);
+        } else {
+            // init with all animals
+            $animals = $client->animalsGet(page: $page, page_size: $chunksize);
+        }
+        // error_log(count($animals));
+        array_push($allAnimals, ...$animals);
+        if (count($animals) < $chunksize) {
+            return;
+        }
+    } catch (Exception $e) {
+        error_log('Error while fetching animals: ' . $e->getMessage());
         return;
     }
     sa_sync_doGetAllAnimalsFromDate($client, $date, $allAnimals, $chunksize, $page + 1);
@@ -235,10 +243,15 @@ function sa_sync_ensure_allergies(array $allergies)
 /**
  * @param OpenAPI\Client\Model\Animal $animal 
  */
-function sa_sync_insert_animal($animal)
+function sa_sync_insert_animal($animal, &$i)
 {
-    outLog('Insert animal');
+    outLog('*****************************************');
+    outLog('Insert ' . $animal->getName() . ' ' . $animal->getId() . ' ' . ($animal->getUpdatedAt() !== null ? $animal->getUpdatedAt()->format('Y-m-d H:i:s') : 'no date'));
     global $sa_sync_config;
+
+    $i++;
+    global $importedAnimals;
+    $importedAnimals++;
     
     $post = array(
         'post_title' => $animal->getName(),
@@ -261,9 +274,14 @@ function sa_sync_insert_animal($animal)
         return;
     }
     $post = get_post($id);
-    sa_sync_set_taxonomies($id, $animal);
-    sa_sync_update_post_feature_image($post, $animal);
-    sa_sync_update_post_other_images($post, $animal);
+    try{
+        sa_sync_set_taxonomies($id, $animal);
+        sa_sync_update_post_feature_image($post, $animal);
+        sa_sync_update_post_other_images($post, $animal);
+    } catch (Exception $e) {
+        outLog('Error while inserving Animal: ' . $e->getMessage());
+        // wp_delete_post($id, true);
+    }
 }
 
 /**
@@ -291,16 +309,22 @@ function sa_sync_set_taxonomies(int $id, $animal)
  * @param OpenAPI\Client\Model\Animal $animal 
  * @param WP_Post $post
  */
-function sa_sync_update_animal($animal, $post)
+function sa_sync_update_animal($animal, $post, &$i)
 {
     // if the animal is updated AFTER the last WP update, we update the WP post
     $postModified = new DateTime($post->post_modified);
     $postModified->setTimezone(new DateTimeZone("UTC"));
 
     if ($animal->getUpdatedAt() < $postModified) {
-        outLog('Animal up to date.');
         return;
     }
+    
+    outLog('*****************************************');
+    outLog('Update ' . $animal->getName() . ' ' . $animal->getId() . ' ' . ($animal->getUpdatedAt() !== null ? $animal->getUpdatedAt()->format('Y-m-d H:i:s') : 'no date'));
+    
+    $i++;
+    global $importedAnimals;
+    $importedAnimals++;
 
     outLog('Update animal.');
     global $sa_sync_config;
@@ -350,6 +374,9 @@ function sa_sync_update_post_feature_image($post, $animal){
             // upload file to media library and set as thunbnail
             $upload_dir = wp_upload_dir();
             $image_data = file_get_contents($animal->getMainPictureFileUrl());
+            if($image_data === false) {
+                throw new Exception('Could not download image');
+            }
             $filename = basename($animal->getMainPictureFileUrl());
             if (wp_mkdir_p($upload_dir['path'])) {
                 $file = $upload_dir['path'] . '/' . $filename;
@@ -428,6 +455,9 @@ function sa_sync_update_post_other_images($post, $animal){
                 // upload file to media library and set as thunbnail
                 $upload_dir = wp_upload_dir();
                 $image_data = file_get_contents($image);
+                if($image_data === false) {
+                    throw new Exception('Could not download image');
+                }
                 $filename = basename($image);
                 if (wp_mkdir_p($upload_dir['path'])) {
                     $file = $upload_dir['path'] . '/' . $filename;
