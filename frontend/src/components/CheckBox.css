@@ -1,0 +1,63 @@
+
+
+.sa-checkbox {
+  position: relative;
+  padding-left: 35px !important;
+}
+.sa-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.sa-checkmark {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(0px, -50%);
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: .5rem;
+}
+
+/* On mouse-over, add a grey background color */
+.sa-checkbox:hover input ~ .sa-checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.sa-checkbox input:checked ~ .sa-checkmark {
+  background-color: var(--e-global-color-primary, var(--wp--preset--color--custom-primary, rgb(29 78 216 / var(--tw-bg-opacity))));
+}
+.sa-checkbox:hover input:checked ~ .sa-checkmark {
+  background-color: color-mix(in srgb, var(--e-global-color-primary, var(--wp--preset--color--custom-primary, rgb(29 78 216 / var(--tw-bg-opacity)))) 80%, black) !important;
+}
+
+/* Create the sa-checkmark/indicator (hidden when not checked) */
+.sa-checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the sa-checkmark when checked */
+.sa-checkbox input:checked ~ .sa-checkmark:after {
+  display: block;
+}
+
+/* Style the sa-checkmark/indicator */
+.sa-checkbox .sa-checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}

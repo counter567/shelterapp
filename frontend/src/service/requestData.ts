@@ -2,7 +2,7 @@ import getNonce from "./nonce-helper";
 
 type RequestData = FormData | { [key: string]: any };
 
-interface RequestResponseWithPagination {
+export interface RequestResponseWithPagination {
   _pagination: {
     total?: number;
     totalPages?: number;

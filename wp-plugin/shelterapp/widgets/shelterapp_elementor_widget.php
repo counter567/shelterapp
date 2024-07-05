@@ -78,6 +78,52 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
 				'default' => '0',
 			]
 		);
+		
+		$this->add_control(
+			'sex',
+			[
+				'type' => \Elementor\Controls_Manager::SELECT,
+				'label' => esc_html__( 'Geschlecht', 'wordpress' ),
+				'options' => array(
+                    '' => esc_html__( 'Alle', 'wordpress' ),
+                    'NEW' => esc_html__( 'Neu', 'wordpress' ),
+                    'SEARCHING' => esc_html__( 'Suchend', 'wordpress' ),
+                    'REQUEST_STOP' => esc_html__( 'Anfrage Stop', 'wordpress' ),
+                    'EMERGENCY' => esc_html__( 'Notfall', 'wordpress' ),
+                    'RESERVED' => esc_html__( 'Reserviert', 'wordpress' ),
+                    'ADOPTED' => esc_html__( 'Adoptiert', 'wordpress' ),
+                    'FINAL_CARE' => esc_html__( 'Final Care', 'wordpress' ),
+                    'COURT_OF_GRACE' => esc_html__( 'Court Of Grace', 'wordpress' ),
+                    'DECEASED' => esc_html__( 'Gestorben', 'wordpress' ),
+                ),
+				'default' => '0',
+			]
+		);
+
+		$this->add_control(
+			'min_age',
+			[
+				'type' => \Elementor\Controls_Manager::NUMBER,
+				'label' => esc_html__( 'Mindestalter', 'wordpress' ),
+				'placeholder' => '0',
+				'min' => 0,
+				'max' => 100,
+				'step' => 1,
+				'default' => 0,
+			]
+		);
+		$this->add_control(
+			'max_age',
+			[
+				'type' => \Elementor\Controls_Manager::NUMBER,
+				'label' => esc_html__( 'Höchstalter', 'wordpress' ),
+				'placeholder' => '0',
+				'min' => 0,
+				'max' => 100,
+				'step' => 1,
+				'default' => 0,
+			]
+		);
 
 		$this->end_controls_section();
 
@@ -89,6 +135,7 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
 
 		if(isset($settings['type']) && !empty($settings['type'])) $attributes['type'] = $settings['type'];
         if(isset($settings['status']) && !empty($settings['status'])) $attributes['status'] = $settings['status'];
+        if(isset($settings['sex']) && !empty($settings['sex'])) $attributes['sex'] = $settings['sex'];
         include (plugin_dir_path(SHELTERAPP_PATH) . 'blocks/shelter-block-view/render.php');
 	}
 

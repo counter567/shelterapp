@@ -42,7 +42,8 @@ const AnimalCard = ({
         status
       )}`}
     >
-      <Link className="no-underline flex-auto flex flex-col" to={`${getRouterBasePath()}/${slug}`} key={id}>
+      {/* Before this was a link! behold! */}
+      <a className="no-underline flex-auto flex flex-col" href={`${getRouterBasePath()}/${slug}`} key={id}>
         <div className="flex items-center flex-col flex-auto overflow-hidden">
           <div className="flex items-center justify-center h-44 pt-4">
             <div className="aspect-square bg-gray-100 w-40 rounded-full flex flex-col items-center absolute"></div>
@@ -91,7 +92,7 @@ const AnimalCard = ({
             )}
           </div>
         </div>
-      </Link>
+      </a>
     </li>
   );
 };

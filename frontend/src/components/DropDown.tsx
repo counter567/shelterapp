@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SelectDownArrow } from "./icons/SelectDownArrow";
 
 interface DropDownProps {
   items: { name: string; id?: string | number }[];
@@ -15,10 +16,8 @@ const DropDown = ({ items, value, defaultValue, callback }: DropDownProps) => {
     defaultValue?: string | number,
     value?: string | number
   ) => {
-    return (
-      selectItems.find((option) => option.id === value || option.name === value)
-        ?.name || defaultValue
-    );
+    const val = selectItems.find((option) => option.id === value)?.name || defaultValue;
+    return val;
   };
   return (
     <>
@@ -30,21 +29,7 @@ const DropDown = ({ items, value, defaultValue, callback }: DropDownProps) => {
           onClick={() => setIsOpen((value) => !value)}
         >
           {getSelectItemName(items, defaultValue, value)}
-          <svg
-            className="w-2.5 h-2.5 ms-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 10 6"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="m1 1 4 4 4-4"
-            />
-          </svg>
+          <SelectDownArrow />
         </button>
         <div
           id="dropdown"

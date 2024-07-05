@@ -3,7 +3,7 @@ import ArrowLeft from "../icons/arrowLeft";
 import ArrowRight from "../icons/arrowRight";
 
 
-const baseClasses = 'flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 select-none';
+const baseClasses = 'flex items-center justify-center px-2 md:px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 select-none';
 const activeClasses = 'cursor-pointer hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-700 dark:hover:text-white';
 const disabledClasses = 'cursor-not-allowed';
 const disabledClassesArrows = 'cursor-not-allowed opacity-50';
@@ -13,7 +13,7 @@ const Pagination = ({
   currentPage = 1,
   maxPages = 1,
   onPageChange = (page: number) => {},
-  padding = 2
+  padding = 1
 }) => {
   if(maxPages < 2) {
     return <></>

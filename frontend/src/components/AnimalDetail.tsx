@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ImageGallery from "react-image-gallery";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatDate } from "../helper/dateFormat";
@@ -17,36 +17,46 @@ import PayPalButton from "./PaypalButton";
 import SectionList from "./SectionList";
 import { useData } from "../stores/animalStore";
 import { getPaypalAdress } from "../service/config-helper";
+import { observer } from "mobx-react-lite";
+import AnimalsStoreContext, { AnimalsStore } from "../stores/animals";
+import { getRouterBasePath } from "../service/url-helper";
 
-const AnimalDetail = () => {
+interface AnimalDetailProps {
+  animalStoreContext: React.Context<AnimalsStore>;
+}
+
+const AnimalDetail = observer(({ animalStoreContext}: AnimalDetailProps) => {
+  const animalStore = useContext(animalStoreContext);
+  
   const navigate = useNavigate();
-  const [animal, setAnimals] = useState<Animal>();
-  const [idValue, setId] = useState<string>("");
   const { id } = useParams<{ id: string }>();
-  if (idValue !== id) setId(id!);
-  const { getAnimal, getOriginalTitle } = useData();
+  
+  function navigateBack(){
+    window.history.length > 1 ? window.history.back() : navigate(getRouterBasePath()+"/");
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      const animal = await getAnimal(idValue);
-      if (animal) setAnimals(animal);
-      else navigate("/");
-    };
-    fetchData();
-  }, [idValue, getAnimal, navigate, setAnimals]);
+    if(id) {
+      animalStore.fetchSingleAnimal(id).finally(() => {
+        if(!animalStore.singleAnimal) {
+          navigate(getRouterBasePath()+"/");
+        }
+      });
+    }
+  }, [id]);
 
   useEffect(() => {
-    if(animal) {
-      document.title = `${getOriginalTitle()} - ${animal.name} - ${animal.type} - ${!breedTwo ? breedOne : `${breedOne}, ${breedTwo}`}`;
+    if(animalStore.singleAnimal) {
+      document.title = `${animalStore.defaultTitle} - ${animalStore.singleAnimal.name} - ${animalStore.singleAnimal.type} - ${!breedTwo ? breedOne : `${breedOne}, ${breedTwo}`}`;
     } else {
-      document.title = getOriginalTitle();
+      document.title = animalStore.defaultTitle;
     }
     return () => {
-      document.title = getOriginalTitle();
+      document.title = animalStore.defaultTitle;
     }
   });
 
-  if (!animal) return <></>;
+  if (!animalStore.singleAnimal) return <></>;
 
   const {
     name,
@@ -62,13 +72,13 @@ const AnimalDetail = () => {
     description,
     otherPictureFileUrls,
     illnesses,
-  } = animal;
+  } = animalStore.singleAnimal;
 
   return (
     <div>
       <div className="my-4">
         <button
-          onClick={() => navigate("/")}
+          onClick={navigateBack}
           className="text-white bg-blue-700 text-sm px-5 py-2.5 rounded-lg"
         >
           Zurück
@@ -106,8 +116,8 @@ const AnimalDetail = () => {
               <BirthDate birthDate={dateOfBirth} />
             </span>
           )}
-          {animal.getPersonalData().length > 0 && (
-            <SectionList className="mb-4" values={animal.getPersonalData()}>
+          {animalStore.singleAnimal.getPersonalData().length > 0 && (
+            <SectionList className="mb-4" values={animalStore.singleAnimal.getPersonalData()}>
               <InfoIcon className="mr-2" />
             </SectionList>
           )}
@@ -164,6 +174,6 @@ const AnimalDetail = () => {
       </div>
     </div>
   );
-};
+});
 
 export default AnimalDetail;

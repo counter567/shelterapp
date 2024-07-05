@@ -63,34 +63,76 @@ class ShelterappAnimals
             }
         }
 
-        add_filter( 'rest_shelterapp_animals_query', 'filter_posts_by_source_field', 999, 2 );
-        function filter_posts_by_source_field( $args, $request ) {
-            if ( ! isset( $request['meta_status'] )  ) {
-                return $args;
-            }
-            
+        add_filter( 'rest_shelterapp_animals_query', array($this, 'filter_posts'), 999, 2 );
+        
+        
+    }
+
+    function filter_posts( $args, $request ) {
+        if ( isset( $args['meta_query'] ) ) {
+            $args['meta_query']['relation'] = 'AND';
+        }
+        
+        if(isset( $request['meta_status'] )) {
             $status_value = json_decode(sanitize_text_field( $request['meta_status'] ));
-            
             $statusCompare = '=';
             if(is_array($status_value)){
                 $statusCompare = 'IN';
             }
-            $status_meta_query = array(
+            $meta_query = array(
                 'key' => 'status',
                 'value' => $status_value,
                 'compare' => $statusCompare,
             );
-            
-            if ( isset( $args['meta_query'] ) ) {
-                $args['meta_query']['relation'] = 'AND';
-                $args['meta_query'][] = $status_meta_query;
-            } else {
-                $args['meta_query'] = array();
-                $args['meta_query'][] = $status_meta_query;
-            }
-            return $args;
+            $args['meta_query'][] = $meta_query;
+        }
+        if(isset( $request['meta_sex'] )) {
+            $status_value = sanitize_text_field( $request['meta_sex'] );
+            $meta_query = array(
+                'key' => 'sex',
+                'value' => $status_value,
+                'compare' => '=',
+            );
+            $args['meta_query'][] = $meta_query;
         }
         
+        if(isset( $request['meta_age_max'] )) {
+            $maxAge = (int)sanitize_text_field( $request['meta_age_max'] );
+            $meta_query = array(
+                'key' => 'dateOfBirth',
+                'value' => date('Y-m-d', strtotime("-$maxAge years")),
+                'compare' => '>',
+            );
+            $args['meta_query'][] = $meta_query;
+        }
+        if(isset( $request['meta_age_min'] )) {
+            $minAge = ((int)sanitize_text_field( $request['meta_age_min'] )) -1;
+            $meta_query = array(
+                'key' => 'dateOfBirth',
+                'value' => date('Y-m-d', strtotime("-$minAge years")),
+                'compare' => '<',
+            );
+            $args['meta_query'][] = $meta_query;
+        }
+        if(isset( $request['meta_was_found'] )) {
+            $wasFound = ((boolean)sanitize_text_field( $request['meta_was_found'] ));
+            $meta_query = array(
+                'key' => 'wasFound',
+                'value' => $wasFound ? '1' : '0',
+                'compare' => '=',
+            );
+            $args['meta_query'][] = $meta_query;
+        }
+        if(isset( $request['meta_missing'] )) {
+            $wasFound = ((boolean)sanitize_text_field( $request['meta_missing'] ));
+            $meta_query = array(
+                'key' => 'missing',
+                'value' => $wasFound ? '1' : '0',
+                'compare' => '=',
+            );
+            $args['meta_query'][] = $meta_query;
+        }
+        return $args;
     }
 
     function example_add_cron_interval( $schedules ) {
@@ -352,10 +394,14 @@ class ShelterappAnimals
         $post_id = $object['id'];
         $meta = get_post_meta($post_id, '', true);
         foreach ($meta as $key => $value) {
+            if(str_starts_with('_', $key)){
+                unset($meta[$key]);
+                continue;
+            }
             if ($key === 'search-data') {
                 continue;
             }
-            $meta[$key] = get_post_meta($post_id, $key, true);
+            $meta[$key] = get_field($key, $post_id);
         }
 
         $type = wp_get_post_terms($post_id, 'shelterapp_animal_type');
