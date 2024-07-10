@@ -3,7 +3,8 @@
   "scripts": {
     "build": "dotenv -- turbo run build",
     "prebuild": "npm run generate",
-    "dev": "dotenv -- concurrently 'turbo run dev'",
+    "dev": "dotenv -- concurrently 'turbo run dev' npm:frontend:dev",
+    "frontend:dev": "cd frontend && npm run watch",
     "predev": "npm run generate",
     "generate": "dotenv -- turbo run generate",
     "stop container": "docker stop wp-plugin-wordpress-1 wp-plugin-backend-db-1 wp-plugin-wp-db-1"

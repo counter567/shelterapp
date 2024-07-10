@@ -3,15 +3,32 @@ import ReactDOM from 'react-dom/client';
 import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { AnimalStatus } from './models/animalStatus';
+import { AnimalSex } from './models/animalSex';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+let roots = document.querySelectorAll('.shelterblock-root');
+if(roots.length === 0) {
+  roots = document.querySelectorAll('#root');
+}
+roots.forEach((rootElement) => {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <App
+        type={rootElement.getAttribute('data-type') ? parseInt(rootElement.getAttribute('data-type')!) :  undefined}
+        status={rootElement.getAttribute('data-status') as AnimalStatus || undefined}
+        sex={rootElement.getAttribute('data-sex') as AnimalSex || undefined}
+        maxAge={getNumber(rootElement, 'data-max_age')}
+        minAge={getNumber(rootElement, 'data-min_age')}
+        hideFilters={rootElement.getAttribute('data-hideFilters') === 'true'}
+      />
+    </React.StrictMode>
+  );
+});
+
+function getNumber(element: Element, attribute: string): number | undefined {
+  return element.getAttribute(attribute) ? parseInt(element.getAttribute(attribute)!) : undefined;
+}
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

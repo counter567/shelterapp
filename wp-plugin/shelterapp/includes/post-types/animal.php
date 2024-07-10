@@ -3,132 +3,259 @@ defined('ABSPATH') or die("");
 global $preventPreGetPosts;
 $preventPreGetPosts = false;
 
-$filteredMetaFields = [
-    'internalNotes'
-];
+global $importedAnimals;
+$importedAnimals = 0;
 
-$titleMappings = array(
-    'dateOfBirth' => 'Geburtstag',
-    'sex' => 'Geschlecht',
-    'color' => 'Farbe',
-    'breedOne' => 'Hauptrasse',
-    'breedTwo' => 'Nebenrasse',
-    'chipNumber' => 'Chip Nummer',
-    'description' => 'Beschreibung',
-    'wasFound' => 'Wurde gefunden',
-    'missing' => 'Wird vermisst',
-    'weight' => 'Gewicht',
-    'heightAtWithers' => 'Widerristhöhe',
-    'circumferenceOfNeck' => 'Halsumfang',
-    'lengthOfBack' => 'Rückenlänge',
-    'circumferenceOfChest' => 'Brustumfang',
-    'dateOfAdmission' => 'Aufnahmedatum',
-    'dateOfLeave' => 'Abgabedatum',
-    'dateOfDeath' => 'Todesdatum',
-    'status' => 'Status',
-    'notes' => 'Notizen',
-    'internalNotes' => 'Interne Notizen',
-    'donationCall' => 'Spendenaufruf',
-    'successStory' => 'Erfolgsgeschichte',
-    'privateAdoption' => 'Private Adoption',
-    'castrated' => 'Kastriert',
-    'bloodType' => 'Blutgruppe',
-);
+class SaDateTime extends DateTime
+{
+    function format($format) {
+        return parent::format('Y-m-d\\TH:i:s');
+    }
+}
 
 class ShelterappAnimals
 {
+    private $isSyncing = false;
     private $rest_is_init = false;
+    public $blockView = 0;
 
     function __construct()
     {
+        // plugin init hooks
         add_action('init', array($this, 'register_post_type'), 100);
-        add_action('admin_menu', array($this, 'setup_admin'));
         add_action('rest_api_init', array($this, 'init_rest'));
         $this->register_custom_fields();
 
-        add_action('after_switch_theme', array($this, 'after_switch_theme'));
-        add_action('switch_theme', array($this, 'switch_theme'));
-
+        // admin editor hooks
         add_action('save_post', array($this, 'save_post'), 10, 3);
         add_action('add_meta_boxes', 'sa_add_custom_box_animal_galery');
 
+        // template stuff
+        add_filter('template_include', array($this, 'loadAnimalTemplatesNonBlockTheme'), 99);
+        add_filter('archive_template', array($this, 'loadAnimalArchiveTemplate'));
+        add_filter('single_template', array($this, 'loadAnimalSingleTemplate'));
 
-        add_filter('archive_template', function ($page_template) {
-            outLog('archive_template', $page_template);
-            if (is_post_type_archive('shelterapp_animals')) {
-                if (function_exists('wp_is_block_theme') && wp_is_block_theme()) {
-                    global $_wp_current_template_content;
-                    $_wp_current_template_content = '<!-- wp:template-part {"slug":"header"} /-->
-                    
-                    <!-- wp:group {"align":"full","layout":{"type":"constrained"}} -->
-                    <div class="wp-block-group alignfull">
-                        <!-- wp:group {"tagName":"main","align":"wide","layout":{"type":"constrained"}} -->
-                        <main class="wp-block-group alignwide">
-                            <!-- wp:create-block/shelter-block-view /-->
-                        </main>
-                        <!-- /wp:group -->
-                    </div>
-                    <!-- /wp:group -->
-                    
-                    <!-- wp:template-part {"slug":"footer"} /-->';
+        // blocks, widgets, shortcodes
+        add_action( 'elementor/widgets/register', array($this, 'register_elementor_widget') );
+        add_shortcode('shelterapp_view', array($this, 'doShortcode'));
+
+        // cronjob stuff
+        add_filter( 'cron_schedules', array($this, 'example_add_cron_interval'), 1000);
+        add_action( 'sa_cron_perform_sync', array($this, 'cron_perform_sync') );
+
+        // check if the wp-cron.php is executed
+        if(isDebug()) {
+            // define stub for cronjob
+            add_action( 'sa_cron_perform_sync', function(){} );
+            // always call the cronjob
+            add_action('init', function(){
+                if (defined('DOING_CRON') && DOING_CRON) {
+                    outLog('Doing cron');
+                    $this->cron_perform_sync();
+                }
+            }, 101);
+        } else {
+            // define cron job callback
+            add_action( 'sa_cron_perform_sync', array($this, 'cron_perform_sync') );
+            // ensure cronjob is set
+            if( !wp_next_scheduled( 'sa_cron_perform_sync' ) ){
+                wp_schedule_event( time(), 'five_minutes', 'sa_cron_perform_sync' );
+            }
+        }
+
+        add_filter( 'rest_shelterapp_animals_query', array($this, 'filter_posts'), 999, 2 );
+        
+        
+    }
+
+    function filter_posts( $args, $request ) {
+        if ( isset( $args['meta_query'] ) ) {
+            $args['meta_query']['relation'] = 'AND';
+        }
+        
+        if(isset( $request['meta_status'] )) {
+            $status_value = json_decode(sanitize_text_field( $request['meta_status'] ));
+            $statusCompare = '=';
+            if(is_array($status_value)){
+                $statusCompare = 'IN';
+            }
+            $meta_query = array(
+                'key' => 'status',
+                'value' => $status_value,
+                'compare' => $statusCompare,
+            );
+            $args['meta_query'][] = $meta_query;
+        }
+        if(isset( $request['meta_sex'] )) {
+            $status_value = sanitize_text_field( $request['meta_sex'] );
+            $meta_query = array(
+                'key' => 'sex',
+                'value' => $status_value,
+                'compare' => '=',
+            );
+            $args['meta_query'][] = $meta_query;
+        }
+        
+        if(isset( $request['meta_age_max'] )) {
+            $maxAge = (int)sanitize_text_field( $request['meta_age_max'] );
+            $meta_query = array(
+                'key' => 'dateOfBirth',
+                'value' => date('Y-m-d', strtotime("-$maxAge years")),
+                'compare' => '>',
+            );
+            $args['meta_query'][] = $meta_query;
+        }
+        if(isset( $request['meta_age_min'] )) {
+            $minAge = ((int)sanitize_text_field( $request['meta_age_min'] )) -1;
+            $meta_query = array(
+                'key' => 'dateOfBirth',
+                'value' => date('Y-m-d', strtotime("-$minAge years")),
+                'compare' => '<',
+            );
+            $args['meta_query'][] = $meta_query;
+        }
+        if(isset( $request['meta_was_found'] )) {
+            $wasFound = ((boolean)sanitize_text_field( $request['meta_was_found'] ));
+            $meta_query = array(
+                'key' => 'wasFound',
+                'value' => $wasFound ? '1' : '0',
+                'compare' => '=',
+            );
+            $args['meta_query'][] = $meta_query;
+        }
+        if(isset( $request['meta_missing'] )) {
+            $wasFound = ((boolean)sanitize_text_field( $request['meta_missing'] ));
+            $meta_query = array(
+                'key' => 'missing',
+                'value' => $wasFound ? '1' : '0',
+                'compare' => '=',
+            );
+            $args['meta_query'][] = $meta_query;
+        }
+        return $args;
+    }
+
+    function example_add_cron_interval( $schedules ) {
+        $schedules['five_minutes'] = array(
+            'interval' => 5*60,
+            'display' => esc_html__( 'Every Five Minutes' ),
+        );
+        return $schedules;
+    }
+
+    function register_elementor_widget( $widgets_manager ) {
+
+        require_once( plugin_dir_path(SHELTERAPP_PATH) . '/widgets/shelterapp_elementor_widget.php' );
+    
+        $widgets_manager->register( new \Shelterapp_Elementor_Widget() );
+    
+    }
+
+    function doShortcode($atts, $content = ""){
+        ob_start();
+        if(isset($atts['type']) && !empty($atts['type'])) $attributes['type'] = $atts['type'];
+        if(isset($atts['status']) && !empty($atts['status'])) $attributes['status'] = $atts['status'];
+        include (plugin_dir_path(SHELTERAPP_PATH) . 'blocks/shelter-block-view/render.php');
+        return ob_get_clean();
+    }
+
+    function setCurrentTemplateContent($additionalContent = '')
+    {
+        global $_wp_current_template_content;
+        $_wp_current_template_content = '<!-- wp:template-part {"slug":"header"} /-->
+        
+        ' . $additionalContent . '
+
+        <!-- wp:group {"align":"full","layout":{"type":"constrained"}} -->
+        <div class="wp-block-group alignfull">
+            <!-- wp:group {"tagName":"main","align":"wide","layout":{"type":"constrained"}} -->
+            <main class="wp-block-group alignwide">
+                <!-- wp:create-block/shelter-block-view /-->
+            </main>
+            <!-- /wp:group -->
+        </div>
+        <!-- /wp:group -->
+        
+        <!-- wp:template-part {"slug":"footer"} /-->';
+    }
+
+    function loadAnimalArchiveTemplate($page_template){
+        if (is_post_type_archive('shelterapp_animals')) {
+            if (function_exists('wp_is_block_theme') && wp_is_block_theme()) {
+                $id = get_option('sa_page_animal_archive', false);
+                $additionalContent = '';
+                if ($id) {
+                    $page = get_post($id);
+                    $additionalContent = $page->post_content;
+                }
+                $this->setCurrentTemplateContent($additionalContent);
+            }
+        }
+        return $page_template;
+    }
+
+    function loadAnimalSingleTemplate($page_template){
+        if (is_singular('shelterapp_animals')) {
+            if (function_exists('wp_is_block_theme') && wp_is_block_theme()) {
+                $id = get_option('sa_page_animal_archive', false);
+                $additionalContent = '';
+                if ($id) {
+                    $page = get_post($id);
+                    $additionalContent = $page->post_content . "
+                    <style>
+.image-gallery-slide-wrapper {aspect-ratio: 1 / 1; padding-top: 100%;}
+.image-gallery-swipe {position: absolute; inset: 0;}
+.image-gallery-swipe, .image-gallery-slides, .image-gallery-slides > div {height: 100%; background: #eeeeee}
+.image-gallery-slides > div {display: flex; place-content: center;}
+.image-gallery-slides > div > img {max-height: 100% !important;}
+                    </style>
+                    ";
+                }
+                $this->setCurrentTemplateContent($additionalContent);
+            }
+        }
+        return $page_template;
+    }
+
+    function loadAnimalTemplatesNonBlockTheme($template)
+    {
+        if (is_post_type_archive('shelterapp_animals')) {
+            if (!function_exists('wp_is_block_theme') || !wp_is_block_theme()) {
+                $new_template = plugin_dir_path(SHELTERAPP_PATH) . 'templates/archive-animal.php';
+                if ('' != $new_template) {
+                    return $new_template;
                 }
             }
-            return $page_template;
-        });
-        add_filter('single_template', function ($page_template) {
-            outLog('single_template', $page_template);
-            if (is_singular('shelterapp_animals')) {
-                if (function_exists('wp_is_block_theme') && wp_is_block_theme()) {
-                    global $_wp_current_template_content;
-                    $_wp_current_template_content = '<!-- wp:template-part {"slug":"header"} /-->
-                    
-                    <!-- wp:group {"align":"full","layout":{"type":"constrained"}} -->
-                    <div class="wp-block-group alignfull">
-                        <!-- wp:group {"tagName":"main","align":"wide","layout":{"type":"constrained"}} -->
-                        <main class="wp-block-group alignwide">
-                            <!-- wp:create-block/shelter-block-view /-->
-                        </main>
-                        <!-- /wp:group -->
-                    </div>
-                    <!-- /wp:group -->
-                    
-                    <!-- wp:template-part {"slug":"footer"} /-->';
+        }
+        if (is_singular('shelterapp_animals')) {
+            if (!function_exists('wp_is_block_theme') || !wp_is_block_theme()) {
+                $new_template = plugin_dir_path(SHELTERAPP_PATH) . 'templates/single-animal.php';
+                if ('' != $new_template) {
+                    return $new_template;
                 }
             }
-            return $page_template;
-        });
+        }
+        return $template;
+    }
 
+    function ensureAnimalPage()
+    {
+        if (!get_option('sa_page_animal_archive', false)) {
+            $page = array(
+                'post_title' => 'Tiere',
+                'post_name' => 'animal',
 
-        add_filter('template_include', function ($template) {
-            if (is_post_type_archive('shelterapp_animals')) {
-                if (!function_exists('wp_is_block_theme') || !wp_is_block_theme()) {
-                    $new_template = plugin_dir_path(SHELTERAPP_PATH) . 'templates/archive-animal.php';
-                    if ('' != $new_template) {
-                        return $new_template;
-                    }
-                }
-            }
-            if (is_singular('shelterapp_animals')) {
-                if (!function_exists('wp_is_block_theme') || !wp_is_block_theme()) {
-                    $new_template = plugin_dir_path(SHELTERAPP_PATH) . 'templates/single-animal.php';
-                    if ('' != $new_template) {
-                        return $new_template;
-                    }
-                }
-            }
-            return $template;
-        }, 99);
-
-        /*
-        add_action('get_template_part', function ($slug, $name, $templates, $args) {
-            outLog('get_template_part', $slug, $name, $templates, $args);
-        }, 10, 4);
-        */
-
-
-
-
-
+                'post_content' => '',
+                'post_status' => 'publish',
+                'post_type' => 'page',
+                'post_excerpt' => '',
+                'comment_status' => 'closed',
+                'to_ping' => '',
+                'pinged' => '',
+            );
+            $page_id = wp_insert_post($page);
+            update_option('sa_page_animal_archive', $page_id);
+        }
     }
 
     /**
@@ -138,8 +265,23 @@ class ShelterappAnimals
      */
     function save_post(int $post_id, $post, $update)
     {
+        if($this->isSyncing) {
+            return;
+        }
+        if($post->post_type !== 'shelterapp_animals'){
+            return;
+        }
+        
         $post_value = $_POST['otherPictureFileUrls'];
-        update_post_meta($post->ID, 'otherPictureFileUrls', $post_value);
+        if(isset($post_value)) {
+            update_post_meta($post->ID, 'otherPictureFileUrls', $post_value);
+        }
+
+        outLog('***********************************************');
+        outLog('saving a post! Update to backend!');
+        outLog($post_id);
+        outLog($post);
+        outLog($update);
     }
 
     function init_rest()
@@ -164,6 +306,53 @@ class ShelterappAnimals
                         'root' => esc_url_raw(rest_url()),
                         'nonce' => wp_create_nonce('wp_rest'),
                         'publicUrlBase' => plugin_dir_url(SHELTERAPP_PATH) . 'public'
+                    );
+                },
+                'permission_callback' => function () {
+                    return true;
+                }
+            )
+        );
+        register_rest_route(
+            'sa/v1',
+            '/update',
+            array(
+                'login_user_id' => get_current_user_id(), // This will be pass to the rest API callback
+                'methods' => 'GET',
+                'callback' => function ($data) {
+                    $attrs =  $data->get_attributes();
+                    if( !isset($attrs['login_user_id']) || intval($attrs['login_user_id']) === 0  ) {
+                        return array (
+                            'success' => false,
+                        );
+                    }
+                    $user_id        = intval($attrs['login_user_id']);
+                    $current_user   = get_user_by( 'id', $user_id );
+                    if ($current_user === false || $current_user === null || !in_array('administrator', $current_user->roles)) {
+                        return array (
+                            'success' => false,
+                        );
+                    }
+                    if(isset($_GET['delete']) && is_user_admin()) {
+                        $args = array(
+                            'post_type' => 'shelterapp_animals',
+                            'post_status' => 'any',
+                            'posts_per_page' => -1,
+                        );
+                        $posts = get_posts($args);
+                        foreach ($posts as $post) {
+                            // delete the post
+                            wp_delete_post($post->ID, true);
+                        }
+                    }
+                    $success = false;
+                    $success = $this->cron_perform_sync();
+                    global $importedAnimals;
+                    return array (
+                        'success' => $success,
+                        'processed' => $importedAnimals,
+                        'data' => $_GET,
+                        'current_user' => $current_user,
                     );
                 },
                 'permission_callback' => function () {
@@ -205,10 +394,14 @@ class ShelterappAnimals
         $post_id = $object['id'];
         $meta = get_post_meta($post_id, '', true);
         foreach ($meta as $key => $value) {
+            if(str_starts_with('_', $key)){
+                unset($meta[$key]);
+                continue;
+            }
             if ($key === 'search-data') {
                 continue;
             }
-            $meta[$key] = get_post_meta($post_id, $key, true);
+            $meta[$key] = get_field($key, $post_id);
         }
 
         $type = wp_get_post_terms($post_id, 'shelterapp_animal_type');
@@ -246,11 +439,9 @@ class ShelterappAnimals
             unset($meta[$filed]);
         }
 
-        return $meta;
-    }
+        // @todo: Filter out private fields
 
-    function setup_admin()
-    {
+        return $meta;
     }
 
     function register_post_type()
@@ -304,7 +495,11 @@ class ShelterappAnimals
             array('shelterapp_animals'),
             'Tier Art',
             'Tier Art',
-            'type'
+            null,
+            true,
+            false,
+            true,
+            false
         );
         sa_generate_taxonomy(
             'shelterapp_animal_illness',
@@ -312,6 +507,9 @@ class ShelterappAnimals
             'Tier Krankheit',
             'Tier Krankheiten',
             null,
+            false,
+            false,
+            false,
             false
         );
         sa_generate_taxonomy(
@@ -320,12 +518,15 @@ class ShelterappAnimals
             'Tier Allergie',
             'Tier Allergien',
             null,
+            false,
+            false,
+            false,
             false
         );
 
         $this->register_custom_fields();
 
-        $this->sync();
+        // $this->sync();
     }
 
     function activate_plugin()
@@ -339,6 +540,10 @@ class ShelterappAnimals
             }
         }
         flush_rewrite_rules();
+
+        if( !wp_next_scheduled( 'sa_cron_perform_sync' ) ){
+            wp_schedule_event( time(), 'five_minutes', 'sa_cron_perform_sync' );
+        }
     }
 
     function deactivate_plugin()
@@ -352,6 +557,10 @@ class ShelterappAnimals
             }
         }
         flush_rewrite_rules();
+
+        if( wp_next_scheduled( 'sa_cron_perform_sync' ) ){
+            wp_clear_scheduled_hook( 'sa_cron_perform_sync' );
+        }
     }
 
     function register_custom_fields()
@@ -619,86 +828,97 @@ class ShelterappAnimals
         }
     }
 
-    function getAllAnimalsFromDate(OpenAPI\Client\Api\AnimalResourceApi $client, array &$allAnimals, int $chunksize = 50, int $page = 0)
+    function cron_perform_sync()
     {
-        if ($page > 100) {
-            throw new \Exception('To many pages');
-        }
-        $options = sa_get_config();
-        if (isset($options['shelterapp_sync_from'])) {
-            // get all updates from date.
-            $date = new DateTime($options['shelterapp_sync_from'], new DateTimeZone("UTC"));
-            return $this->_getAllAnimalsFromDate($client, $date, $allAnimals, $chunksize, $page + 1);
-        } else {
-            // init with all animals
+        $this->isSyncing = true;
+        error_log('============================================');
 
-            return $this->_getAllAnimalsFromDate($client, NULL, $allAnimals, $chunksize, $page + 1);
-        }
-
-    }
-    function _getAllAnimalsFromDate(OpenAPI\Client\Api\AnimalResourceApi $client, $date, array &$allAnimals, int $chunksize = 50, int $page = 0)
-    {
-        if ($page > 100) {
-            throw new \Exception('To many pages');
-        }
-        if (isset($date) && !empty($date)) {
-            // get all updates from date.
-            $animals = $client->animalsGet(page: $page, page_size: $chunksize, updated_after: $date);
-        } else {
-            // init with all animals
-            $animals = $client->animalsGet(page: $page, page_size: $chunksize);
-        }
-        array_push($allAnimals, ...$animals);
-        if (count($animals) < $chunksize) {
-            return;
-        }
-        $this->_getAllAnimalsFromDate($client, $date, $allAnimals, $chunksize, $page + 1);
-    }
-
-    /**
-     * @return \OpenAPI\Client\Model\Animal[]
-     */
-    function initAnimalArray()
-    {
-        return array();
-    }
-
-    function sync()
-    {
-        $client = sa_get_animal_resource_client();
-        if (!$client) {
-            error_log('Could not get client, no token or token expired.');
-            return;
-        }
-        $animals = $this->initAnimalArray();
-        $this->getAllAnimalsFromDate($client, $animals);
-
-        if (isset($animals) && is_array($animals) && count($animals) > 0) {
-            outLog($animals[0]->jsonSerialize());
-        }
-
-        foreach ($animals as $animal) {
-            sa_sync_ensure_term($animal->getType());
-            sa_sync_ensure_illnesses($animal->getIllnesses());
-            sa_sync_ensure_allergies($animal->getAllergies());
-
+        if(isDebug()){
+            error_log('Delete old animals...');
+            // @REMOVE: clear animals for debug
             $args = array(
-                'meta_key' => 'shelterapp_id',
-                'meta_value' => $animal->getId(),
                 'post_type' => 'shelterapp_animals',
                 'post_status' => 'any',
-                'posts_per_page' => -1
+                'posts_per_page' => -1,
             );
             $posts = get_posts($args);
-            if (count($posts) > 0) {
-                // we already have a post with this link id!
-                sa_sync_update_animal($animal, $posts[0]);
-            } else {
-                sa_sync_insert_animal($animal);
+            foreach ($posts as $post) {
+                // delete the post
+                wp_delete_post($post->ID, true);
             }
+        }
+
+        error_log('Import animals...');
+        try{
+            sa_sync_sync_animals();
+            return true;
+        } catch(Exception $e) {
+            outLog('There was an error during sync:');
+            outLog($e->getMessage());
+            outLog(array_map(function($entry){
+                return $entry['function'];
+            }, $e->getTrace()));
+            $this->isSyncing = false;
+            return false;
         }
     }
 }
 
 global $SHELTERAPP_GLOBAL_ANIMAL;
 $SHELTERAPP_GLOBAL_ANIMAL = new ShelterappAnimals();
+
+function custom_display_post_states($states, $post)
+{
+    $id = get_option('sa_page_animal_archive', false);
+    if ($id && $post->ID == $id) {
+        $states['page_for_animals'] = 'Seite für Tiere';
+    }
+    return $states;
+}
+
+add_filter('display_post_states', 'custom_display_post_states', 10, 2);
+
+$filteredMetaFields = [
+    'internalNotes'
+];
+
+$titleMappings = array(
+    'dateOfBirth' => 'Geburtstag',
+    'sex' => 'Geschlecht',
+    'color' => 'Farbe',
+    'breedOne' => 'Hauptrasse',
+    'breedTwo' => 'Nebenrasse',
+    'chipNumber' => 'Chip Nummer',
+    'description' => 'Beschreibung',
+    'wasFound' => 'Wurde gefunden',
+    'missing' => 'Wird vermisst',
+    'weight' => 'Gewicht',
+    'heightAtWithers' => 'Widerristhöhe',
+    'circumferenceOfNeck' => 'Halsumfang',
+    'lengthOfBack' => 'Rückenlänge',
+    'circumferenceOfChest' => 'Brustumfang',
+    'dateOfAdmission' => 'Aufnahmedatum',
+    'dateOfLeave' => 'Abgabedatum',
+    'dateOfDeath' => 'Todesdatum',
+    'status' => 'Status',
+    'notes' => 'Notizen',
+    'internalNotes' => 'Interne Notizen',
+    'donationCall' => 'Spendenaufruf',
+    'successStory' => 'Erfolgsgeschichte',
+    'privateAdoption' => 'Private Adoption',
+    'castrated' => 'Kastriert',
+    'bloodType' => 'Blutgruppe',
+);
+
+
+// delte all attachments of post of type shelterapp_animals on delete
+add_action('before_delete_post', function($post_id){
+    $post = get_post($post_id);
+    if($post->post_type === 'shelterapp_animals'){
+        outLog('Deleting all attachments of post ' . $post_id);
+        $attachments = get_attached_media('image', $post_id);
+        foreach ($attachments as $attachment) {
+            wp_delete_attachment($attachment->ID, true);
+        }
+    }
+});

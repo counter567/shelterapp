@@ -4,6 +4,26 @@ function getRandomStatus() {
     return pickRandomElement(status);
 }
 
+function getRandomImage(type) {
+    const images = {
+        Dog: [
+            'https://sobotta.digital/animals/dog1.jpg',
+            'https://sobotta.digital/animals/dog2.jpg',
+            'https://sobotta.digital/animals/dog3.jpg',
+            'https://sobotta.digital/animals/dog4.jpg',
+            'https://sobotta.digital/animals/dog5.jpg',
+        ],
+        Cat: [
+            'https://sobotta.digital/animals/cat1.jpg',
+            'https://sobotta.digital/animals/cat2.jpg',
+            'https://sobotta.digital/animals/cat3.jpg',
+            'https://sobotta.digital/animals/cat4.jpg',
+            'https://sobotta.digital/animals/cat5.jpg',
+        ],
+    };
+    return pickRandomElement(images[type]);
+}
+
 function getRandomIllness() {
     const names = [
         'Feline Immunodeficiency Virus (FIV)',
@@ -69,7 +89,8 @@ function pickRandomElement(array) {
 const rows = [];
 const ill = [];
 const all = [];
-for (let i = 0; i < 50; i++) {
+const other = [];
+for (let i = 0; i < 10; i++) {
     const id = crypto.randomUUID();
     const name = getRandomAnimalName();
     const type = Math.random() > 0.5 ? 'Dog' : 'Cat';
@@ -81,10 +102,10 @@ for (let i = 0; i < 50; i++) {
     const gender = pickRandomElement(['0', '1']);
     const public = pickRandomElement(['true', 'false']);
     const donationCall = pickRandomElement(['true', 'false']);
-    const isMissing = pickRandomElement(['true', 'false']);
-    const isSuccessStory = pickRandomElement(['true', 'false']);
-    const isPrivateAdoption = pickRandomElement(['true', 'false']);
-    const isCastrated = pickRandomElement(['true', 'false']);
+    const missing = pickRandomElement(['true', 'false']);
+    const successStory = pickRandomElement(['true', 'false']);
+    const privateAdoption = pickRandomElement(['true', 'false']);
+    const castrated = pickRandomElement(['true', 'false']);
     const wasFound = pickRandomElement(['true', 'false']);
     const weight = Math.floor(Math.random() * 100);
     const heightAtWithers = Math.floor(Math.random() * 100);
@@ -95,6 +116,8 @@ for (let i = 0; i < 50; i++) {
     const chipNumber = crypto.randomUUID();
     const status = getRandomStatus();
     const notes = 'Lorem ipsum dolor sit amet.';
+    const otherPictureFileUrls = [getRandomImage(type), getRandomImage(type)];
+    const mainPictureFileUrl = getRandomImage(type);
 
     getRandomIllness().forEach(element => {
         ill.push(`( '${id}', '${element}' )`);
@@ -102,14 +125,24 @@ for (let i = 0; i < 50; i++) {
     getRandomAllergies().forEach(element => {
         all.push(`( '${id}', '${element}' )`);
     });
+    otherPictureFileUrls.forEach(element => {
+        other.push(`( '${id}', '${element}' )`);
+    });
 
-    rows.push(`( '${id}', '07f0711f-b952-4f02-9e85-f90a2a69b0e1', '${name}', '${date}', '${type}', '${breed}', '${breedtwo}', ${gender}, ${public}, ${status}, ${donationCall}, ${isMissing}, ${isSuccessStory}, ${isPrivateAdoption}, ${isCastrated}, '${dateOfBirth}', '${color}', ${weight}, ${heightAtWithers}, ${circumferenceOfNeck}, ${lengthOfBack}, ${circumferenceOfChest}, '${bloodType}', '${chipNumber}', ${wasFound}, '${notes}', '${notes}', '${notes}' )`);
+    rows.push(`( '${id}', '07f0711f-b952-4f02-9e85-f90a2a69b0e1', '${mainPictureFileUrl}', '${name}', '${date}', '${type}', '${breed}', '${breedtwo}', ${gender}, ${public}, ${status}, ${donationCall}, ${missing}, ${successStory}, ${privateAdoption}, ${castrated}, '${dateOfBirth}', '${color}', ${weight}, ${heightAtWithers}, ${circumferenceOfNeck}, ${lengthOfBack}, ${circumferenceOfChest}, '${bloodType}', '${chipNumber}', ${wasFound}, '${notes}', '${notes}', '${notes}' )`);
 }
-console.log(`INSERT INTO public."animal" (id, tenantId, name, dateOfAdmission, type, breedOne, breedTwo, sex, 
-    isPublic, status, donationCall, isMissing, isSuccessStory, isPrivateAdoption, isCastrated, dateOfBirth, color, 
+console.log(`INSERT INTO public.tenant (id, ownerid, name, baseUrl)
+VALUES ('07f0711f-b952-4f02-9e85-f90a2a69b0e1', '07f0711f-b952-4f02-9e85-f90a2a69b0e1', 'test', 'http://localhost:8080');
+INSERT INTO public."user" (role, createdat, lastlogin, id, tenantid, email, firstname, lastname, password, username)
+VALUES (2, '2024-03-21 11:28:19.000000', '2024-03-21 11:28:21.000000', '07f0711f-b952-4f02-9e85-f90a2a69b0e1',
+        '07f0711f-b952-4f02-9e85-f90a2a69b0e1', 'test@test.de', 'Felix', 'Specht',
+        '$2a$12$krc9SDoD11UDI7YHXp7kx.QaKWzd7RhAMZ5A1D6bJeE5lh8hASn.q', 'test');
+INSERT INTO public."animal" (id, tenantId, mainPictureFileUrl, name, dateOfAdmission, type, breedOne, breedTwo, sex, 
+    public, status, donationCall, missing, successStory, privateAdoption, castrated, dateOfBirth, color, 
     weight, heightAtWithers, circumferenceOfNeck, lengthOfBack, circumferenceOfChest, bloodType, chipNumber, wasFound,
     notes, description, internalNotes
 ) VALUES ${rows.join(',\n')};
 INSERT INTO public."animal_allergies" (animal_id, allergies) VALUES ${all.join(',\n')};
 INSERT INTO public."animal_illnesses" (animal_id, illnesses) VALUES ${ill.join(',\n')};
+INSERT INTO public."animal_otherpicturefileurls" (animal_id, otherpicturefileurls) VALUES ${other.join(',\n')};
 `);

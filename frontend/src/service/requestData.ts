@@ -2,7 +2,7 @@ import getNonce from "./nonce-helper";
 
 type RequestData = FormData | { [key: string]: any };
 
-interface RequestResponseWithPagination {
+export interface RequestResponseWithPagination {
   _pagination: {
     total?: number;
     totalPages?: number;
@@ -41,7 +41,7 @@ export async function requestData<T>(
       // join existing search params with data
       const params = new URLSearchParams(data as Record<string, string>);
       params.forEach(
-        (value, key) => (path as URL).searchParams?.set(key, value)
+        (value, key) => url.searchParams?.set(key, value)
       );
     } else {
       if (data instanceof FormData) {

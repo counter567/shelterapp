@@ -8,7 +8,10 @@
     "scripts": {
         "dev": "npm run copy-schema; docker compose up",
         "copy-schema": "cp ../backend/docs/openapi/openapi.json ./shelterapp/openapi.json",
-        "build": "zip -rq ./shelterapp.zip ./shelterapp",
+        "bump": "node ./bump.js",
+        "build": "npm run bump; zip -rq ./shelterapp.zip ./shelterapp; cp ./shelterapp.zip /mnt/f/Downloads/",
+        "build:major": "npm run bump -- --major; zip -rq ./shelterapp.zip ./shelterapp; cp ./shelterapp.zip /mnt/f/Downloads/",
+        "build:minor": "npm run bump -- --minor; zip -rq ./shelterapp.zip ./shelterapp; cp ./shelterapp.zip /mnt/f/Downloads/",
         "log": "docker compose logs wordpress -f -n 10 | sed -Enu 's/wp-plugin-wordpress-1  \\| \\[.*\\](.*)(, referer:.*)?/\\1/p' | awk '{ print strftime(\"%H:%M:%S\"), $0 }'"
     }
 }

@@ -4,10 +4,10 @@ export const AnimalStatus = {
   RequestStop: "REQUEST_STOP",
   Emergency: "EMERGENCY",
   Reserved: "RESERVED",
-  Adopted: "ADOPTED",
+  // Adopted: "ADOPTED",
   FinalCare: "FINAL_CARE",
   CourtOfGrace: "COURT_OF_GRACE",
-  Deceased: "DECEASED",
+  // Deceased: "DECEASED",
 } as const;
 export type AnimalStatus = (typeof AnimalStatus)[keyof typeof AnimalStatus];
 

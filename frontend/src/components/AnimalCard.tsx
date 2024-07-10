@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { formatDate } from "../helper/dateFormat";
 import {
   germanStatus,
@@ -6,8 +5,10 @@ import {
 } from "../helper/getCardColorByAnimalStatus";
 import { Animal } from "../models/animal";
 import { AnimalStatus } from "../models/animalStatus";
+import { getRouterBasePath } from "../service/url-helper";
 import BirthDate from "./Birthdate";
 import Gender from "./Gender";
+import Ribbon from "./ribbon/Ribbon";
 
 interface AnimalCardProps {
   animal: Animal;
@@ -27,6 +28,7 @@ const AnimalCard = ({
     type,
     status,
     wasFound,
+    missing,
   },
 }: AnimalCardProps) => {
   const getCardClass = (status?: AnimalStatus) => {
@@ -37,12 +39,25 @@ const AnimalCard = ({
   return (
     <li
       key={id}
-      className={`border shadow rounded hover:shadow-xl cursor-pointer ${getCardClass(
+      className={`flex flex-col border shadow rounded hover:shadow-xl cursor-pointer relative ${getCardClass(
         status
       )}`}
     >
-      <Link className="no-underline" to={`/${slug}`} key={id}>
-        <div className="flex items-center flex-col">
+      {/* Before this was a link! behold! */}
+      <a
+        className="no-underline flex-auto flex flex-col"
+        href={`${getRouterBasePath()}/${slug}`}
+        key={id}
+      >
+        {wasFound && <Ribbon text="Fundtier" color="yellow" />}
+        {missing && (
+          <Ribbon
+            cssClass={wasFound ? "top-10" : ""}
+            text="Vermisst"
+            color="red"
+          />
+        )}
+        <div className="flex items-center flex-col flex-auto overflow-hidden">
           <div className="flex items-center justify-center h-44 pt-4">
             <div className="aspect-square bg-gray-100 w-40 rounded-full flex flex-col items-center absolute"></div>
             {mainPictureFileUrl && (
@@ -53,15 +68,7 @@ const AnimalCard = ({
               />
             )}
           </div>
-          {wasFound && (
-            <span
-              style={{ backgroundColor: "#f0ad4e" }}
-              className=" text-white h-8 py-1 px-6 rounded relative bottom-8 -mb-8"
-            >
-              Fundtier
-            </span>
-          )}
-          <h1 className="text-center font-bold uppercase min-h-[22px]">
+          <h1 className="text-center font-bold uppercase min-h-[22px] grow">
             {name}
           </h1>
           {breedOne && (
@@ -90,7 +97,7 @@ const AnimalCard = ({
             )}
           </div>
         </div>
-      </Link>
+      </a>
     </li>
   );
 };

@@ -1,6 +1,7 @@
-import { Animal } from "../models/animal";
 import { AnimalSource } from "../models/animalSource";
-import { requestData } from "./requestData";
+import { AnimalStatus } from "../models/animalStatus";
+import { AnimalFilterComputed, TypeData } from "../stores/animals";
+import { RequestResponseWithPagination, requestData } from "./requestData";
 
 export interface PostFilter {
   context?: "view" | "embed" | "edit";
@@ -28,7 +29,7 @@ export interface PostFilter {
     | "title";
   slug?: string;
   status?: "publish" | "future" | "draft" | "pending" | "private";
-  shelterapp_animal_type?: number[];
+  shelterapp_animal_type?: number;
   shelterapp_animal_type_exclude?: number[];
   shelterapp_animal_allergies?: number[];
   shelterapp_animal_allergies_exclude?: number[];
@@ -43,24 +44,49 @@ export interface PostFilter {
   filter?: any;
 }
 
+const cache = new Map<string, RequestResponseWithPagination & AnimalSource[]>();
+
 // to filter use refference: https://developer.wordpress.org/rest-api/reference/posts/
 const getAnimalsPaged = async (
   page = 1,
   perPage = 10,
-  filter: PostFilter = {}
+  filter: AnimalFilterComputed = {}
 ) => {
-  return requestData<AnimalSource[]>("/wp/v2/shelterapp_animals", {
+  let CacheEntry = cache.get(JSON.stringify({ page, perPage, filter }));
+  if (CacheEntry) {
+    return CacheEntry;
+  }
+  const options = {
     page: page,
     per_page: perPage,
     ...filter,
-  });
+  } as any;
+  if (filter.meta_status) {
+    options.meta_status = JSON.stringify(filter.meta_status);
+  }
+  const response = await requestData<AnimalSource[]>(
+    "/wp/v2/shelterapp_animals",
+    options
+  );
+  cache.set(JSON.stringify({ page, perPage, filter }), response);
+  return response;
 };
 
 const getAllanimals = async (perPage = 10) => {
   let page = 1;
   const animalsSource = [] as AnimalSource[];
   while (true) {
-    const res = await getAnimalsPaged(page, perPage);
+    const res = await getAnimalsPaged(page, perPage, {
+      meta_status: [
+        AnimalStatus.New,
+        AnimalStatus.Searching,
+        AnimalStatus.RequestStop,
+        AnimalStatus.Emergency,
+        AnimalStatus.Reserved,
+        AnimalStatus.FinalCare,
+        AnimalStatus.CourtOfGrace,
+      ],
+    });
     animalsSource.push(...res);
     if (res._pagination.totalPages === page) {
       break;
@@ -79,15 +105,16 @@ export interface SelectItem {
   name: string;
 }
 
-export interface SelectItemString {
-  id: string;
-  name: string;
-}
 const getAnimalTypes = async () => {
-  const response = await requestData<SelectItem[]>(
+  const response = await requestData<TypeData[]>(
     "/wp/v2/shelterapp_animal_type"
   );
-  return response.map((item) => ({ id: item.id, name: item.name }));
+  console.log(response);
+  return response.map((item) => ({
+    id: item.id,
+    name: item.name,
+    count: item.count,
+  })) as TypeData[];
 };
 
-export { getAnimalsPaged, getAnimal, getAllanimals, getAnimalTypes };
+export { getAllanimals, getAnimal, getAnimalTypes, getAnimalsPaged };

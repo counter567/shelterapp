@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { observer } from "mobx-react-lite";
+import { useContext, useEffect } from "react";
 import ImageGallery from "react-image-gallery";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatDate } from "../helper/dateFormat";
@@ -9,32 +10,57 @@ import {
 import CakeIcon from "../icons/cake";
 import CheckIcon from "../icons/check";
 import InfoIcon from "../icons/infoCircle";
-import { Animal } from "../models/animal";
+import { getPaypalAdress } from "../service/config-helper";
+import { getRouterBasePath } from "../service/url-helper";
+import { AnimalsStore } from "../stores/animals";
 import "./AnimalDetail.css";
 import BirthDate from "./Birthdate";
 import Gender from "./Gender";
 import PayPalButton from "./PaypalButton";
 import SectionList from "./SectionList";
-import { useData } from "../stores/animalStore";
 
-const AnimalDetail = () => {
+interface AnimalDetailProps {
+  animalStoreContext: React.Context<AnimalsStore>;
+}
+
+const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
+  const animalStore = useContext(animalStoreContext);
+
   const navigate = useNavigate();
-  const [animal, setAnimals] = useState<Animal>();
-  const [idValue, setId] = useState<string>("");
   const { id } = useParams<{ id: string }>();
-  if (idValue !== id) setId(id!);
-  const { getAnimal } = useData();
+
+  function navigateBack() {
+    window.history.length > 1
+      ? window.history.back()
+      : navigate(getRouterBasePath() + "/");
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      const animal = await getAnimal(idValue);
-      if (animal) setAnimals(animal);
-      else navigate("/");
-    };
-    fetchData();
-  }, [idValue, getAnimal, navigate, setAnimals]);
+    if (id) {
+      animalStore.fetchSingleAnimal(id).finally(() => {
+        if (!animalStore.singleAnimal) {
+          navigate(getRouterBasePath() + "/");
+        }
+      });
+    }
+  }, [id, animalStore, navigate]);
 
-  if (!animal) return <></>;
+  useEffect(() => {
+    if (animalStore.singleAnimal) {
+      document.title = `${animalStore.defaultTitle} - ${
+        animalStore.singleAnimal.name
+      } - ${animalStore.singleAnimal.type} - ${
+        !breedTwo ? breedOne : `${breedOne}, ${breedTwo}`
+      }`;
+    } else {
+      document.title = animalStore.defaultTitle;
+    }
+    return () => {
+      document.title = animalStore.defaultTitle;
+    };
+  });
+
+  if (!animalStore.singleAnimal) return <></>;
 
   const {
     name,
@@ -50,12 +76,13 @@ const AnimalDetail = () => {
     description,
     otherPictureFileUrls,
     illnesses,
-  } = animal;
+  } = animalStore.singleAnimal;
+
   return (
     <div>
       <div className="my-4">
         <button
-          onClick={() => navigate("/")}
+          onClick={navigateBack}
           className="text-white bg-blue-700 text-sm px-5 py-2.5 rounded-lg"
         >
           Zurück
@@ -93,8 +120,11 @@ const AnimalDetail = () => {
               <BirthDate birthDate={dateOfBirth} />
             </span>
           )}
-          {animal.getPersonalData().length > 0 && (
-            <SectionList className="mb-4" values={animal.getPersonalData()}>
+          {animalStore.singleAnimal.getPersonalData().length > 0 && (
+            <SectionList
+              className="mb-4"
+              values={animalStore.singleAnimal.getPersonalData()}
+            >
               <InfoIcon className="mr-2" />
             </SectionList>
           )}
@@ -111,7 +141,7 @@ const AnimalDetail = () => {
           <SectionList className="mb-4" heading="Wir danken" values={donators}>
             <HeartIcon className="mr-2" stroke="red" fill="red" />{" "}
           </SectionList> */}
-          <PayPalButton name={name!} url="spenden@tierheim-neuwied.de" />
+          <PayPalButton name={name!} adress={getPaypalAdress()} />
         </div>
         <div className="p-4 w-full">
           <h1 className="font-bold mb-2 text-5xl w-full">{name}</h1>
@@ -151,6 +181,6 @@ const AnimalDetail = () => {
       </div>
     </div>
   );
-};
+});
 
 export default AnimalDetail;
