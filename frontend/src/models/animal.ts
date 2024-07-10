@@ -42,6 +42,16 @@ export class Animal implements AnimalToFilterProps {
     });
   }
 
+  async generateThumbnailsForVideos() {
+    for (const data of this.otherPictureFileUrls ?? []) {
+      if (data.url.includes(".mp4")) {
+        const thumbnail = await generateThumbnail(data.url);
+        console.log(thumbnail);
+        data.thumbnailUrl = thumbnail;
+      }
+    }
+  }
+
   id: string = "";
   slug: string = "";
   name: string = "";
@@ -100,6 +110,42 @@ export class Animal implements AnimalToFilterProps {
       result.push(`Brustumfang: ${this.circumferenceOfChest} cm`);
     return result;
   }
+}
+
+function generateThumbnail(videoUrl: string, seekTime = 2): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const video = document.createElement("video");
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d")!;
+    let loaded = false;
+
+    video.crossOrigin = "anonymous"; // This might be necessary for cross-origin videos
+    video.src = videoUrl;
+    video.load();
+
+    video.addEventListener("loadeddata", () => {
+      if (!loaded) {
+        loaded = true;
+        // Set the canvas dimensions to the video dimensions
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        // Seek to the desired time in the video
+        video.currentTime = seekTime;
+      }
+    });
+
+    video.addEventListener("seeked", () => {
+      // Draw the video frame to the canvas
+      context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+      // Get the data URL of the canvas
+      canvas.toBlob((blob) => resolve(URL.createObjectURL(blob!)));
+    });
+
+    video.addEventListener("error", (err) => {
+      reject(err);
+    });
+  });
 }
 
 function parseDate(dateString?: string) {

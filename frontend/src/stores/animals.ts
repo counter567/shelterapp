@@ -94,7 +94,9 @@ export class AnimalsStore {
   async fetchSingleAnimal(slug: string) {
     const animal = await getAnimal(slug);
     if (animal) {
-      this.setSingleAnimal(new Animal(animal));
+      const foundAnimal = new Animal(animal);
+      await foundAnimal.generateThumbnailsForVideos();
+      this.setSingleAnimal(foundAnimal);
     }
   }
 
