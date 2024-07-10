@@ -20,12 +20,17 @@ import java.time.LocalDateTime
 ])
 class Animal: TenantPanacheEntity() {
     companion object : PagedPanacheCompanion<Animal>
+    @Column(nullable = false)
     lateinit var name: String
     var dateOfBirth: LocalDate? = null
+    @Column(nullable = false)
     lateinit var dateOfAdmission: LocalDate
+    @Column(nullable = false)
     lateinit var type: String
+    @Column(nullable = false)
     lateinit var breedOne: String
     var breedTwo: String? = null
+    @Column(nullable = false)
     lateinit var sex: AnimalSex
     var color: String? = null
     @Column(columnDefinition = "TEXT")
@@ -46,6 +51,7 @@ class Animal: TenantPanacheEntity() {
     var allergies: List<String>? = null
     var chipNumber: String? = null
     var public: Boolean = false
+    @Column(nullable = false)
     lateinit var status: AnimalStatus
     var wasFound: Boolean = false
     var successStory: Boolean = false

@@ -3,6 +3,7 @@ package de.felix.shelterapp.util
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.quarkus.hibernate.reactive.panache.kotlin.PanacheEntityBase
+import jakarta.persistence.Column
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
 import jakarta.persistence.MappedSuperclass
@@ -18,5 +19,6 @@ open class TenantPanacheEntity: PanacheEntityBase {
     open lateinit var id: UUID
     @set: JsonIgnore
     @get: JsonProperty
+    @Column(nullable = false)
     open lateinit var tenantId: UUID
 }

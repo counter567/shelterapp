@@ -858,6 +858,28 @@ paths:
           description: Not Authorized
       security:
       - SecurityScheme: []
+  /users/createTenantAndSuperUser:
+    post:
+      tags:
+      - User Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTenantAndUserRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTenantAndUserResponse'
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+      - SecurityScheme: []
   /users/email/change:
     post:
       tags:
@@ -1059,6 +1081,7 @@ components:
     Animal:
       required:
       - id
+      - tenantId
       - name
       - dateOfAdmission
       - type
@@ -1072,6 +1095,11 @@ components:
       type: object
       properties:
         id:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          readOnly: true
+        tenantId:
           type: string
           allOf:
           - $ref: '#/components/schemas/UUID'
@@ -1188,11 +1216,17 @@ components:
     AnimalEvent:
       required:
       - id
+      - tenantId
       - animalId
       - title
       type: object
       properties:
         id:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          readOnly: true
+        tenantId:
           type: string
           allOf:
           - $ref: '#/components/schemas/UUID'
@@ -1222,12 +1256,18 @@ components:
     AnimalProcedure:
       required:
       - id
+      - tenantId
       - title
       - date
       - animalId
       type: object
       properties:
         id:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          readOnly: true
+        tenantId:
           type: string
           allOf:
           - $ref: '#/components/schemas/UUID'
@@ -1258,6 +1298,26 @@ components:
       - COURT_OF_GRACE
       - DECEASED
       type: string
+    CreateTenantAndUserRequest:
+      required:
+      - tenant
+      - user
+      type: object
+      properties:
+        tenant:
+          $ref: '#/components/schemas/Tenant'
+        user:
+          $ref: '#/components/schemas/User'
+    CreateTenantAndUserResponse:
+      required:
+      - tenantId
+      - userId
+      type: object
+      properties:
+        tenantId:
+          $ref: '#/components/schemas/UUID'
+        userId:
+          $ref: '#/components/schemas/UUID'
     LocalDate:
       format: date
       type: string
@@ -1323,6 +1383,7 @@ components:
     User:
       required:
       - id
+      - tenantId
       - username
       - email
       - password
@@ -1331,6 +1392,11 @@ components:
       type: object
       properties:
         id:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          readOnly: true
+        tenantId:
           type: string
           allOf:
           - $ref: '#/components/schemas/UUID'
