@@ -1,8 +1,6 @@
 package de.felix.shelterapp.user
 
 import at.favre.lib.crypto.bcrypt.BCrypt
-import de.felix.shelterapp.user.User
-import de.felix.shelterapp.user.UserRole
 import de.felix.shelterapp.auth.RefreshTokenBlacklist
 import de.felix.shelterapp.general.EmailService
 import de.felix.shelterapp.tenant.Tenant
@@ -18,7 +16,6 @@ import jakarta.validation.constraints.NotEmpty
 import jakarta.ws.rs.*
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
-import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.hibernate.exception.ConstraintViolationException
 import java.time.LocalDateTime
@@ -36,6 +33,7 @@ class UserResource {
     @Inject
     @field: Default
     lateinit var tokenBlackList: RefreshTokenBlacklist
+
     @POST
     @RolesAllowed("SUPER_DUPER_ADMIN", "SUPER_ADMIN", "ADMIN")
     fun createUser(
@@ -57,6 +55,25 @@ class UserResource {
         }
 
     }
+
+    @POST
+    @RolesAllowed("SUPER_DUPER_ADMIN")
+    @Path("/createTenantAndSuperUser")
+    fun createTenantAndSuperUser(
+        @Valid request: CreateTenantAndUserRequest
+    ) = withPanacheTransaction {
+        val tenant = request.tenant.persistAndFlush<Tenant>().awaitSuspending()
+        val user = request.user
+        user.tenantId = tenant.id
+        user.role = UserRole.SUPER_ADMIN
+        user.password = BCrypt.withDefaults().hashToString(12, user.password.toCharArray())
+        val persistedUser = user.persistAndFlush<User>().awaitSuspending()
+        tenant.ownerId = user.id
+        tenant.persistAndFlush<Tenant>().awaitSuspending()
+        return@withPanacheTransaction CreateTenantAndUserResponse(tenantId = tenant.id, userId = persistedUser.id)
+    }
+
+
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
