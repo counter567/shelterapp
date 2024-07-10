@@ -58,6 +58,7 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPITypes = [
         'id' => 'string',
+        'tenant_id' => 'string',
         'name' => 'string',
         'date_of_birth' => '\DateTime',
         'date_of_admission' => '\DateTime',
@@ -105,6 +106,7 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPIFormats = [
         'id' => 'uuid',
+        'tenant_id' => 'uuid',
         'name' => null,
         'date_of_birth' => 'date',
         'date_of_admission' => 'date',
@@ -150,6 +152,7 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static array $openAPINullables = [
         'id' => false,
+        'tenant_id' => false,
         'name' => false,
         'date_of_birth' => true,
         'date_of_admission' => false,
@@ -275,6 +278,7 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $attributeMap = [
         'id' => 'id',
+        'tenant_id' => 'tenantId',
         'name' => 'name',
         'date_of_birth' => 'dateOfBirth',
         'date_of_admission' => 'dateOfAdmission',
@@ -320,6 +324,7 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $setters = [
         'id' => 'setId',
+        'tenant_id' => 'setTenantId',
         'name' => 'setName',
         'date_of_birth' => 'setDateOfBirth',
         'date_of_admission' => 'setDateOfAdmission',
@@ -365,6 +370,7 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $getters = [
         'id' => 'getId',
+        'tenant_id' => 'getTenantId',
         'name' => 'getName',
         'date_of_birth' => 'getDateOfBirth',
         'date_of_admission' => 'getDateOfAdmission',
@@ -461,6 +467,7 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
     public function __construct(array $data = null)
     {
         $this->setIfExists('id', $data ?? [], null);
+        $this->setIfExists('tenant_id', $data ?? [], null);
         $this->setIfExists('name', $data ?? [], null);
         $this->setIfExists('date_of_birth', $data ?? [], null);
         $this->setIfExists('date_of_admission', $data ?? [], null);
@@ -531,6 +538,13 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         }
         if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $this->container['id'])) {
             $invalidProperties[] = "invalid value for 'id', must be conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.";
+        }
+
+        if ($this->container['tenant_id'] === null) {
+            $invalidProperties[] = "'tenant_id' can't be null";
+        }
+        if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $this->container['tenant_id'])) {
+            $invalidProperties[] = "invalid value for 'tenant_id', must be conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.";
         }
 
         if ($this->container['name'] === null) {
@@ -606,6 +620,38 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         }
 
         $this->container['id'] = $id;
+
+        return $this;
+    }
+
+    /**
+     * Gets tenant_id
+     *
+     * @return string
+     */
+    public function getTenantId()
+    {
+        return $this->container['tenant_id'];
+    }
+
+    /**
+     * Sets tenant_id
+     *
+     * @param string $tenant_id tenant_id
+     *
+     * @return self
+     */
+    public function setTenantId($tenant_id)
+    {
+        if (is_null($tenant_id)) {
+            throw new \InvalidArgumentException('non-nullable tenant_id cannot be null');
+        }
+
+        if ((!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", ObjectSerializer::toString($tenant_id)))) {
+            throw new \InvalidArgumentException("invalid value for \$tenant_id when calling Animal., must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
+        }
+
+        $this->container['tenant_id'] = $tenant_id;
 
         return $this;
     }

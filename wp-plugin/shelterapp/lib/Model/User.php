@@ -58,6 +58,7 @@ class User implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPITypes = [
         'id' => 'string',
+        'tenant_id' => 'string',
         'username' => 'string',
         'email' => 'string',
         'password' => 'string',
@@ -77,6 +78,7 @@ class User implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPIFormats = [
         'id' => 'uuid',
+        'tenant_id' => 'uuid',
         'username' => null,
         'email' => null,
         'password' => null,
@@ -94,6 +96,7 @@ class User implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static array $openAPINullables = [
         'id' => false,
+        'tenant_id' => false,
         'username' => false,
         'email' => false,
         'password' => false,
@@ -191,6 +194,7 @@ class User implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $attributeMap = [
         'id' => 'id',
+        'tenant_id' => 'tenantId',
         'username' => 'username',
         'email' => 'email',
         'password' => 'password',
@@ -208,6 +212,7 @@ class User implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $setters = [
         'id' => 'setId',
+        'tenant_id' => 'setTenantId',
         'username' => 'setUsername',
         'email' => 'setEmail',
         'password' => 'setPassword',
@@ -225,6 +230,7 @@ class User implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $getters = [
         'id' => 'getId',
+        'tenant_id' => 'getTenantId',
         'username' => 'getUsername',
         'email' => 'getEmail',
         'password' => 'getPassword',
@@ -293,6 +299,7 @@ class User implements ModelInterface, ArrayAccess, \JsonSerializable
     public function __construct(array $data = null)
     {
         $this->setIfExists('id', $data ?? [], null);
+        $this->setIfExists('tenant_id', $data ?? [], null);
         $this->setIfExists('username', $data ?? [], null);
         $this->setIfExists('email', $data ?? [], null);
         $this->setIfExists('password', $data ?? [], null);
@@ -335,6 +342,13 @@ class User implements ModelInterface, ArrayAccess, \JsonSerializable
         }
         if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $this->container['id'])) {
             $invalidProperties[] = "invalid value for 'id', must be conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.";
+        }
+
+        if ($this->container['tenant_id'] === null) {
+            $invalidProperties[] = "'tenant_id' can't be null";
+        }
+        if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $this->container['tenant_id'])) {
+            $invalidProperties[] = "invalid value for 'tenant_id', must be conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.";
         }
 
         if ($this->container['username'] === null) {
@@ -403,6 +417,38 @@ class User implements ModelInterface, ArrayAccess, \JsonSerializable
         }
 
         $this->container['id'] = $id;
+
+        return $this;
+    }
+
+    /**
+     * Gets tenant_id
+     *
+     * @return string
+     */
+    public function getTenantId()
+    {
+        return $this->container['tenant_id'];
+    }
+
+    /**
+     * Sets tenant_id
+     *
+     * @param string $tenant_id tenant_id
+     *
+     * @return self
+     */
+    public function setTenantId($tenant_id)
+    {
+        if (is_null($tenant_id)) {
+            throw new \InvalidArgumentException('non-nullable tenant_id cannot be null');
+        }
+
+        if ((!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", ObjectSerializer::toString($tenant_id)))) {
+            throw new \InvalidArgumentException("invalid value for \$tenant_id when calling User., must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
+        }
+
+        $this->container['tenant_id'] = $tenant_id;
 
         return $this;
     }
