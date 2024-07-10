@@ -1,0 +1,47 @@
+@import url("https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap");
+aside:before,
+aside:after {
+  height: 0;
+  width: 0;
+  content: "";
+  position: absolute;
+  border-style: solid;
+  border-width: 0;
+}
+
+aside {
+  padding-right: 10px;
+  line-height: 34px;
+  position: absolute;
+  width: 80px;
+  right: 0px;
+}
+
+aside.ribbon:before {
+  left: -20px;
+  border-width: 15px 20px 20px 0;
+}
+/* Colors */
+aside.blue.ribbon {
+  background-color: #4f86f7;
+}
+aside.blue.ribbon:after,
+aside.blue.ribbon:before {
+  border-color: transparent #4f86f7;
+}
+
+aside.red.ribbon {
+  background-color: #d9534f;
+}
+aside.red.ribbon:after,
+aside.red.ribbon:before {
+  border-color: transparent #d9534f;
+}
+
+aside.yellow.ribbon {
+  background-color: #f0ad4e;
+}
+aside.yellow.ribbon:after,
+aside.yellow.ribbon:before {
+  border-color: transparent #f0ad4e;
+}

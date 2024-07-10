@@ -1,9 +1,6 @@
 import { useState } from "react";
-import { SelectDownArrow } from "./icons/SelectDownArrow";
 
 import "./CheckBox.css";
-
-const labelClass = "sa-checkbox w-full whitespace-nowrap justify-start font-medium text-sm px-5 py-2.5 text-center inline-flex items-center";
 
 let checkbox = 0;
 
@@ -18,10 +15,24 @@ const CheckBox = ({ value, defaultValue, label, callback }: DropDownProps) => {
   const [id] = useState(checkbox++);
   return (
     <>
-      <div style={{minWidth: '20vw'}}>
-        <label className={labelClass} htmlFor={`sa-checkbox-${id}`}><input id={`sa-checkbox-${id}`} type="checkbox" defaultChecked={defaultValue} checked={value} onChange={(ev) => {
-          ev.target.checked ? callback(true) : callback(false);
-        }}/><span className="sa-checkmark"></span>{label}</label>
+      <div style={{ minWidth: "20vw" }}>
+        <div className="flex items-center">
+          <input
+            id={`sa-checkbox-${id}`}
+            checked={value ?? defaultValue}
+            type="checkbox"
+            onChange={(ev) => {
+              ev.target.checked ? callback(true) : callback(false);
+            }}
+            className="w-5 h-5 cursor-pointer text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          />
+          <label
+            htmlFor={`sa-checkbox-${id}`}
+            className="ms-2 cursor-pointer text-sm font-medium text-gray-900 dark:text-gray-300"
+          >
+            {label}
+          </label>
+        </div>
       </div>
     </>
   );

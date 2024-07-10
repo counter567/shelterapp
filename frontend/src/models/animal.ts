@@ -13,7 +13,7 @@ export interface AnimalToFilterProps {
 export class Animal implements AnimalToFilterProps {
   constructor(animalSource: AnimalSource) {
     const props = { ...animalSource.shelterapp_meta };
-    console.log(props.dateOfBirth);
+    // console.log(props.dateOfBirth);
     Object.assign(this, props, {
       name: animalSource.title.rendered,
       id: animalSource.id,
@@ -41,14 +41,6 @@ export class Animal implements AnimalToFilterProps {
       isCastrated: parseBoolean(props.isCastrated!),
     });
   }
-
-  // toJson() {
-  //   return Object.assign({}, this, {
-  //     illnesses: this.illnesses?.join(","),
-  //     allergies: this.allergies?.join(","),
-  //     otherPictureFileUrls: this.otherPictureFileUrls?.join(","),
-  //   });
-  // }
 
   id: string = "";
   slug: string = "";
@@ -116,16 +108,16 @@ function parseDate(dateString?: string) {
   }
 
   const year = parseInt(dateString.substring(0, 4), 10);
-  const month = parseInt(dateString.substring(4, 6), 10) - 1; // Monate sind von 0-11 in JavaScript
-  const day = parseInt(dateString.substring(6, 8), 10);
+  const month = parseInt(dateString.substring(5, 7), 10) - 1; // Monate sind von 0-11 in JavaScript
+  const day = parseInt(dateString.substring(8, 10), 10);
 
-  console.log(dateString, year, month, day)
+  // console.log(dateString, year, month, day);
 
   return new Date(year, month, day);
 }
 
 function parseBoolean(value: string) {
-  return value === "1" ? true : false;
+  return value === "1" || value === "true" ? true : false;
 }
 
 export interface ImageMetaData {

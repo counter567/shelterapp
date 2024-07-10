@@ -1,6 +1,5 @@
-import { Animal } from "../models/animal";
 import { AnimalSource } from "../models/animalSource";
-import { AnimalStatus, statusValues } from "../models/animalStatus";
+import { AnimalStatus } from "../models/animalStatus";
 import { AnimalFilterComputed, TypeData } from "../stores/animals";
 import { RequestResponseWithPagination, requestData } from "./requestData";
 
@@ -53,8 +52,8 @@ const getAnimalsPaged = async (
   perPage = 10,
   filter: AnimalFilterComputed = {}
 ) => {
-  let CacheEntry = cache.get(JSON.stringify({page, perPage, filter}));
-  if(CacheEntry){
+  let CacheEntry = cache.get(JSON.stringify({ page, perPage, filter }));
+  if (CacheEntry) {
     return CacheEntry;
   }
   const options = {
@@ -62,9 +61,14 @@ const getAnimalsPaged = async (
     per_page: perPage,
     ...filter,
   } as any;
-  if(filter.meta_status) { options.meta_status = JSON.stringify(filter.meta_status);}
-  const response = await requestData<AnimalSource[]>("/wp/v2/shelterapp_animals", options);
-  cache.set(JSON.stringify({page, perPage, filter}), response);
+  if (filter.meta_status) {
+    options.meta_status = JSON.stringify(filter.meta_status);
+  }
+  const response = await requestData<AnimalSource[]>(
+    "/wp/v2/shelterapp_animals",
+    options
+  );
+  cache.set(JSON.stringify({ page, perPage, filter }), response);
   return response;
 };
 
@@ -72,7 +76,17 @@ const getAllanimals = async (perPage = 10) => {
   let page = 1;
   const animalsSource = [] as AnimalSource[];
   while (true) {
-    const res = await getAnimalsPaged(page, perPage, {meta_status: [AnimalStatus.New, AnimalStatus.Searching, AnimalStatus.RequestStop, AnimalStatus.Emergency, AnimalStatus.Reserved, AnimalStatus.FinalCare, AnimalStatus.CourtOfGrace]});
+    const res = await getAnimalsPaged(page, perPage, {
+      meta_status: [
+        AnimalStatus.New,
+        AnimalStatus.Searching,
+        AnimalStatus.RequestStop,
+        AnimalStatus.Emergency,
+        AnimalStatus.Reserved,
+        AnimalStatus.FinalCare,
+        AnimalStatus.CourtOfGrace,
+      ],
+    });
     animalsSource.push(...res);
     if (res._pagination.totalPages === page) {
       break;
@@ -96,7 +110,11 @@ const getAnimalTypes = async () => {
     "/wp/v2/shelterapp_animal_type"
   );
   console.log(response);
-  return response.map((item) => ({ id: item.id, name: item.name, count: item.count })) as TypeData[];
+  return response.map((item) => ({
+    id: item.id,
+    name: item.name,
+    count: item.count,
+  })) as TypeData[];
 };
 
-export { getAnimalsPaged, getAnimal, getAllanimals, getAnimalTypes };
+export { getAllanimals, getAnimal, getAnimalTypes, getAnimalsPaged };

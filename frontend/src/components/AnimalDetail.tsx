@@ -1,4 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+import { observer } from "mobx-react-lite";
+import { useContext, useEffect } from "react";
 import ImageGallery from "react-image-gallery";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatDate } from "../helper/dateFormat";
@@ -9,51 +10,54 @@ import {
 import CakeIcon from "../icons/cake";
 import CheckIcon from "../icons/check";
 import InfoIcon from "../icons/infoCircle";
-import { Animal } from "../models/animal";
+import { getPaypalAdress } from "../service/config-helper";
+import { getRouterBasePath } from "../service/url-helper";
+import { AnimalsStore } from "../stores/animals";
 import "./AnimalDetail.css";
 import BirthDate from "./Birthdate";
 import Gender from "./Gender";
 import PayPalButton from "./PaypalButton";
 import SectionList from "./SectionList";
-import { useData } from "../stores/animalStore";
-import { getPaypalAdress } from "../service/config-helper";
-import { observer } from "mobx-react-lite";
-import AnimalsStoreContext, { AnimalsStore } from "../stores/animals";
-import { getRouterBasePath } from "../service/url-helper";
 
 interface AnimalDetailProps {
   animalStoreContext: React.Context<AnimalsStore>;
 }
 
-const AnimalDetail = observer(({ animalStoreContext}: AnimalDetailProps) => {
+const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
   const animalStore = useContext(animalStoreContext);
-  
+
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  
-  function navigateBack(){
-    window.history.length > 1 ? window.history.back() : navigate(getRouterBasePath()+"/");
+
+  function navigateBack() {
+    window.history.length > 1
+      ? window.history.back()
+      : navigate(getRouterBasePath() + "/");
   }
 
   useEffect(() => {
-    if(id) {
+    if (id) {
       animalStore.fetchSingleAnimal(id).finally(() => {
-        if(!animalStore.singleAnimal) {
-          navigate(getRouterBasePath()+"/");
+        if (!animalStore.singleAnimal) {
+          navigate(getRouterBasePath() + "/");
         }
       });
     }
-  }, [id]);
+  }, [id, animalStore, navigate]);
 
   useEffect(() => {
-    if(animalStore.singleAnimal) {
-      document.title = `${animalStore.defaultTitle} - ${animalStore.singleAnimal.name} - ${animalStore.singleAnimal.type} - ${!breedTwo ? breedOne : `${breedOne}, ${breedTwo}`}`;
+    if (animalStore.singleAnimal) {
+      document.title = `${animalStore.defaultTitle} - ${
+        animalStore.singleAnimal.name
+      } - ${animalStore.singleAnimal.type} - ${
+        !breedTwo ? breedOne : `${breedOne}, ${breedTwo}`
+      }`;
     } else {
       document.title = animalStore.defaultTitle;
     }
     return () => {
       document.title = animalStore.defaultTitle;
-    }
+    };
   });
 
   if (!animalStore.singleAnimal) return <></>;
@@ -117,7 +121,10 @@ const AnimalDetail = observer(({ animalStoreContext}: AnimalDetailProps) => {
             </span>
           )}
           {animalStore.singleAnimal.getPersonalData().length > 0 && (
-            <SectionList className="mb-4" values={animalStore.singleAnimal.getPersonalData()}>
+            <SectionList
+              className="mb-4"
+              values={animalStore.singleAnimal.getPersonalData()}
+            >
               <InfoIcon className="mr-2" />
             </SectionList>
           )}
