@@ -20,6 +20,7 @@ export interface AnimalFilter extends PostFilter {
   meta_age_max?: number;
   meta_age_min?: number;
 
+  meta_private_adoption?: boolean;
   meta_was_found?: boolean;
   meta_missing?: boolean;
 }
