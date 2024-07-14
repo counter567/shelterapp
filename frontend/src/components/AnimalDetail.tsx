@@ -170,9 +170,7 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
                   otherPictureFileUrls?.map((data) => ({
                     original: data.url,
                     thumbnail: data.thumbnailUrl,
-                    renderItem: (item) => {
-                      if (!data.url.includes(".mp4")) return undefined;
-                      else
+                    renderItem: data.isVideo ? (item) => {
                         return (
                           <video
                             className="px-[56px] w-full"
@@ -183,10 +181,10 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
                             <source src={data.url} type="video/mp4" />
                           </video>
                         );
-                    },
-                    renderThumbInner: () => {
+                    } : undefined,
+                    renderThumbInner: data.isVideo ? () => {
                       return <img alt="" src={data.thumbnailUrl} />;
-                    },
+                    } : undefined,
                   })) ?? []
                 }
                 showThumbnails={true}

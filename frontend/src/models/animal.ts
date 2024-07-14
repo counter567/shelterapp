@@ -46,8 +46,10 @@ export class Animal implements AnimalToFilterProps {
     for (const data of this.otherPictureFileUrls ?? []) {
       if (data.url.includes(".mp4")) {
         const thumbnail = await generateThumbnail(data.url);
-        console.log(thumbnail);
         data.thumbnailUrl = thumbnail;
+        data.isVideo = true;
+      } else {
+        data.isVideo = false;
       }
     }
   }
@@ -96,6 +98,7 @@ export class Animal implements AnimalToFilterProps {
     meta: ImageMetaData;
     url: string;
     thumbnailUrl: string;
+    isVideo: boolean;
   }[];
 
   getPersonalData() {
