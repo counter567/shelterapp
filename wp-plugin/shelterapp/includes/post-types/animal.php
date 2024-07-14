@@ -881,9 +881,6 @@ class ShelterappAnimals
     }
 }
 
-global $SHELTERAPP_GLOBAL_ANIMAL;
-$SHELTERAPP_GLOBAL_ANIMAL = new ShelterappAnimals();
-
 function custom_display_post_states($states, $post)
 {
     $id = get_option('sa_page_animal_archive', false);
@@ -899,6 +896,7 @@ $filteredMetaFields = [
     'internalNotes'
 ];
 
+global $titleMappings;
 $titleMappings = array(
     'dateOfBirth' => 'Geburtstag',
     'sex' => 'Geschlecht',
@@ -952,3 +950,7 @@ add_action('before_delete_post', function($post_id){
         }
     }
 });
+
+
+global $SHELTERAPP_GLOBAL_ANIMAL;
+$SHELTERAPP_GLOBAL_ANIMAL = new ShelterappAnimals();
