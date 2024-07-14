@@ -43,7 +43,13 @@ if (defined('WP_DEBUG') && true == WP_DEBUG) {
 		class="shelterblock-root"
 		data-type="<?php echo isset($attributes['type']) ? $attributes['type'] : '' ?>"
 		data-status="<?php echo isset($attributes['status']) ? $attributes['status'] : '' ?>"
-		data-hideFilters="<?php echo is_post_type_archive('shelterapp_animals') || is_singular('shelterapp_animals') ? 'false' : 'true' ?>"
+		data-sex="<?php echo isset($attributes['sex']) ? $attributes['sex'] : '' ?>"
+		data-maxAge="<?php echo isset($attributes['maxAge']) ? $attributes['maxAge'] : '' ?>"
+		data-minAge="<?php echo isset($attributes['minAge']) ? $attributes['minAge'] : '' ?>"
+		data-wasFound="<?php echo isset($attributes['wasFound']) ? $attributes['wasFound'] : '' ?>"
+		data-missing="<?php echo isset($attributes['missing']) ? $attributes['missing'] : '' ?>"
+		data-privateAdoption="<?php echo isset($attributes['privateAdoption']) ? $attributes['privateAdoption'] : '' ?>"
+		data-hideFilters="<?php echo is_post_type_archive('shelterapp_animals') || is_singular('shelterapp_animals') ? 'false' : (isset($attributes['hideFilters']) ? $attributes['hideFilters'] : 'false') ?>"
 		<?php echo get_block_wrapper_attributes(); ?>
 	>
 	</div>

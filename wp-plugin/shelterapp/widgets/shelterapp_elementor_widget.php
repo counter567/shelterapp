@@ -48,6 +48,17 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
+        $this->add_control(
+            'hideFilters',
+            [
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label' => esc_html__( 'Verstecke Filter', 'wordpress' ),
+                'label_on' => esc_html__( 'Ja', 'wordpress' ),
+                'label_off' => esc_html__( 'Nein', 'wordpress' ),
+                'default' => 'no',
+            ]
+        );
+
 		$this->add_control(
 			'type',
 			[
@@ -96,7 +107,7 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
-			'min_age',
+			'minAge',
 			[
 				'type' => \Elementor\Controls_Manager::NUMBER,
 				'label' => esc_html__( 'Mindestalter in Jahren', 'wordpress' ),
@@ -108,7 +119,7 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
 			]
 		);
 		$this->add_control(
-			'max_age',
+			'maxAge',
 			[
 				'type' => \Elementor\Controls_Manager::NUMBER,
 				'label' => esc_html__( 'Höchstalter in Jahren', 'wordpress' ),
@@ -123,9 +134,9 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
             'wasFound',
             [
                 'type' => \Elementor\Controls_Manager::SWITCHER,
-                'label' => esc_html__( 'Fundtier', 'wordpress' ),
-                'label_on' => esc_html__( 'Ist Fundtier', 'textdomain' ),
-                'label_off' => esc_html__( 'Ist kein Fundtier', 'textdomain' ),
+                'label' => esc_html__( 'Ist Fundtier', 'wordpress' ),
+                'label_on' => esc_html__( 'Ja', 'wordpress' ),
+                'label_off' => esc_html__( 'Nein', 'wordpress' ),
                 'default' => 'no',
             ]
         );
@@ -133,9 +144,9 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
             'missing',
             [
                 'type' => \Elementor\Controls_Manager::SWITCHER,
-                'label' => esc_html__( 'Vermisst', 'wordpress' ),
-                'label_on' => esc_html__( 'Wird vermisst', 'textdomain' ),
-                'label_off' => esc_html__( 'Wird nicht vermisst', 'textdomain' ),
+                'label' => esc_html__( 'Wird vermisst', 'wordpress' ),
+                'label_on' => esc_html__( 'Ja', 'wordpress' ),
+                'label_off' => esc_html__( 'Nein', 'wordpress' ),
                 'default' => 'no',
             ]
         );
@@ -143,9 +154,9 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
             'privateAdoption',
             [
                 'type' => \Elementor\Controls_Manager::SWITCHER,
-                'label' => esc_html__( 'Fremdvermittlung', 'wordpress' ),
-                'label_on' => esc_html__( 'Ist Fremdvermittlung', 'textdomain' ),
-                'label_off' => esc_html__( 'Ist nicht Fremdvermittlung', 'textdomain' ),
+                'label' => esc_html__( 'Ist Fremdvermittlung', 'wordpress' ),
+                'label_on' => esc_html__( 'Ja', 'wordpress' ),
+                'label_off' => esc_html__( 'Nein', 'wordpress' ),
                 'default' => 'no',
             ]
         );
@@ -162,9 +173,12 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
 		if(isset($settings['type']) && !empty($settings['type'])) $attributes['type'] = $settings['type'];
         if(isset($settings['status']) && !empty($settings['status'])) $attributes['status'] = $settings['status'];
         if(isset($settings['sex']) && !empty($settings['sex'])) $attributes['sex'] = $settings['sex'];
+        if(isset($settings['minAge']) && !empty($settings['minAge'])) $attributes['minAge'] = $settings['minAge'];
+        if(isset($settings['maxAge']) && !empty($settings['maxAge'])) $attributes['maxAge'] = $settings['maxAge'];
         if(isset($settings['wasFound']) && !empty($settings['wasFound'])) $attributes['wasFound'] = $settings['wasFound'];
         if(isset($settings['missing']) && !empty($settings['missing'])) $attributes['missing'] = $settings['missing'];
         if(isset($settings['privateAdoption']) && !empty($settings['privateAdoption'])) $attributes['privateAdoption'] = $settings['privateAdoption'];
+        if(isset($settings['hideFilters']) && !empty($settings['hideFilters'])) $attributes['hideFilters'] = $settings['hideFilters'];
         include (plugin_dir_path(SHELTERAPP_PATH) . 'blocks/shelter-block-view/render.php');
 	}
 
