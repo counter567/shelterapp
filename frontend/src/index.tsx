@@ -18,19 +18,19 @@ roots.forEach((rootElement) => {
         type={rootElement.getAttribute('data-type') ? parseInt(rootElement.getAttribute('data-type')!) :  undefined}
         status={rootElement.getAttribute('data-status') as AnimalStatus || undefined}
         sex={rootElement.getAttribute('data-sex') as AnimalSex || undefined}
-        maxAge={getNumber(rootElement, 'data-max_age')}
-        minAge={getNumber(rootElement, 'data-min_age')}
-        hideFilters={rootElement.getAttribute('data-hideFilters') === 'false'}
-        wasFound={rootElement.getAttribute('data-wasFound') === 'false'}
-        missing={rootElement.getAttribute('data-missing') === 'false'}
-        privateAdoption={rootElement.getAttribute('data-privateAdoption') === 'false'}
+        maxAge={getNumber(rootElement, 'data-maxAge') || undefined}
+        minAge={getNumber(rootElement, 'data-minAge', 1) || undefined}
+        hideFilters={rootElement.getAttribute('data-hideFilters') === 'yes' || undefined}
+        wasFound={rootElement.getAttribute('data-wasFound') === 'yes' || undefined}
+        missing={rootElement.getAttribute('data-missing') === 'yes' || undefined}
+        privateAdoption={rootElement.getAttribute('data-privateAdoption') === 'yes' || undefined}
       />
     </React.StrictMode>
   );
 });
 
-function getNumber(element: Element, attribute: string): number | undefined {
-  return element.getAttribute(attribute) ? parseInt(element.getAttribute(attribute)!) : undefined;
+function getNumber(element: Element, attribute: string, bias: number = 0): number | undefined {
+  return element.getAttribute(attribute) ? parseInt(element.getAttribute(attribute)!) + bias : undefined;
 }
 
 // If you want to start measuring performance in your app, pass a function

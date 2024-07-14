@@ -93,7 +93,7 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
       <div className="ml:flex">
         <div className="p-4 mr-4 flex flex-col size-max:sm:min-w-full sm:min-w-[320px]">
           <div className="flex items-center flex-col mb-8">
-            <div className="flex items-center relative w-full justify-center sm:my-[46%] py-4 my-[40%]">
+            <div className="flex items-center relative w-full justify-center py-[50%]">
               <div className="aspect-square bg-gray-100 w-full rounded-full flex flex-col items-center absolute"></div>
               {mainPictureFileUrl && (
                 <img
