@@ -191,6 +191,7 @@ export class AnimalsStore {
     value: AnimalFilter[T],
     store = true
   ) {
+    this.setCurrentPage(1);
     // console.log('setFilter', filter, value);
     if (value === undefined) {
       const currentFilter = JSON.parse(JSON.stringify(this.filters));

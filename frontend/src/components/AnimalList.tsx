@@ -126,8 +126,7 @@ export default observer(function AnimalList({
           </div>
           <div className="mb-4 dropdown-buttons gap-y-4 gap-x-4 items-center justify-center">
             <CheckBox
-              value={animalStore.filters.meta_missing || false}
-              defaultValue={false}
+              value={animalStore.filters.meta_missing}
               label="Wird Vermisst"
               callback={(value) =>
                 animalStore.setFilter("meta_missing", value || undefined)
@@ -135,8 +134,7 @@ export default observer(function AnimalList({
             />
 
             <CheckBox
-              value={animalStore.filters.meta_was_found || false}
-              defaultValue={false}
+              value={animalStore.filters.meta_was_found}
               label="Wurde Gefunden"
               callback={(value) =>
                 animalStore.setFilter("meta_was_found", value || undefined)
@@ -144,11 +142,13 @@ export default observer(function AnimalList({
             />
 
             <CheckBox
-              value={animalStore.filters.meta_private_adoption || false}
-              defaultValue={false}
+              value={animalStore.filters.meta_private_adoption}
               label="Fremdvermittlung"
               callback={(value) =>
-                animalStore.setFilter("meta_private_adoption", value || undefined)
+                animalStore.setFilter(
+                  "meta_private_adoption",
+                  value || undefined
+                )
               }
             />
           </div>

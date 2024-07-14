@@ -43,15 +43,24 @@ export class Animal implements AnimalToFilterProps {
   }
 
   async generateThumbnailsForVideos() {
+    const itemsToRemove: any[] = [];
     for (const data of this.otherPictureFileUrls ?? []) {
-      if (data.url.includes(".mp4")) {
-        const thumbnail = await generateThumbnail(data.url);
-        data.thumbnailUrl = thumbnail;
-        data.isVideo = true;
-      } else {
-        data.isVideo = false;
+      try {
+        if (data.url.includes(".mp4")) {
+          const thumbnail = await generateThumbnail(data.url);
+          data.thumbnailUrl = thumbnail;
+          data.isVideo = true;
+        } else {
+          data.isVideo = false;
+        }
+      } catch (e) {
+        itemsToRemove.push(data);
+        console.warn(e);
       }
     }
+    this.otherPictureFileUrls = this.otherPictureFileUrls?.filter(
+      (item) => !itemsToRemove.includes(item)
+    );
   }
 
   id: string = "";
@@ -165,8 +174,10 @@ function parseDate(dateString?: string) {
   return new Date(year, month, day);
 }
 
-function parseBoolean(value: string) {
-  return value === "1" || value === "true" ? true : false;
+function parseBoolean(value: string | boolean | number) {
+  return value === "1" || value === "true" || value === 1 || value === true
+    ? true
+    : false;
 }
 
 export interface ImageMetaData {
