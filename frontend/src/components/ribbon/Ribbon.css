@@ -45,3 +45,11 @@ aside.yellow.ribbon:after,
 aside.yellow.ribbon:before {
   border-color: transparent #f0ad4e;
 }
+
+aside.green.ribbon {
+  background-color: #26a826;
+}
+aside.green.ribbon:after,
+aside.green.ribbon:before {
+  border-color: transparent #5cb85c;
+}

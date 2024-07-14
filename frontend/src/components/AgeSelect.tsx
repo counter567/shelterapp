@@ -2,14 +2,15 @@ import { useState } from "react";
 import { SelectDownArrow } from "./icons/SelectDownArrow";
 
 interface AgeSelectProps {
-  value: [number,number];
+  value: [number, number];
   defaultValue: [number, number];
   callback: (value: any) => void;
 }
 
-const defaultStyle = 'text-white whitespace-nowrap justify-between bg-blue-700 font-medium text-sm py-2.5 text-center inline-flex items-center dark:bg-blue-600';
+const defaultStyle =
+  "text-white whitespace-nowrap justify-between bg-blue-700 font-medium text-sm py-2.5 text-center inline-flex items-center dark:bg-blue-600";
 const buttonStyle = `${defaultStyle} w-full hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:hover:bg-blue-700 dark:focus:ring-blue-800`;
-const minWidth = '10px';
+const minWidth = "10px";
 const items_max = new Array(20).fill(0).map((_, i) => {
   return {
     name: i === 0 ? "Alle" : `${i}`,
@@ -18,7 +19,7 @@ const items_max = new Array(20).fill(0).map((_, i) => {
 });
 const items_min = new Array(20).fill(0).map((_, i) => {
   return {
-    name: i === 0 ? "Alle" : `${i-1}`,
+    name: i === 0 ? "Alle" : `${i - 1}`,
     id: i,
   };
 });
@@ -37,10 +38,14 @@ const AgeSelect = ({ value, defaultValue, callback }: AgeSelectProps) => {
     );
   };
   return (
-    <div className="flex text-right" style={{minWidth: '20vw'}}>
-      <div className={`rounded-l-lg grow-0 pl-5 pr-1 opacity-80  ${defaultStyle}`}>Alter:</div>
+    <div className="flex text-right" style={{ minWidth: "20vw" }}>
+      <div
+        className={`rounded-l-lg grow-0 pl-5 pr-1 opacity-80  ${defaultStyle}`}
+      >
+        Alter:
+      </div>
 
-      <div className="grow" style={{minWidth}}>
+      <div className="grow" style={{ minWidth }}>
         <button
           data-dropdown-toggle="dropdown"
           className={`${buttonStyle} px-1`}
@@ -53,7 +58,7 @@ const AgeSelect = ({ value, defaultValue, callback }: AgeSelectProps) => {
         <div
           id="dropdown"
           className={
-            "z-10 bg-white divide-y divide-gray-100 shadow w-44 dark:bg-gray-700 absolute" +
+            "z-20 bg-white divide-y divide-gray-100 shadow w-44 dark:bg-gray-700 absolute" +
             (isOpenMin ? " block" : " hidden")
           }
         >
@@ -63,7 +68,12 @@ const AgeSelect = ({ value, defaultValue, callback }: AgeSelectProps) => {
                 key={index}
                 onClick={() => {
                   setIsOpenMin(false);
-                  callback([id === 0 || value[0] === 0 ? value[0] : Math.max(id, value[0]), id]);
+                  callback([
+                    id === 0 || value[0] === 0
+                      ? value[0]
+                      : Math.max(id, value[0]),
+                    id,
+                  ]);
                 }}
               >
                 <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer">
@@ -85,7 +95,7 @@ const AgeSelect = ({ value, defaultValue, callback }: AgeSelectProps) => {
 
       <div className={`px-1 opacity-80  ${defaultStyle}`}>-</div>
 
-      <div className="grow" style={{minWidth}}>
+      <div className="grow" style={{ minWidth }}>
         <button
           data-dropdown-toggle="dropdown"
           className={`${buttonStyle} pl-1 pr-5 rounded-r-lg`}
@@ -98,7 +108,7 @@ const AgeSelect = ({ value, defaultValue, callback }: AgeSelectProps) => {
         <div
           id="dropdown"
           className={
-            "z-10 bg-white divide-y divide-gray-100 shadow w-44 dark:bg-gray-700 absolute" +
+            "z-20 bg-white divide-y divide-gray-100 shadow w-44 dark:bg-gray-700 absolute" +
             (isOpenMax ? " block" : " hidden")
           }
         >
@@ -108,7 +118,12 @@ const AgeSelect = ({ value, defaultValue, callback }: AgeSelectProps) => {
                 key={index}
                 onClick={() => {
                   setIsOpenMax(false);
-                  callback([id, id === 0 || value[1] === 0 ? value[1] : Math.min(id, value[1])]);
+                  callback([
+                    id,
+                    id === 0 || value[1] === 0
+                      ? value[1]
+                      : Math.min(id, value[1]),
+                  ]);
                 }}
               >
                 <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer">

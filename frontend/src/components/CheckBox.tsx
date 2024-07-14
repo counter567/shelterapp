@@ -4,14 +4,13 @@ import "./CheckBox.css";
 
 let checkbox = 0;
 
-interface DropDownProps {
+interface CheckBoxProps {
   value?: boolean;
-  defaultValue?: boolean;
   label?: string | JSX.Element;
   callback: (value: boolean) => void;
 }
 
-const CheckBox = ({ value, defaultValue, label, callback }: DropDownProps) => {
+const CheckBox = ({ value = false, label, callback }: CheckBoxProps) => {
   const [id] = useState(checkbox++);
   return (
     <>
@@ -19,7 +18,7 @@ const CheckBox = ({ value, defaultValue, label, callback }: DropDownProps) => {
         <div className="flex items-center">
           <input
             id={`sa-checkbox-${id}`}
-            checked={value ?? defaultValue}
+            checked={value}
             type="checkbox"
             onChange={(ev) => {
               ev.target.checked ? callback(true) : callback(false);
