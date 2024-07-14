@@ -20,7 +20,10 @@ roots.forEach((rootElement) => {
         sex={rootElement.getAttribute('data-sex') as AnimalSex || undefined}
         maxAge={getNumber(rootElement, 'data-max_age')}
         minAge={getNumber(rootElement, 'data-min_age')}
-        hideFilters={rootElement.getAttribute('data-hideFilters') === 'true'}
+        hideFilters={rootElement.getAttribute('data-hideFilters') === 'false'}
+        wasFound={rootElement.getAttribute('data-wasFound') === 'false'}
+        missing={rootElement.getAttribute('data-missing') === 'false'}
+        privateAdoption={rootElement.getAttribute('data-privateAdoption') === 'false'}
       />
     </React.StrictMode>
   );
