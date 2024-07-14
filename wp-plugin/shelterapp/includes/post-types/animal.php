@@ -439,7 +439,9 @@ class ShelterappAnimals
             unset($meta[$filed]);
         }
 
-        // @todo: Filter out private fields
+        unset($meta['chipNumber']);
+        unset($meta['internalNotes']);
+        unset($meta['public']);
 
         return $meta;
     }
