@@ -114,6 +114,15 @@ class ShelterappAnimals
             );
             $args['meta_query'][] = $meta_query;
         }
+        if(isset( $request['meta_private_adoption'] )) {
+            $wasFound = ((boolean)sanitize_text_field( $request['meta_private_adoption'] ));
+            $meta_query = array(
+                'key' => 'privateAdoption',
+                'value' => $wasFound ? '1' : '0',
+                'compare' => '=',
+            );
+            $args['meta_query'][] = $meta_query;
+        }
         if(isset( $request['meta_was_found'] )) {
             $wasFound = ((boolean)sanitize_text_field( $request['meta_was_found'] ));
             $meta_query = array(
@@ -128,6 +137,15 @@ class ShelterappAnimals
             $meta_query = array(
                 'key' => 'missing',
                 'value' => $wasFound ? '1' : '0',
+                'compare' => '=',
+            );
+            $args['meta_query'][] = $meta_query;
+        }
+        if(isset( $request['meta_private_adoption'] )) {
+            $privateAdoption = ((boolean)sanitize_text_field( $request['meta_private_adoption'] ));
+            $meta_query = array(
+                'key' => 'privateAdoption',
+                'value' => $privateAdoption ? '1' : '0',
                 'compare' => '=',
             );
             $args['meta_query'][] = $meta_query;
@@ -279,9 +297,6 @@ class ShelterappAnimals
 
         outLog('***********************************************');
         outLog('saving a post! Update to backend!');
-        outLog($post_id);
-        outLog($post);
-        outLog($update);
     }
 
     function init_rest()
@@ -439,7 +454,9 @@ class ShelterappAnimals
             unset($meta[$filed]);
         }
 
-        // @todo: Filter out private fields
+        unset($meta['chipNumber']);
+        unset($meta['internalNotes']);
+        unset($meta['public']);
 
         return $meta;
     }
@@ -864,9 +881,6 @@ class ShelterappAnimals
     }
 }
 
-global $SHELTERAPP_GLOBAL_ANIMAL;
-$SHELTERAPP_GLOBAL_ANIMAL = new ShelterappAnimals();
-
 function custom_display_post_states($states, $post)
 {
     $id = get_option('sa_page_animal_archive', false);
@@ -882,6 +896,7 @@ $filteredMetaFields = [
     'internalNotes'
 ];
 
+global $titleMappings;
 $titleMappings = array(
     'dateOfBirth' => 'Geburtstag',
     'sex' => 'Geschlecht',
@@ -921,4 +936,21 @@ add_action('before_delete_post', function($post_id){
             wp_delete_attachment($attachment->ID, true);
         }
     }
+    $shelterapp_id = get_post_meta($post_id, 'shelterapp_id', true);
+    if(isset($shelterapp_id) && !empty($shelterapp_id)) {
+        outLog('Delete animal with id ' . $shelterapp_id);
+        try{
+            sa_sync_delete_animal($shelterapp_id);
+        } catch(Exception $e) {
+            outLog('There was an error during delete:');
+            outLog($e->getMessage());
+            outLog(array_map(function($entry){
+                return $entry['function'];
+            }, $e->getTrace()));
+        }
+    }
 });
+
+
+global $SHELTERAPP_GLOBAL_ANIMAL;
+$SHELTERAPP_GLOBAL_ANIMAL = new ShelterappAnimals();

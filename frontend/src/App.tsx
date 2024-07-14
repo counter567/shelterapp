@@ -15,6 +15,9 @@ export interface AppProps {
   sex?: AnimalSex;
   minAge?: number;
   maxAge?: number;
+  wasFound?: boolean;
+  missing?: boolean;
+  privateAdoption?: boolean;
 }
 
 function App(props: AppProps) {
@@ -32,6 +35,9 @@ function App(props: AppProps) {
     animalStore.setFilter("meta_sex", props.sex, false);
     animalStore.setFilter("meta_age_max", props.maxAge, false);
     animalStore.setFilter("meta_age_min", props.minAge, false);
+    animalStore.setFilter("meta_was_found", props.wasFound, false)
+    animalStore.setFilter("meta_missing", props.missing, false)
+    animalStore.setFilter("meta_private_adoption", props.privateAdoption, false)
   }, []);
 
   if (!animalStoreContext) {

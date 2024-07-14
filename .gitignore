@@ -51,3 +51,7 @@ node_modules
 /backend/src/main/helm/charts/*
 /backend/src/main/helm/Chart.lock
 /backend/src/main/helm/*.tgz
+/vendor/
+/composer.phar
+/frontend/frontend.iml
+/wp-plugin/wp-plugin.iml

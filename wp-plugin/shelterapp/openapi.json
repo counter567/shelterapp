@@ -1282,6 +1282,41 @@
         } ]
       }
     },
+    "/users/createTenantAndSuperUser" : {
+      "post" : {
+        "tags" : [ "User Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateTenantAndUserRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CreateTenantAndUserResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
     "/users/email/change" : {
       "post" : {
         "tags" : [ "User Resource" ],
@@ -1583,10 +1618,17 @@
   "components" : {
     "schemas" : {
       "Animal" : {
-        "required" : [ "id", "name", "dateOfAdmission", "type", "breedOne", "sex", "status", "createdAt", "updatedAt", "notices", "supporters" ],
+        "required" : [ "id", "tenantId", "name", "dateOfAdmission", "type", "breedOne", "sex", "status", "createdAt", "updatedAt", "notices", "supporters" ],
         "type" : "object",
         "properties" : {
           "id" : {
+            "type" : "string",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/UUID"
+            } ],
+            "readOnly" : true
+          },
+          "tenantId" : {
             "type" : "string",
             "allOf" : [ {
               "$ref" : "#/components/schemas/UUID"
@@ -1747,10 +1789,17 @@
         }
       },
       "AnimalEvent" : {
-        "required" : [ "id", "animalId", "title" ],
+        "required" : [ "id", "tenantId", "animalId", "title" ],
         "type" : "object",
         "properties" : {
           "id" : {
+            "type" : "string",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/UUID"
+            } ],
+            "readOnly" : true
+          },
+          "tenantId" : {
             "type" : "string",
             "allOf" : [ {
               "$ref" : "#/components/schemas/UUID"
@@ -1791,10 +1840,17 @@
         }
       },
       "AnimalProcedure" : {
-        "required" : [ "id", "title", "date", "animalId" ],
+        "required" : [ "id", "tenantId", "title", "date", "animalId" ],
         "type" : "object",
         "properties" : {
           "id" : {
+            "type" : "string",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/UUID"
+            } ],
+            "readOnly" : true
+          },
+          "tenantId" : {
             "type" : "string",
             "allOf" : [ {
               "$ref" : "#/components/schemas/UUID"
@@ -1820,6 +1876,30 @@
       "AnimalStatus" : {
         "enum" : [ "NEW", "SEARCHING", "REQUEST_STOP", "EMERGENCY", "RESERVED", "ADOPTED", "FINAL_CARE", "COURT_OF_GRACE", "DECEASED" ],
         "type" : "string"
+      },
+      "CreateTenantAndUserRequest" : {
+        "required" : [ "tenant", "user" ],
+        "type" : "object",
+        "properties" : {
+          "tenant" : {
+            "$ref" : "#/components/schemas/Tenant"
+          },
+          "user" : {
+            "$ref" : "#/components/schemas/User"
+          }
+        }
+      },
+      "CreateTenantAndUserResponse" : {
+        "required" : [ "tenantId", "userId" ],
+        "type" : "object",
+        "properties" : {
+          "tenantId" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "userId" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        }
       },
       "LocalDate" : {
         "format" : "date",
@@ -1899,10 +1979,17 @@
         "type" : "object"
       },
       "User" : {
-        "required" : [ "id", "username", "email", "password", "createdAt", "role" ],
+        "required" : [ "id", "tenantId", "username", "email", "password", "createdAt", "role" ],
         "type" : "object",
         "properties" : {
           "id" : {
+            "type" : "string",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/UUID"
+            } ],
+            "readOnly" : true
+          },
+          "tenantId" : {
             "type" : "string",
             "allOf" : [ {
               "$ref" : "#/components/schemas/UUID"

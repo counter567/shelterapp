@@ -68,6 +68,8 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
     breedTwo,
     mainPictureFileUrl,
     dateOfAdmission,
+    dateOfDeath,
+    dateOfLeave,
     dateOfBirth,
     sex,
     type,
@@ -102,7 +104,17 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
               )}
             </div>
           </div>
-          {dateOfAdmission && (
+          {status == "ADOPTED" && dateOfLeave && (
+            <span className="text-center mb-2">
+              seit {formatDate(dateOfLeave)}
+            </span>
+          )}
+          {status == "DECEASED" && dateOfDeath && (
+            <span className="text-center mb-2">
+              seit {formatDate(dateOfDeath)}
+            </span>
+          )}
+          {status != "DECEASED" && status != "ADOPTED" && dateOfAdmission && (
             <span className="text-center mb-2">
               seit {formatDate(dateOfAdmission)}
             </span>
@@ -170,6 +182,21 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
                   otherPictureFileUrls?.map((data) => ({
                     original: data.url,
                     thumbnail: data.thumbnailUrl,
+                    renderItem: data.isVideo ? (item) => {
+                        return (
+                          <video
+                            className="px-[56px] w-full"
+                            controls={true}
+                            autoPlay={false}
+                            loop={true}
+                          >
+                            <source src={data.url} type="video/mp4" />
+                          </video>
+                        );
+                    } : undefined,
+                    renderThumbInner: data.isVideo ? () => {
+                      return <img alt="" src={data.thumbnailUrl} />;
+                    } : undefined,
                   })) ?? []
                 }
                 showThumbnails={true}

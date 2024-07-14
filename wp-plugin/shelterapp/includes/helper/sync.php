@@ -10,6 +10,13 @@ $sa_sync_config = array(
 
 
 
+
+function sa_sync_delete_animal(string $id){
+    global $sa_sync_config;
+    $client = sa_get_animal_resource_client();
+    $client->animalsDelete($id);
+}
+
 function sa_sync_sync_animals(){
     global $sa_sync_config;
     $client = sa_get_animal_resource_client();
@@ -41,6 +48,9 @@ function sa_sync_sync_animals(){
                 );
                 /** @var array<WP_Post> */
                 $posts = get_posts($args);
+
+                require_once ABSPATH . 'wp-admin/includes/media.php';
+
                 if (count($posts) > 0) {
                     // we already have a post with this link id!
                     sa_sync_update_animal($animal, $posts[0], $i);
@@ -375,7 +385,7 @@ function sa_sync_update_post_feature_image($post, $animal){
             $upload_dir = wp_upload_dir();
             $image_data = file_get_contents($animal->getMainPictureFileUrl());
             if($image_data === false) {
-                throw new Exception('Could not download image');
+                return outLog('Could not download image: ' . $animal->getMainPictureFileUrl());
             }
             $filename = basename($animal->getMainPictureFileUrl());
             if (wp_mkdir_p($upload_dir['path'])) {
@@ -456,7 +466,7 @@ function sa_sync_update_post_other_images($post, $animal){
                 $upload_dir = wp_upload_dir();
                 $image_data = file_get_contents($image);
                 if($image_data === false) {
-                    throw new Exception('Could not download image');
+                    return outLog('Could not download image: ' . $image);
                 }
                 $filename = basename($image);
                 if (wp_mkdir_p($upload_dir['path'])) {
