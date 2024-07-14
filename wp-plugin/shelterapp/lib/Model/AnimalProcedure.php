@@ -58,6 +58,7 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPITypes = [
         'id' => 'string',
+        'tenant_id' => 'string',
         'title' => 'string',
         'date' => '\DateTime',
         'animal_id' => 'string'
@@ -72,6 +73,7 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPIFormats = [
         'id' => 'uuid',
+        'tenant_id' => 'uuid',
         'title' => null,
         'date' => 'date',
         'animal_id' => 'uuid'
@@ -84,6 +86,7 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static array $openAPINullables = [
         'id' => false,
+        'tenant_id' => false,
         'title' => false,
         'date' => false,
         'animal_id' => false
@@ -176,6 +179,7 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $attributeMap = [
         'id' => 'id',
+        'tenant_id' => 'tenantId',
         'title' => 'title',
         'date' => 'date',
         'animal_id' => 'animalId'
@@ -188,6 +192,7 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $setters = [
         'id' => 'setId',
+        'tenant_id' => 'setTenantId',
         'title' => 'setTitle',
         'date' => 'setDate',
         'animal_id' => 'setAnimalId'
@@ -200,6 +205,7 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $getters = [
         'id' => 'getId',
+        'tenant_id' => 'getTenantId',
         'title' => 'getTitle',
         'date' => 'getDate',
         'animal_id' => 'getAnimalId'
@@ -263,6 +269,7 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
     public function __construct(array $data = null)
     {
         $this->setIfExists('id', $data ?? [], null);
+        $this->setIfExists('tenant_id', $data ?? [], null);
         $this->setIfExists('title', $data ?? [], null);
         $this->setIfExists('date', $data ?? [], null);
         $this->setIfExists('animal_id', $data ?? [], null);
@@ -300,6 +307,13 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
         }
         if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $this->container['id'])) {
             $invalidProperties[] = "invalid value for 'id', must be conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.";
+        }
+
+        if ($this->container['tenant_id'] === null) {
+            $invalidProperties[] = "'tenant_id' can't be null";
+        }
+        if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $this->container['tenant_id'])) {
+            $invalidProperties[] = "invalid value for 'tenant_id', must be conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.";
         }
 
         if ($this->container['title'] === null) {
@@ -362,6 +376,38 @@ class AnimalProcedure implements ModelInterface, ArrayAccess, \JsonSerializable
         }
 
         $this->container['id'] = $id;
+
+        return $this;
+    }
+
+    /**
+     * Gets tenant_id
+     *
+     * @return string
+     */
+    public function getTenantId()
+    {
+        return $this->container['tenant_id'];
+    }
+
+    /**
+     * Sets tenant_id
+     *
+     * @param string $tenant_id tenant_id
+     *
+     * @return self
+     */
+    public function setTenantId($tenant_id)
+    {
+        if (is_null($tenant_id)) {
+            throw new \InvalidArgumentException('non-nullable tenant_id cannot be null');
+        }
+
+        if ((!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", ObjectSerializer::toString($tenant_id)))) {
+            throw new \InvalidArgumentException("invalid value for \$tenant_id when calling AnimalProcedure., must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
+        }
+
+        $this->container['tenant_id'] = $tenant_id;
 
         return $this;
     }

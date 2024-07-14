@@ -58,6 +58,7 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPITypes = [
         'id' => 'string',
+        'tenant_id' => 'string',
         'animal_id' => 'string',
         'date' => '\DateTime',
         'tags' => 'string[]',
@@ -75,6 +76,7 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPIFormats = [
         'id' => 'uuid',
+        'tenant_id' => 'uuid',
         'animal_id' => 'uuid',
         'date' => 'date',
         'tags' => null,
@@ -90,6 +92,7 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static array $openAPINullables = [
         'id' => false,
+        'tenant_id' => false,
         'animal_id' => false,
         'date' => true,
         'tags' => true,
@@ -185,6 +188,7 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $attributeMap = [
         'id' => 'id',
+        'tenant_id' => 'tenantId',
         'animal_id' => 'animalId',
         'date' => 'date',
         'tags' => 'tags',
@@ -200,6 +204,7 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $setters = [
         'id' => 'setId',
+        'tenant_id' => 'setTenantId',
         'animal_id' => 'setAnimalId',
         'date' => 'setDate',
         'tags' => 'setTags',
@@ -215,6 +220,7 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $getters = [
         'id' => 'getId',
+        'tenant_id' => 'getTenantId',
         'animal_id' => 'getAnimalId',
         'date' => 'getDate',
         'tags' => 'getTags',
@@ -281,6 +287,7 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
     public function __construct(array $data = null)
     {
         $this->setIfExists('id', $data ?? [], null);
+        $this->setIfExists('tenant_id', $data ?? [], null);
         $this->setIfExists('animal_id', $data ?? [], null);
         $this->setIfExists('date', $data ?? [], null);
         $this->setIfExists('tags', $data ?? [], null);
@@ -321,6 +328,13 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
         }
         if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $this->container['id'])) {
             $invalidProperties[] = "invalid value for 'id', must be conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.";
+        }
+
+        if ($this->container['tenant_id'] === null) {
+            $invalidProperties[] = "'tenant_id' can't be null";
+        }
+        if (!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", $this->container['tenant_id'])) {
+            $invalidProperties[] = "invalid value for 'tenant_id', must be conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.";
         }
 
         if ($this->container['animal_id'] === null) {
@@ -376,6 +390,38 @@ class AnimalEvent implements ModelInterface, ArrayAccess, \JsonSerializable
         }
 
         $this->container['id'] = $id;
+
+        return $this;
+    }
+
+    /**
+     * Gets tenant_id
+     *
+     * @return string
+     */
+    public function getTenantId()
+    {
+        return $this->container['tenant_id'];
+    }
+
+    /**
+     * Sets tenant_id
+     *
+     * @param string $tenant_id tenant_id
+     *
+     * @return self
+     */
+    public function setTenantId($tenant_id)
+    {
+        if (is_null($tenant_id)) {
+            throw new \InvalidArgumentException('non-nullable tenant_id cannot be null');
+        }
+
+        if ((!preg_match("/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/", ObjectSerializer::toString($tenant_id)))) {
+            throw new \InvalidArgumentException("invalid value for \$tenant_id when calling AnimalEvent., must conform to the pattern /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/.");
+        }
+
+        $this->container['tenant_id'] = $tenant_id;
 
         return $this;
     }
