@@ -22,6 +22,7 @@ export interface AnimalFilter extends PostFilter {
 
   meta_was_found?: boolean;
   meta_missing?: boolean;
+  meta_private_adoption?: boolean;
 }
 export interface AnimalFilterComputed extends PostFilter {
   meta_status?: AnimalStatus | AnimalStatus[];

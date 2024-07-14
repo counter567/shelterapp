@@ -142,6 +142,14 @@ export default observer(function AnimalList({
                 animalStore.setFilter("meta_was_found", value || undefined)
               }
             />
+            <CheckBox
+            value={animalStore.filters.meta_private_adoption || false}
+            defaultValue={false}
+            label="Externe Vermittlung"
+            callback={(value) =>
+            animalStore.setFilter("meta_private_adoption", value || undefined)
+            }
+            />
           </div>
         </>
       )}

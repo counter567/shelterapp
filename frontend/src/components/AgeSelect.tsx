@@ -37,7 +37,7 @@ const AgeSelect = ({ value, defaultValue, callback }: AgeSelectProps) => {
     );
   };
   return (
-    <div className="flex" style={{minWidth: '20vw'}}>
+    <div className="flex text-right" style={{minWidth: '20vw'}}>
       <div className={`rounded-l-lg grow-0 pl-5 pr-1 opacity-80  ${defaultStyle}`}>Alter:</div>
 
       <div className="grow" style={{minWidth}}>

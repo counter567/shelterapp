@@ -132,6 +132,15 @@ class ShelterappAnimals
             );
             $args['meta_query'][] = $meta_query;
         }
+        if(isset( $request['meta_private_adoption'] )) {
+            $privateAdoption = ((boolean)sanitize_text_field( $request['meta_private_adoption'] ));
+            $meta_query = array(
+                'key' => 'privateAdoption',
+                'value' => $privateAdoption ? '1' : '0',
+                'compare' => '=',
+            );
+            $args['meta_query'][] = $meta_query;
+        }
         return $args;
     }
 
@@ -669,7 +678,7 @@ class ShelterappAnimals
                         // this is a enum!
                         $field = array(
                             'key' => 'field_' . $key,
-                            'label' => isset($titleMappings[$key]) ? $titleMappings[$key] : $key,
+                            'label' => isset($titleMappings[$key]) ? $titleMappings[$key] : $key . " Konnte nicht übersetzt werden",
                             'name' => $key,
                             'aria-label' => $key,
                             'type' => 'select',
