@@ -1,6 +1,6 @@
 import "./Ribbon.css";
 
-type RibbonColor = "blue" | "red" | "yellow" | "green";
+type RibbonColor = "blue" | "red" | "yellow" | "green" | "purple";
 
 interface RibbonProps {
   text: string;

@@ -53,6 +53,7 @@ const AnimalCard = ({
         key={id}
       >
         {wasFound && <Ribbon text="Fundtier" color="yellow" />}
+        {privateAdoption && <Ribbon text="Fremdvermittlung" color="purple" />}
         {missing && (
           <Ribbon
             cssClass={wasFound ? "top-10" : ""}
