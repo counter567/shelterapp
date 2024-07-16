@@ -76,10 +76,7 @@ export default observer(function AnimalList({
               }
             />
             <MultiSelectDropDown
-              items={Array.prototype.concat(
-                [{ id: 0, name: "Alle Tierarten" }],
-                animalStore.typesData
-              )}
+              items={animalStore.typesData}
               value={animalStore.filters.shelterapp_animal_type || []}
               defaultValue={[]}
               callback={(value) =>

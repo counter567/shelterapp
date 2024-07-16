@@ -116,7 +116,7 @@ class ShelterappAnimals
             $args['meta_query'][] = $meta_query;
         }
         if(isset( $request['meta_private_adoption'] )) {
-            $wasFound = ((boolean)sanitize_text_field( $request['meta_private_adoption'] ));
+            $wasFound = filter_var(sanitize_text_field( $request['meta_private_adoption'] ), FILTER_VALIDATE_BOOLEAN);
             $meta_query = array(
                 'key' => 'privateAdoption',
                 'value' => $wasFound ? '1' : '0',
@@ -125,7 +125,7 @@ class ShelterappAnimals
             $args['meta_query'][] = $meta_query;
         }
         if(isset( $request['meta_was_found'] )) {
-            $wasFound = ((boolean)sanitize_text_field( $request['meta_was_found'] ));
+            $wasFound = filter_var(sanitize_text_field( $request['meta_was_found'] ), FILTER_VALIDATE_BOOLEAN);
             $meta_query = array(
                 'key' => 'wasFound',
                 'value' => $wasFound ? '1' : '0',
@@ -133,11 +133,13 @@ class ShelterappAnimals
             );
             $args['meta_query'][] = $meta_query;
         }
+
         if(isset( $request['meta_missing'] )) {
-            $wasFound = ((boolean)sanitize_text_field( $request['meta_missing'] ));
+            $missing = filter_var(sanitize_text_field( $request['meta_missing'] ), FILTER_VALIDATE_BOOLEAN);
+
             $meta_query = array(
                 'key' => 'missing',
-                'value' => $wasFound ? '1' : '0',
+                'value' => $missing ? '1' : '0',
                 'compare' => '=',
             );
             $args['meta_query'][] = $meta_query;

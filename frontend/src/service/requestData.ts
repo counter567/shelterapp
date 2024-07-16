@@ -41,6 +41,9 @@ export async function requestData<T>(
       // join existing search params with data
       const params = new URLSearchParams();
       for(let key in data) {
+        if (!key) {
+          continue
+        }
         if(Array.isArray(data[key])) {
           data[key].forEach((it: string | number) => params.append(key, it as string))
         } else {
