@@ -155,7 +155,7 @@ export class AnimalsStore {
   }
 
   setTypesData(typeData: TypeData[], store = true) {
-    this.typesData = typeData.filter((e) => e.count > 0);
+    this.typesData = typeData//.filter((e) => e.count > 0);
     if (store) {
       localStorage.setItem("sa.animal.types", JSON.stringify(typeData));
     }
@@ -226,10 +226,11 @@ export class AnimalsStore {
           if (propName === "meta_age_max" || propName === "meta_age_min") {
             value = Number.isInteger(parseInt(value)) ? parseInt(value) : value;
           } else if (
-            propName === "meta_status" ||
-            propName === "shelterapp_animal_type"
-          ) {
-            value = value.split(",").filter((it: string) => it !== "");
+            propName === "meta_status"
+            ) {
+            value = value.split(",").filter((it: string) => it !== '' )
+          } else if (propName === "shelterapp_animal_type") {
+            value = value.split(",").filter((it: string) => it !== '' ).map((it: string) => parseInt(it))
           }
           const currentFilter = JSON.parse(JSON.stringify(this.filters));
           (currentFilter as any)[propName] = value;

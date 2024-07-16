@@ -59,7 +59,7 @@ const getAnimalsPaged = async (
   const options = {
     page: page,
     per_page: perPage,
-    ...JSON.parse(JSON.stringify(filter)),
+    ...filter,
   } as any;
   if (filter.meta_status) {
     options.meta_status = JSON.stringify(filter.meta_status);
