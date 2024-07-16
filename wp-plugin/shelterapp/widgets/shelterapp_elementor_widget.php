@@ -57,13 +57,15 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
             ]
         );
         $type_options = $this->getOptionsAnimalType();
+        $type_ids = array_keys($type_options);
 		$this->add_control(
 			'type',
 			[
 				'type' => \Elementor\Controls_Manager::SELECT2,
+                'multiple' => true,
 				'label' => esc_html__( 'Type', 'wordpress' ),
 				'options' => $type_options,
-				'default' => $type_options,
+				'default' => $type_ids,
 			]
 		);
 

@@ -10,7 +10,7 @@ import { AnimalsStore } from "./stores/animals";
 
 export interface AppProps {
   hideFilters?: boolean;
-  type?: number;
+  type?: number[];
   status?: Array<AnimalStatus>;
   sex?: AnimalSex;
   minAge?: number;

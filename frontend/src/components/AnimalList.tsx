@@ -71,24 +71,23 @@ export default observer(function AnimalList({
               callback={(value) =>
                 animalStore.setFilter(
                   "meta_status",
-                  value.map((it) => it as AnimalStatus)
+                  value?.map((it) => it as AnimalStatus)
                 )
               }
             />
-            <DropDown
+            <MultiSelectDropDown
               items={Array.prototype.concat(
                 [{ id: 0, name: "Alle Tierarten" }],
                 animalStore.typesData
               )}
               value={
-                (animalStore.filters.shelterapp_animal_type as any as number) ||
-                0
+                animalStore.filters.shelterapp_animal_type || []
               }
-              defaultValue={"Alle Tierarten"}
+              defaultValue={[]}
               callback={(value) =>
                 animalStore.setFilter(
                   "shelterapp_animal_type",
-                  value === 0 ? undefined : value
+                  value as number[]
                 )
               }
             />

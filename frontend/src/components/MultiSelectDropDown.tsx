@@ -7,7 +7,7 @@ interface MultiSelectDropDown {
   items: { name: string; id?: string | number }[];
   value?: Array<string | number>;
   defaultValue?: Array<string | number>;
-  callback: (value: Array<string | number>) => void;
+  callback: (value: Array<string | number> | undefined) => void;
 }
 
 const MultiSelectDropDown = ({ items, value, defaultValue, callback }: MultiSelectDropDown) => {

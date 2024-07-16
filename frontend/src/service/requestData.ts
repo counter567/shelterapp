@@ -1,6 +1,6 @@
 import getNonce from "./nonce-helper";
 
-type RequestData = FormData | { [key: string]: any };
+type RequestData = { [key: string]: any };
 
 export interface RequestResponseWithPagination {
   _pagination: {
@@ -39,17 +39,20 @@ export async function requestData<T>(
     // apply get variable binding if this is a GET call.
     if (!options.method || options.method === "GET") {
       // join existing search params with data
-      const params = new URLSearchParams(data as Record<string, string>);
+      const params = new URLSearchParams();
+      for(let key in data) {
+        if(Array.isArray(data[key])) {
+          data[key].forEach((it: string | number) => params.append(key, it as string))
+        } else {
+          params.append(key, data[key])
+        }
+      }
       params.forEach(
-        (value, key) => url.searchParams?.set(key, value)
+        (value, key) => url.searchParams?.append(key, value)
       );
     } else {
-      if (data instanceof FormData) {
-        options.body = data;
-      } else {
         headers.append("content-type", "application/json");
         options.body = JSON.stringify(data);
-      }
     }
   }
 

@@ -84,7 +84,6 @@ export class AnimalsStore {
   };
 
   setFilters = (value: AnimalFilter) => {
-
     this.filters = value;
   };
 
@@ -168,20 +167,16 @@ export class AnimalsStore {
     const filters: AnimalFilterComputed = {
       ...(this.filters as any),
     };
-    this.filters.shelterapp_animal_type
     // fill meta_status
-    if (this.filters.meta_status) {
+    if (this.filters.meta_status && this.filters.meta_status.length > 0) {
       filters.meta_status = this.filters.meta_status as AnimalStatus[];
     } else {
-      filters.meta_status = [
-        AnimalStatus.New,
-        AnimalStatus.Searching,
-        AnimalStatus.RequestStop,
-        AnimalStatus.Emergency,
-        AnimalStatus.Reserved,
-        AnimalStatus.FinalCare,
-        AnimalStatus.CourtOfGrace,
-      ];
+      filters.meta_status = Object.values(AnimalStatus);
+    }
+    if(this.filters.shelterapp_animal_type && this.filters.shelterapp_animal_type.length > 0) {
+      filters.shelterapp_animal_type = this.filters.shelterapp_animal_type
+    } else {
+      filters.shelterapp_animal_type = undefined
     }
 
     return filters;
@@ -192,8 +187,9 @@ export class AnimalsStore {
     value: AnimalFilter[T],
     store = true
   ) {
-    if(filter === "meta_status") {
-      console.log(value)
+    if(filter === "shelterapp_animal_type") {
+        console.log(typeof value)
+        console.log(value)
     }
     this.setCurrentPage(1);
     if (value === undefined) {
@@ -229,15 +225,15 @@ export class AnimalsStore {
         .forEach((c) => {
           let [propName, value] = c.split("=") as [string, any];
           if (
-            propName === "shelterapp_animal_type" ||
             propName === "meta_age_max" ||
             propName === "meta_age_min"
           ) {
             value = Number.isInteger(parseInt(value)) ? parseInt(value) : value;
           } else if (
-            propName === "meta_status"
+            propName === "meta_status" ||
+            propName === "shelterapp_animal_type"
             ) {
-            value = value.split(",")
+            value = value.split(",").filter((it: string) => it !== '' )
           }
           const currentFilter = JSON.parse(JSON.stringify(this.filters));
           (currentFilter as any)[propName] = value;
@@ -263,7 +259,7 @@ export class AnimalsStore {
     if (this.filters.shelterapp_animal_type) {
       const value =
         this.typesData.find(
-          (animal) => animal.id === this.filters.shelterapp_animal_type
+          (type) => this.filters.shelterapp_animal_type?.find((it) => it === type.id) !== undefined
         )?.name || undefined;
       if (value) {
         newTitle += ` - ${value}`;

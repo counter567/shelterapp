@@ -42,7 +42,7 @@ if (defined('WP_DEBUG') && true == WP_DEBUG) {
 	<div
 		id="root"
 		class="shelterblock-root"
-		data-type="<?php echo isset($attributes['type']) ? $attributes['type'] : '' ?>"
+		data-type="<?php echo (isset($attributes['type']) && is_array($attributes['type'])) ? implode(',',$attributes['type']) : '' ?>"
 		data-status="<?php echo (isset($attributes['status']) && is_array($attributes['status'])) ? implode(',',$attributes['status']) : '' ?>"
 		data-sex="<?php echo isset($attributes['sex']) ? $attributes['sex'] : '' ?>"
 		data-maxAge="<?php echo isset($attributes['maxAge']) ? $attributes['maxAge'] : '' ?>"
