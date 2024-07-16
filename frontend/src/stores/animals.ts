@@ -168,7 +168,7 @@ export class AnimalsStore {
     const filters: AnimalFilterComputed = {
       ...(this.filters as any),
     };
-
+    this.filters.shelterapp_animal_type
     // fill meta_status
     if (this.filters.meta_status) {
       filters.meta_status = this.filters.meta_status as AnimalStatus[];
