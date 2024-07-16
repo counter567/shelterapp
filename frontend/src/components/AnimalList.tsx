@@ -2,13 +2,14 @@ import { observer } from "mobx-react-lite";
 import { useContext, useEffect } from "react";
 import { germanStatus } from "../helper/getCardColorByAnimalStatus";
 import { AnimalSex } from "../models/animalSex";
-import { statusValues } from "../models/animalStatus";
+import {AnimalStatus, statusValues } from "../models/animalStatus";
 import { AnimalsStore } from "../stores/animals";
 import AgeSelect from "./AgeSelect";
 import AnimalCard from "./AnimalCard";
 import "./AnimalList.css";
 import CheckBox from "./CheckBox";
 import DropDown from "./DropDown";
+import MultiSelectDropDown from "./MultiSelectDropDown";
 import Pagination from "./Pagination";
 
 export const animalSex = [
@@ -24,7 +25,6 @@ export const animalStatus: { id: string | number; name: string }[] =
     id: status,
     name: germanStatus(status),
   }));
-animalStatus.unshift({ id: 0, name: "Alle Status" });
 export const ageFilter = [
   { id: 0, name: "Alter beliebig" },
   { id: 1, name: "Bis 6 Monate" },
@@ -65,13 +65,13 @@ export default observer(function AnimalList({
       {!animalStore.hideFilters && (
         <>
           <div className="mb-4 dropdown-buttons gap-y-4 gap-x-4 items-center justify-center">
-            <DropDown
+            <MultiSelectDropDown
               items={animalStatus}
-              value={animalStore.filters.meta_status || 0}
+              value={animalStore.filters.meta_status || []}
               callback={(value) =>
                 animalStore.setFilter(
                   "meta_status",
-                  value === 0 ? undefined : value
+                  value.map((it) => it as AnimalStatus)
                 )
               }
             />
@@ -123,6 +123,7 @@ export default observer(function AnimalList({
                 );
               }}
             />
+
           </div>
           <div className="mb-4 dropdown-buttons gap-y-4 gap-x-4 items-center justify-center">
             <CheckBox

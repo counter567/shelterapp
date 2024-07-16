@@ -109,7 +109,6 @@ const getAnimalTypes = async () => {
   const response = await requestData<TypeData[]>(
     "/wp/v2/shelterapp_animal_type"
   );
-  console.log(response);
   return response.map((item) => ({
     id: item.id,
     name: item.name,

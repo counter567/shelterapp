@@ -206,9 +206,11 @@ function sa_sync_doGetAllAnimalsFromDate(OpenAPI\Client\Api\AnimalResourceApi $c
         if (isset($date) && !empty($date)) {
             // get all updates from date.
             $animals = $client->animalsGet(page: $page, page_size: $chunksize, updated_after: $date);
+            error_log(count($animals));
         } else {
             // init with all animals
             $animals = $client->animalsGet(page: $page, page_size: $chunksize);
+            error_log(count($animals));
         }
         // error_log(count($animals));
         array_push($allAnimals, ...$animals);

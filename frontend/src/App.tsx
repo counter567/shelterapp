@@ -11,7 +11,7 @@ import { AnimalsStore } from "./stores/animals";
 export interface AppProps {
   hideFilters?: boolean;
   type?: number;
-  status?: AnimalStatus;
+  status?: Array<AnimalStatus>;
   sex?: AnimalSex;
   minAge?: number;
   maxAge?: number;

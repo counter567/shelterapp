@@ -591,11 +591,11 @@
           "name" : "status",
           "in" : "query",
           "schema" : {
-            "allOf" : [ {
+            "type" : "array",
+            "items" : {
               "$ref" : "#/components/schemas/AnimalStatus"
-            }, {
-              "nullable" : true
-            } ]
+            },
+            "nullable" : true
           }
         }, {
           "name" : "typeContains",

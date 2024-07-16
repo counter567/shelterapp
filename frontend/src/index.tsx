@@ -16,7 +16,7 @@ roots.forEach((rootElement) => {
     <React.StrictMode>
       <App
         type={rootElement.getAttribute('data-type') ? parseInt(rootElement.getAttribute('data-type')!) :  undefined}
-        status={rootElement.getAttribute('data-status') as AnimalStatus || undefined}
+        status={rootElement.getAttribute('data-status')?.split(",").filter((it) => it !== '').map((it: string) => it as AnimalStatus) || Object.values(AnimalStatus)}
         sex={rootElement.getAttribute('data-sex') as AnimalSex || undefined}
         maxAge={getNumber(rootElement, 'data-maxAge') || undefined}
         minAge={getNumber(rootElement, 'data-minAge', 1) || undefined}

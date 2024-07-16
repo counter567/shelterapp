@@ -9,6 +9,7 @@ $view = $SHELTERAPP_GLOBAL_ANIMAL->blockView++;
 
 wp_enqueue_style('shelter-app-frontend-style', plugins_url('js/static/css/main.css', SHELTERAPP_PATH), array(), SHELTERAPP_VERSION, 'all');
 wp_enqueue_script('shelter-app-frontend', plugins_url('js/static/js/main.js', SHELTERAPP_PATH), array('wp-api-fetch'), SHELTERAPP_VERSION, true);
+
 wp_localize_script(
 	'shelter-app-frontend',
 	'sa_app_data',
@@ -42,7 +43,7 @@ if (defined('WP_DEBUG') && true == WP_DEBUG) {
 		id="root"
 		class="shelterblock-root"
 		data-type="<?php echo isset($attributes['type']) ? $attributes['type'] : '' ?>"
-		data-status="<?php echo isset($attributes['status']) ? $attributes['status'] : '' ?>"
+		data-status="<?php echo isset($attributes['status']) ? implode(',',$attributes['status']) : '' ?>"
 		data-sex="<?php echo isset($attributes['sex']) ? $attributes['sex'] : '' ?>"
 		data-maxAge="<?php echo isset($attributes['maxAge']) ? $attributes['maxAge'] : '' ?>"
 		data-minAge="<?php echo isset($attributes['minAge']) ? $attributes['minAge'] : '' ?>"

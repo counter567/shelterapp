@@ -11,7 +11,7 @@ aside:after {
 
 aside {
   padding-right: 10px;
-  line-height: 34px;
+  line-height: 35px;
   position: absolute;
   width: 80px;
   right: 0px;
@@ -52,4 +52,12 @@ aside.green.ribbon {
 aside.green.ribbon:after,
 aside.green.ribbon:before {
   border-color: transparent #5cb85c;
+}
+
+aside.purple.ribbon {
+  background-color: #a020f0;
+}
+aside.purple.ribbon:after,
+aside.purple.ribbon:before {
+  border-color: transparent #a020f0;
 }

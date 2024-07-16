@@ -8,6 +8,7 @@ $importedAnimals = 0;
 
 class SaDateTime extends DateTime
 {
+    #[\ReturnTypeWillChange]
     function format($format) {
         return parent::format('Y-m-d\\TH:i:s');
     }
@@ -137,15 +138,6 @@ class ShelterappAnimals
             $meta_query = array(
                 'key' => 'missing',
                 'value' => $wasFound ? '1' : '0',
-                'compare' => '=',
-            );
-            $args['meta_query'][] = $meta_query;
-        }
-        if(isset( $request['meta_private_adoption'] )) {
-            $privateAdoption = ((boolean)sanitize_text_field( $request['meta_private_adoption'] ));
-            $meta_query = array(
-                'key' => 'privateAdoption',
-                'value' => $privateAdoption ? '1' : '0',
                 'compare' => '=',
             );
             $args['meta_query'][] = $meta_query;
@@ -290,8 +282,9 @@ class ShelterappAnimals
             return;
         }
         
-        $post_value = $_POST['otherPictureFileUrls'];
-        if(isset($post_value)) {
+
+        if(array_key_exists('otherPictureFileUrls', $_POST)) {
+            $post_value = $_POST['otherPictureFileUrls'];
             update_post_meta($post->ID, 'otherPictureFileUrls', $post_value);
         }
 
@@ -920,7 +913,7 @@ $titleMappings = array(
     'internalNotes' => 'Interne Notizen',
     'donationCall' => 'Spendenaufruf',
     'successStory' => 'Erfolgsgeschichte',
-    'privateAdoption' => 'Private Adoption',
+    'privateAdoption' => 'Fremdvermittlung',
     'castrated' => 'Kastriert',
     'bloodType' => 'Blutgruppe',
 );

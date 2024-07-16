@@ -15,7 +15,7 @@ import {
 export const AuthInitialized = new BehaviorSubject<boolean>(false);
 
 export interface AnimalFilter extends PostFilter {
-  meta_status?: AnimalStatus;
+  meta_status?: Array<AnimalStatus>;
   meta_sex?: AnimalSex;
   meta_age_max?: number;
   meta_age_min?: number;
@@ -84,6 +84,7 @@ export class AnimalsStore {
   };
 
   setFilters = (value: AnimalFilter) => {
+
     this.filters = value;
   };
 
@@ -170,7 +171,7 @@ export class AnimalsStore {
 
     // fill meta_status
     if (this.filters.meta_status) {
-      filters.meta_status = this.filters.meta_status as AnimalStatus;
+      filters.meta_status = this.filters.meta_status as AnimalStatus[];
     } else {
       filters.meta_status = [
         AnimalStatus.New,
@@ -191,8 +192,10 @@ export class AnimalsStore {
     value: AnimalFilter[T],
     store = true
   ) {
+    if(filter === "meta_status") {
+      console.log(value)
+    }
     this.setCurrentPage(1);
-    // console.log('setFilter', filter, value);
     if (value === undefined) {
       const currentFilter = JSON.parse(JSON.stringify(this.filters));
       delete currentFilter[filter];
@@ -231,6 +234,10 @@ export class AnimalsStore {
             propName === "meta_age_min"
           ) {
             value = Number.isInteger(parseInt(value)) ? parseInt(value) : value;
+          } else if (
+            propName === "meta_status"
+            ) {
+            value = value.split(",")
           }
           const currentFilter = JSON.parse(JSON.stringify(this.filters));
           (currentFilter as any)[propName] = value;
@@ -240,7 +247,8 @@ export class AnimalsStore {
   }
 
   resetFilter() {
-    this.setFilters({});
+    this.setFilters({"meta_status": Object.values(AnimalStatus)});
+    this.fetchCurrentAnimals()
   }
 
   setHideFilters(hideFilters: boolean) {
@@ -268,9 +276,9 @@ export class AnimalsStore {
       }
     }
     if (this.filters.meta_status) {
-      const entry = animalStatus.find((e) => e.id === this.filters.meta_status);
-      if (entry) {
-        newTitle += ` - ${entry?.name}`;
+      const combined = this.filters.meta_status.map((it: AnimalStatus) => animalStatus.find((e) => e.id === it)?.name).join(',')
+      if (combined) {
+        newTitle += ` - ${combined}`;
       }
     }
     /*

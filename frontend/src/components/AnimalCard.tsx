@@ -52,8 +52,8 @@ const AnimalCard = ({
         href={`${getRouterBasePath()}/${slug}`}
         key={id}
       >
+        {privateAdoption && <Ribbon text="Fremdv." color="purple" />}
         {wasFound && <Ribbon text="Fundtier" color="yellow" />}
-        {privateAdoption && <Ribbon text="Fremdvermittlung" color="purple" />}
         {missing && (
           <Ribbon
             cssClass={wasFound ? "top-10" : ""}
@@ -61,13 +61,6 @@ const AnimalCard = ({
             color="red"
           />
         )}
-        {/* {privateAdoption && (
-          <Ribbon
-            cssClass={wasFound ? "top-20" : ""}
-            text="Vermittlung"
-            color="green"
-          />
-        )} */}
         <div className="flex items-center flex-col flex-auto overflow-hidden">
           <div className="flex items-center justify-center h-44 pt-4">
             <div className="aspect-square bg-gray-100 w-40 rounded-full flex flex-col items-center absolute"></div>

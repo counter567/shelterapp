@@ -397,7 +397,7 @@ class AnimalResourceApi
      * @param  int $page page (optional)
      * @param  int $page_size page_size (optional)
      * @param  AnimalSex $sex sex (optional)
-     * @param  AnimalStatus $status status (optional)
+     * @param  \OpenAPI\Client\Model\AnimalStatus[] $status status (optional)
      * @param  string $type_contains type_contains (optional)
      * @param  \DateTime $updated_after updated_after (optional)
      * @param  \DateTime $updated_before updated_before (optional)
@@ -453,7 +453,7 @@ class AnimalResourceApi
      * @param  int $page (optional)
      * @param  int $page_size (optional)
      * @param  AnimalSex $sex (optional)
-     * @param  AnimalStatus $status (optional)
+     * @param  \OpenAPI\Client\Model\AnimalStatus[] $status (optional)
      * @param  string $type_contains (optional)
      * @param  \DateTime $updated_after (optional)
      * @param  \DateTime $updated_before (optional)
@@ -615,7 +615,7 @@ class AnimalResourceApi
      * @param  int $page (optional)
      * @param  int $page_size (optional)
      * @param  AnimalSex $sex (optional)
-     * @param  AnimalStatus $status (optional)
+     * @param  \OpenAPI\Client\Model\AnimalStatus[] $status (optional)
      * @param  string $type_contains (optional)
      * @param  \DateTime $updated_after (optional)
      * @param  \DateTime $updated_before (optional)
@@ -674,7 +674,7 @@ class AnimalResourceApi
      * @param  int $page (optional)
      * @param  int $page_size (optional)
      * @param  AnimalSex $sex (optional)
-     * @param  AnimalStatus $status (optional)
+     * @param  \OpenAPI\Client\Model\AnimalStatus[] $status (optional)
      * @param  string $type_contains (optional)
      * @param  \DateTime $updated_after (optional)
      * @param  \DateTime $updated_before (optional)
@@ -764,7 +764,7 @@ class AnimalResourceApi
      * @param  int $page (optional)
      * @param  int $page_size (optional)
      * @param  AnimalSex $sex (optional)
-     * @param  AnimalStatus $status (optional)
+     * @param  \OpenAPI\Client\Model\AnimalStatus[] $status (optional)
      * @param  string $type_contains (optional)
      * @param  \DateTime $updated_after (optional)
      * @param  \DateTime $updated_before (optional)
@@ -1138,7 +1138,7 @@ class AnimalResourceApi
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $status,
             'status', // param base name
-            'AnimalStatus', // openApiType
+            'array', // openApiType
             'form', // style
             true, // explode
             false // required

@@ -27,7 +27,7 @@ class AnimalResource {
         @QueryParam("pageSize") pageSize: Int?,
         @QueryParam("nameContains") nameContains: String?,
         @QueryParam("typeContains") typeContains: String?,
-        @QueryParam("status") status: List<AnimalStatus?>,
+        @QueryParam("status") status: List<AnimalStatus?>? = null,
         @QueryParam("isPublic") isPublic: Boolean?,
         @QueryParam("isSuccessStory") isSuccessStory: Boolean?,
         @QueryParam("isMissing") isMissing: Boolean?,
@@ -66,11 +66,16 @@ class AnimalResource {
         @QueryParam("updatedAfter") updatedAfter: LocalDateTime?,
     ) = withPanacheSession {
         val tenantId = jwt.getTenantIdOrThrow()
+        val fixedStatus = if(status?.isEmpty() == true) {
+            null
+        } else {
+            status
+        }
         val params = listOf(
             PanacheQueryParameter(Animal::tenantId.name, tenantId),
             PanacheQueryParameter(Animal::name.name, nameContains, PanacheQueryParameter.Type.LIKE),
             PanacheQueryParameter(Animal::type.name, typeContains, PanacheQueryParameter.Type.LIKE),
-            PanacheQueryParameter(Animal::status.name, status, PanacheQueryParameter.Type.IN),
+            PanacheQueryParameter(Animal::status.name, fixedStatus, PanacheQueryParameter.Type.IN),
             PanacheQueryParameter(Animal::public.name, isPublic),
             PanacheQueryParameter(Animal::successStory.name, isSuccessStory),
             PanacheQueryParameter(Animal::missing.name, isMissing),
@@ -110,7 +115,10 @@ class AnimalResource {
             )
         val queryParameters = PanacheQueryParameters(params, page ?: 0, pageSize ?: 20)
         return@withPanacheSession try {
-            Animal.query(queryParameters)
+            val result = Animal.query(queryParameters)
+            println("Served ${result.size}")
+            println("States were $status")
+            result
         } catch (e: IllegalArgumentException) {
             throw BadRequestException(e.message)
         }

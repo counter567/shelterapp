@@ -72,10 +72,10 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'status',
 			[
-				'type' => \Elementor\Controls_Manager::SELECT,
+				'type' => \Elementor\Controls_Manager::SELECT2,
 				'label' => esc_html__( 'Status', 'wordpress' ),
+                'multiple' => true,
 				'options' => array(
-                    '0' => esc_html__( 'Alle', 'wordpress' ),
                     'NEW' => esc_html__( 'Neu', 'wordpress' ),
                     'SEARCHING' => esc_html__( 'Suchend', 'wordpress' ),
                     'REQUEST_STOP' => esc_html__( 'Anfrage Stop', 'wordpress' ),
@@ -86,7 +86,7 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
                     'COURT_OF_GRACE' => esc_html__( 'Court Of Grace', 'wordpress' ),
                     'DECEASED' => esc_html__( 'Gestorben', 'wordpress' ),
                 ),
-				'default' => '0',
+				'default' => ['NEW', 'SEARCHING', 'REQUEST_STOP', 'EMERGENCY', 'RESERVED', 'ADOPTED', 'FINAL_CARE', 'COURT_OF_GRACE', 'DECEASED'],
 			]
 		);
 		

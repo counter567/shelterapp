@@ -402,11 +402,11 @@ paths:
           - nullable: true
       - name: status
         in: query
-        required: true
         schema:
           type: array
           items:
             $ref: '#/components/schemas/AnimalStatus'
+          nullable: true
       - name: typeContains
         in: query
         schema:
