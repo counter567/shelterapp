@@ -3,7 +3,7 @@ import { SelectDownArrow } from "./icons/SelectDownArrow";
 
 interface TrippleValueDropdownProps {
   label: string;
-  value?: boolean;
+  value?: boolean | string;
   callback: (value: any) => void;
 }
 
@@ -13,7 +13,7 @@ const options = [
   { value: false, name: "Nein" },
 ];
 const TrippleValueDropdown = ({
-  value,
+  value = undefined,
   label,
   callback,
 }: TrippleValueDropdownProps) => {
@@ -22,8 +22,12 @@ const TrippleValueDropdown = ({
     undefined
   );
   useEffect(() => {
-    setCurrentValue(value);
-  }, [value]);
+    console.log(label, value);
+    if (typeof value === "string") {
+      value = value === "true" ? true : false;
+    }
+    setCurrentValue(() => value as boolean | undefined);
+  }, [value, setCurrentValue]);
 
   const getSelectItemName = () => {
     return options.find((option) => option.value === currentValue)?.name;
@@ -32,14 +36,14 @@ const TrippleValueDropdown = ({
     <>
       <div>
         <div
-          className="flex items-center justify-between max-w-[50%]"
+          className="flex items-center justify-between"
           style={{ minWidth: "20vw" }}
         >
           <label className="font-bold text-nowrap mr-4">{label}:</label>
           <div>
             <button
               data-dropdown-toggle="dropdown"
-              className="text-white whitespace-nowrap justify-between bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="text-white whitespace-nowrap justify-between bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 min-w-48"
               type="button"
               onClick={() => setIsOpen((value) => !value)}
             >

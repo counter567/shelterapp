@@ -7,7 +7,6 @@ import { AnimalsStore } from "../stores/animals";
 import AgeSelect from "./AgeSelect";
 import AnimalCard from "./AnimalCard";
 import "./AnimalList.css";
-import CheckBox from "./CheckBox";
 import DropDown from "./DropDown";
 import MultiSelectDropDown from "./MultiSelectDropDown";
 import Pagination from "./Pagination";
@@ -141,10 +140,7 @@ export default observer(function AnimalList({
               value={animalStore.filters.meta_private_adoption}
               label="Fremdvermittlung"
               callback={(value) =>
-                animalStore.setFilter(
-                  "meta_private_adoption",
-                  value || undefined
-                )
+                animalStore.setFilter("meta_private_adoption", value)
               }
             />
           </div>
