@@ -1,16 +1,21 @@
 import { useState } from "react";
 import Checked from "../icons/checked";
 import { SelectDownArrow } from "./icons/SelectDownArrow";
-import {AnimalStatus} from "../models/animalStatus";
+import { AnimalStatus } from "../models/animalStatus";
 
-interface MultiSelectDropDown {
+interface MultiSelectDropDownProps {
   items: { name: string; id?: string | number }[];
   value?: Array<string | number>;
   defaultValue?: Array<string | number>;
   callback: (value: Array<string | number> | undefined) => void;
 }
 
-const MultiSelectDropDown = ({ items, value, defaultValue, callback }: MultiSelectDropDown) => {
+const MultiSelectDropDown = ({
+  items,
+  value,
+  defaultValue,
+  callback,
+}: MultiSelectDropDownProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const getSelectItemCount = (
@@ -18,11 +23,11 @@ const MultiSelectDropDown = ({ items, value, defaultValue, callback }: MultiSele
     defaultValue?: Array<string | number>,
     value?: Array<string | number>
   ) => {
-    let count = value?.length || Object.keys(AnimalStatus).length
-    if(count < Object.keys(AnimalStatus).length) {
-      return `Ausgewählt: ${count}`
+    let count = value?.length || Object.keys(AnimalStatus).length;
+    if (count < Object.keys(AnimalStatus).length) {
+      return `Ausgewählt: ${count}`;
     } else {
-      return "Alle"
+      return "Alle";
     }
   };
   return (
@@ -33,7 +38,7 @@ const MultiSelectDropDown = ({ items, value, defaultValue, callback }: MultiSele
           className="text-white w-full whitespace-nowrap justify-between bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           type="button"
           onClick={() => setIsOpen((value) => !value)}
-          style={{overflow: "hidden"}}
+          style={{ overflow: "hidden" }}
         >
           {getSelectItemCount(items, defaultValue, value)}
           <SelectDownArrow />
@@ -50,25 +55,22 @@ const MultiSelectDropDown = ({ items, value, defaultValue, callback }: MultiSele
               <li
                 key={index}
                 onClick={() => {
-                  if(value?.find((it: string | number) => it === id)) {
-                    callback(value?.filter((element) => element !== id))
+                  if (value?.find((it: string | number) => it === id)) {
+                    callback(value?.filter((element) => element !== id));
                   } else {
-                    callback(value?.concat([id!]) || [])
+                    callback(value?.concat([id!]) || []);
                   }
                 }}
               >
-                <div className="hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer flex items-center">
-                  <span className="block px-4 py-2">
-                    {name}
-                  </span>
-                  {value?.find((it: string | number) => it === id) !== undefined &&
-                    <div className="self-end">
-                      <Checked/>
-                      </div>
-                    
-                  }
-                     </div>
-                
+                <div className="hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer flex items-center justify-between">
+                  <span className="block px-4 py-2">{name}</span>
+                  {value?.find((it: string | number) => it === id) !==
+                    undefined && (
+                    <div className="pr-2">
+                      <Checked />
+                    </div>
+                  )}
+                </div>
               </li>
             ))}
           </ul>

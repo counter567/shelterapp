@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import { useContext, useEffect } from "react";
 import { germanStatus } from "../helper/getCardColorByAnimalStatus";
 import { AnimalSex } from "../models/animalSex";
-import {AnimalStatus, statusValues } from "../models/animalStatus";
+import { AnimalStatus, statusValues } from "../models/animalStatus";
 import { AnimalsStore } from "../stores/animals";
 import AgeSelect from "./AgeSelect";
 import AnimalCard from "./AnimalCard";
@@ -11,6 +11,7 @@ import CheckBox from "./CheckBox";
 import DropDown from "./DropDown";
 import MultiSelectDropDown from "./MultiSelectDropDown";
 import Pagination from "./Pagination";
+import TrippleValueDropdown from "./TrippleValueDropdown";
 
 export const animalSex = [
   { id: AnimalSex.All, name: "Alle Geschlechter" },
@@ -80,9 +81,7 @@ export default observer(function AnimalList({
                 [{ id: 0, name: "Alle Tierarten" }],
                 animalStore.typesData
               )}
-              value={
-                animalStore.filters.shelterapp_animal_type || []
-              }
+              value={animalStore.filters.shelterapp_animal_type || []}
               defaultValue={[]}
               callback={(value) =>
                 animalStore.setFilter(
@@ -122,26 +121,23 @@ export default observer(function AnimalList({
                 );
               }}
             />
-
           </div>
           <div className="mb-4 dropdown-buttons gap-y-4 gap-x-4 items-center justify-center">
-            <CheckBox
+            <TrippleValueDropdown
               value={animalStore.filters.meta_missing}
-              label="Wird Vermisst"
-              callback={(value) =>
-                animalStore.setFilter("meta_missing", value || undefined)
-              }
+              label="Wird vermisst"
+              callback={(value) => animalStore.setFilter("meta_missing", value)}
             />
 
-            <CheckBox
+            <TrippleValueDropdown
               value={animalStore.filters.meta_was_found}
               label="Wurde Gefunden"
               callback={(value) =>
-                animalStore.setFilter("meta_was_found", value || undefined)
+                animalStore.setFilter("meta_was_found", value)
               }
             />
 
-            <CheckBox
+            <TrippleValueDropdown
               value={animalStore.filters.meta_private_adoption}
               label="Fremdvermittlung"
               callback={(value) =>

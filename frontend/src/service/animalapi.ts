@@ -59,13 +59,13 @@ const getAnimalsPaged = async (
   const options = {
     page: page,
     per_page: perPage,
-    ...structuredClone(filter),
+    ...JSON.parse(JSON.stringify(filter)),
   } as any;
   if (filter.meta_status) {
     options.meta_status = JSON.stringify(filter.meta_status);
   }
   if (!options.shelterapp_animal_type) {
-    delete options.shelterapp_animal_type
+    delete options.shelterapp_animal_type;
   }
   const response = await requestData<AnimalSource[]>(
     "/wp/v2/shelterapp_animals",

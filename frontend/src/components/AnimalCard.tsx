@@ -94,21 +94,23 @@ const AnimalCard = ({
             <h3 className="text-center font-extrabold text-white">
               {germanStatus(status!)}
             </h3>
-            {status == "ADOPTED" && dateOfLeave && (
+            {status === AnimalStatus.Adopted && dateOfLeave && (
               <span className="text-center text-white">
                 {formatDate(dateOfLeave)}
               </span>
             )}
-            {status == "DECEASED" && dateOfDeath && (
+            {status === AnimalStatus.Deceased && dateOfDeath && (
               <span className="text-center text-white">
                 {formatDate(dateOfDeath)}
               </span>
             )}
-            {status != "DECEASED" && status != "ADOPTED" && dateOfAdmission && (
-              <span className="text-center text-white">
-                {formatDate(dateOfAdmission)}
-              </span>
-            )}
+            {status !== AnimalStatus.Deceased &&
+              status !== AnimalStatus.Adopted &&
+              dateOfAdmission && (
+                <span className="text-center text-white">
+                  {formatDate(dateOfAdmission)}
+                </span>
+              )}
           </div>
         </div>
       </a>

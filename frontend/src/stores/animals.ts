@@ -173,10 +173,13 @@ export class AnimalsStore {
     } else {
       filters.meta_status = Object.values(AnimalStatus);
     }
-    if(this.filters.shelterapp_animal_type && this.filters.shelterapp_animal_type.length > 0) {
-      filters.shelterapp_animal_type = this.filters.shelterapp_animal_type
+    if (
+      this.filters.shelterapp_animal_type &&
+      this.filters.shelterapp_animal_type.length > 0
+    ) {
+      filters.shelterapp_animal_type = this.filters.shelterapp_animal_type;
     } else {
-      filters.shelterapp_animal_type = undefined
+      filters.shelterapp_animal_type = undefined;
     }
 
     return filters;
@@ -187,10 +190,6 @@ export class AnimalsStore {
     value: AnimalFilter[T],
     store = true
   ) {
-    if(filter === "shelterapp_animal_type") {
-        console.log(typeof value)
-        console.log(value)
-    }
     this.setCurrentPage(1);
     if (value === undefined) {
       const currentFilter = JSON.parse(JSON.stringify(this.filters));
@@ -224,16 +223,13 @@ export class AnimalsStore {
         .split("&")
         .forEach((c) => {
           let [propName, value] = c.split("=") as [string, any];
-          if (
-            propName === "meta_age_max" ||
-            propName === "meta_age_min"
-          ) {
+          if (propName === "meta_age_max" || propName === "meta_age_min") {
             value = Number.isInteger(parseInt(value)) ? parseInt(value) : value;
           } else if (
             propName === "meta_status" ||
             propName === "shelterapp_animal_type"
-            ) {
-            value = value.split(",").filter((it: string) => it !== '' )
+          ) {
+            value = value.split(",").filter((it: string) => it !== "");
           }
           const currentFilter = JSON.parse(JSON.stringify(this.filters));
           (currentFilter as any)[propName] = value;
@@ -243,8 +239,8 @@ export class AnimalsStore {
   }
 
   resetFilter() {
-    this.setFilters({"meta_status": Object.values(AnimalStatus)});
-    this.fetchCurrentAnimals()
+    this.setFilters({ meta_status: Object.values(AnimalStatus) });
+    this.fetchCurrentAnimals();
   }
 
   setHideFilters(hideFilters: boolean) {
@@ -259,7 +255,10 @@ export class AnimalsStore {
     if (this.filters.shelterapp_animal_type) {
       const value =
         this.typesData.find(
-          (type) => this.filters.shelterapp_animal_type?.find((it) => it === type.id) !== undefined
+          (type) =>
+            this.filters.shelterapp_animal_type?.find(
+              (it) => it === type.id
+            ) !== undefined
         )?.name || undefined;
       if (value) {
         newTitle += ` - ${value}`;
@@ -272,7 +271,9 @@ export class AnimalsStore {
       }
     }
     if (this.filters.meta_status) {
-      const combined = this.filters.meta_status.map((it: AnimalStatus) => animalStatus.find((e) => e.id === it)?.name).join(',')
+      const combined = this.filters.meta_status
+        .map((it: AnimalStatus) => animalStatus.find((e) => e.id === it)?.name)
+        .join(",");
       if (combined) {
         newTitle += ` - ${combined}`;
       }
