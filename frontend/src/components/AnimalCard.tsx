@@ -56,7 +56,7 @@ const AnimalCard = ({
         {wasFound && <Ribbon text="Fundtier" color="yellow" />}
         {missing && (
           <Ribbon
-            cssClass={wasFound ? "top-10" : ""}
+            cssClass={wasFound ? "top-8" : ""}
             text="Vermisst"
             color="red"
           />
@@ -90,7 +90,7 @@ const AnimalCard = ({
               <BirthDate birthDate={dateOfBirth} />
             </span>
           )}
-          <div className="card-bottom flex items-center w-full relative  flex-col rounded-b mt-4">
+          <div className="card-bottom flex items-center w-full relative flex-col rounded-b mt-4 min-h-[42px]">
             <h3 className="text-center font-extrabold text-white">
               {germanStatus(status!)}
             </h3>

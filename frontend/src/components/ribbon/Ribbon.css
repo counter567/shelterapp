@@ -10,16 +10,15 @@ aside:after {
 }
 
 aside {
-  padding-right: 10px;
-  line-height: 35px;
+  padding-right: 4px;
+  line-height: 24px;
   position: absolute;
   width: 80px;
   right: 0px;
 }
-
 aside.ribbon:before {
   left: -20px;
-  border-width: 15px 20px 20px 0;
+  border-width: 12px 20px 12px 0px;
 }
 /* Colors */
 aside.blue.ribbon {
