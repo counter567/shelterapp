@@ -45,7 +45,7 @@ export async function requestData<T>(
           continue
         }
         if(Array.isArray(data[key])) {
-          data[key].forEach((it: string | number) => params.append(key, it as string))
+          data[key].forEach((it: string | number) => params.append(key + '[]', it as string))
         } else {
           params.append(key, data[key])
         }

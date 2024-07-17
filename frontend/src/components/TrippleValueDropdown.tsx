@@ -36,7 +36,7 @@ const TrippleValueDropdown = ({
     <>
       <div>
         <div
-          className="flex items-center justify-between"
+          className="flex items-center"
           style={{ minWidth: "20vw" }}
         >
           <label className="font-bold text-nowrap mr-4">{label}:</label>

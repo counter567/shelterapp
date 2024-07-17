@@ -109,12 +109,17 @@ export default observer(function AnimalList({
               callback={(value: [number, number]) => {
                 animalStore.setFilter(
                   "meta_age_max",
-                  value[0] === 0 ? undefined : value[0]
+                  value[0] === 0 ? undefined : value[0],
+                  true,
+                  false
                 );
                 animalStore.setFilter(
                   "meta_age_min",
-                  value[1] === 0 ? undefined : value[1]
+                  value[1] === 0 ? undefined : value[1],
+                  true,
+                  false
                 );
+                animalStore.fetchCurrentAnimals()
               }}
             />
           </div>

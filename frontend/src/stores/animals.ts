@@ -188,7 +188,8 @@ export class AnimalsStore {
   setFilter<T extends keyof AnimalFilter>(
     filter: T,
     value: AnimalFilter[T],
-    store = true
+    store = true,
+    refresh = true,
   ) {
     this.setCurrentPage(1);
     if (value === undefined) {
@@ -201,7 +202,9 @@ export class AnimalsStore {
       this.setFilters(currentFilter);
     }
     if (store) {
-      this.fetchCurrentAnimals();
+      if(refresh) {
+        this.fetchCurrentAnimals();
+      }
       if (!this.hideFilters) {
         const url = new URL(window.location as any);
         url.hash =
