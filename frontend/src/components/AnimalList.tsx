@@ -2,15 +2,15 @@ import { observer } from "mobx-react-lite";
 import { useContext, useEffect } from "react";
 import { germanStatus } from "../helper/getCardColorByAnimalStatus";
 import { AnimalSex } from "../models/animalSex";
-import {AnimalStatus, statusValues } from "../models/animalStatus";
+import { AnimalStatus, statusValues } from "../models/animalStatus";
 import { AnimalsStore } from "../stores/animals";
 import AgeSelect from "./AgeSelect";
 import AnimalCard from "./AnimalCard";
 import "./AnimalList.css";
-import CheckBox from "./CheckBox";
 import DropDown from "./DropDown";
 import MultiSelectDropDown from "./MultiSelectDropDown";
 import Pagination from "./Pagination";
+import TrippleValueDropdown from "./TrippleValueDropdown";
 
 export const animalSex = [
   { id: AnimalSex.All, name: "Alle Geschlechter" },
@@ -71,24 +71,18 @@ export default observer(function AnimalList({
               callback={(value) =>
                 animalStore.setFilter(
                   "meta_status",
-                  value.map((it) => it as AnimalStatus)
+                  value?.map((it) => it as AnimalStatus)
                 )
               }
             />
-            <DropDown
-              items={Array.prototype.concat(
-                [{ id: 0, name: "Alle Tierarten" }],
-                animalStore.typesData
-              )}
-              value={
-                (animalStore.filters.shelterapp_animal_type as any as number) ||
-                0
-              }
-              defaultValue={"Alle Tierarten"}
+            <MultiSelectDropDown
+              items={animalStore.typesData}
+              value={animalStore.filters.shelterapp_animal_type || []}
+              defaultValue={[]}
               callback={(value) =>
                 animalStore.setFilter(
                   "shelterapp_animal_type",
-                  value === 0 ? undefined : value
+                  value as number[]
                 )
               }
             />
@@ -115,41 +109,40 @@ export default observer(function AnimalList({
               callback={(value: [number, number]) => {
                 animalStore.setFilter(
                   "meta_age_max",
-                  value[0] === 0 ? undefined : value[0]
+                  value[0] === 0 ? undefined : value[0],
+                  true,
+                  false
                 );
                 animalStore.setFilter(
                   "meta_age_min",
-                  value[1] === 0 ? undefined : value[1]
+                  value[1] === 0 ? undefined : value[1],
+                  true,
+                  false
                 );
+                animalStore.fetchCurrentAnimals()
               }}
             />
-
           </div>
           <div className="mb-4 dropdown-buttons gap-y-4 gap-x-4 items-center justify-center">
-            <CheckBox
+            <TrippleValueDropdown
               value={animalStore.filters.meta_missing}
-              label="Wird Vermisst"
-              callback={(value) =>
-                animalStore.setFilter("meta_missing", value || undefined)
-              }
+              label="Wird vermisst"
+              callback={(value) => animalStore.setFilter("meta_missing", value)}
             />
 
-            <CheckBox
+            <TrippleValueDropdown
               value={animalStore.filters.meta_was_found}
               label="Wurde Gefunden"
               callback={(value) =>
-                animalStore.setFilter("meta_was_found", value || undefined)
+                animalStore.setFilter("meta_was_found", value)
               }
             />
 
-            <CheckBox
+            <TrippleValueDropdown
               value={animalStore.filters.meta_private_adoption}
               label="Fremdvermittlung"
               callback={(value) =>
-                animalStore.setFilter(
-                  "meta_private_adoption",
-                  value || undefined
-                )
+                animalStore.setFilter("meta_private_adoption", value)
               }
             />
           </div>

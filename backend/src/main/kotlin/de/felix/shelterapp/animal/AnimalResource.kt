@@ -27,6 +27,7 @@ class AnimalResource {
         @QueryParam("pageSize") pageSize: Int?,
         @QueryParam("nameContains") nameContains: String?,
         @QueryParam("typeContains") typeContains: String?,
+        @QueryParam("typeIsIn") typeIsIn: List<String>?,
         @QueryParam("status") status: List<AnimalStatus?>? = null,
         @QueryParam("isPublic") isPublic: Boolean?,
         @QueryParam("isSuccessStory") isSuccessStory: Boolean?,
@@ -71,10 +72,16 @@ class AnimalResource {
         } else {
             status
         }
+        val fixedTypeIsIn = if(typeIsIn?.isEmpty() == true) {
+            null
+        } else {
+            typeIsIn
+        }
         val params = listOf(
             PanacheQueryParameter(Animal::tenantId.name, tenantId),
             PanacheQueryParameter(Animal::name.name, nameContains, PanacheQueryParameter.Type.LIKE),
             PanacheQueryParameter(Animal::type.name, typeContains, PanacheQueryParameter.Type.LIKE),
+            PanacheQueryParameter(Animal::type.name, fixedTypeIsIn, PanacheQueryParameter.Type.IN),
             PanacheQueryParameter(Animal::status.name, fixedStatus, PanacheQueryParameter.Type.IN),
             PanacheQueryParameter(Animal::public.name, isPublic),
             PanacheQueryParameter(Animal::successStory.name, isSuccessStory),
@@ -115,10 +122,7 @@ class AnimalResource {
             )
         val queryParameters = PanacheQueryParameters(params, page ?: 0, pageSize ?: 20)
         return@withPanacheSession try {
-            val result = Animal.query(queryParameters)
-            println("Served ${result.size}")
-            println("States were $status")
-            result
+            Animal.query(queryParameters)
         } catch (e: IllegalArgumentException) {
             throw BadRequestException(e.message)
         }

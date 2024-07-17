@@ -27,9 +27,7 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
             'taxonomy' => 'shelterapp_animal_type',
             'hide_empty' => false,
         ) );
-        $termsOptions = array(
-            '0' => esc_html__( 'Default', 'wordpress' ),
-        );
+        $termsOptions = array();
         foreach($terms as $term){
             $termsOptions[$term->term_id] = $term->name;
         }
@@ -58,14 +56,16 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
                 'default' => 'no',
             ]
         );
-
+        $type_options = $this->getOptionsAnimalType();
+        $type_ids = array_keys($type_options);
 		$this->add_control(
 			'type',
 			[
-				'type' => \Elementor\Controls_Manager::SELECT,
+				'type' => \Elementor\Controls_Manager::SELECT2,
+                'multiple' => true,
 				'label' => esc_html__( 'Type', 'wordpress' ),
-				'options' => $this->getOptionsAnimalType(),
-				'default' => '0',
+				'options' => $type_options,
+				'default' => $type_ids,
 			]
 		);
 

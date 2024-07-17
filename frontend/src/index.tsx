@@ -15,7 +15,7 @@ roots.forEach((rootElement) => {
   root.render(
     <React.StrictMode>
       <App
-        type={rootElement.getAttribute('data-type') ? parseInt(rootElement.getAttribute('data-type')!) :  undefined}
+        type={getTypesFromRoot(rootElement) || undefined}
         status={rootElement.getAttribute('data-status')?.split(",").filter((it) => it !== '').map((it: string) => it as AnimalStatus) || Object.values(AnimalStatus)}
         sex={rootElement.getAttribute('data-sex') as AnimalSex || undefined}
         maxAge={getNumber(rootElement, 'data-maxAge') || undefined}
@@ -37,3 +37,10 @@ function getNumber(element: Element, attribute: string, bias: number = 0): numbe
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+function getTypesFromRoot(rootElement: Element): number[] | undefined {
+  const rawData = rootElement.getAttribute('data-type')
+  if(!rawData) return undefined
+  const splitted = rawData!.split(",").filter((it) => it !== '')
+  return splitted.map((it: string) => parseInt(it))
+}
+

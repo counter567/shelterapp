@@ -84,7 +84,6 @@ export class AnimalsStore {
   };
 
   setFilters = (value: AnimalFilter) => {
-
     this.filters = value;
   };
 
@@ -156,7 +155,7 @@ export class AnimalsStore {
   }
 
   setTypesData(typeData: TypeData[], store = true) {
-    this.typesData = typeData.filter((e) => e.count > 0);
+    this.typesData = typeData//.filter((e) => e.count > 0);
     if (store) {
       localStorage.setItem("sa.animal.types", JSON.stringify(typeData));
     }
@@ -168,20 +167,19 @@ export class AnimalsStore {
     const filters: AnimalFilterComputed = {
       ...(this.filters as any),
     };
-
     // fill meta_status
-    if (this.filters.meta_status) {
+    if (this.filters.meta_status && this.filters.meta_status.length > 0) {
       filters.meta_status = this.filters.meta_status as AnimalStatus[];
     } else {
-      filters.meta_status = [
-        AnimalStatus.New,
-        AnimalStatus.Searching,
-        AnimalStatus.RequestStop,
-        AnimalStatus.Emergency,
-        AnimalStatus.Reserved,
-        AnimalStatus.FinalCare,
-        AnimalStatus.CourtOfGrace,
-      ];
+      filters.meta_status = Object.values(AnimalStatus);
+    }
+    if (
+      this.filters.shelterapp_animal_type &&
+      this.filters.shelterapp_animal_type.length > 0
+    ) {
+      filters.shelterapp_animal_type = this.filters.shelterapp_animal_type;
+    } else {
+      filters.shelterapp_animal_type = undefined;
     }
 
     return filters;
@@ -190,11 +188,9 @@ export class AnimalsStore {
   setFilter<T extends keyof AnimalFilter>(
     filter: T,
     value: AnimalFilter[T],
-    store = true
+    store = true,
+    refresh = true,
   ) {
-    if(filter === "meta_status") {
-      console.log(value)
-    }
     this.setCurrentPage(1);
     if (value === undefined) {
       const currentFilter = JSON.parse(JSON.stringify(this.filters));
@@ -206,7 +202,9 @@ export class AnimalsStore {
       this.setFilters(currentFilter);
     }
     if (store) {
-      this.fetchCurrentAnimals();
+      if(refresh) {
+        this.fetchCurrentAnimals();
+      }
       if (!this.hideFilters) {
         const url = new URL(window.location as any);
         url.hash =
@@ -228,16 +226,14 @@ export class AnimalsStore {
         .split("&")
         .forEach((c) => {
           let [propName, value] = c.split("=") as [string, any];
-          if (
-            propName === "shelterapp_animal_type" ||
-            propName === "meta_age_max" ||
-            propName === "meta_age_min"
-          ) {
+          if (propName === "meta_age_max" || propName === "meta_age_min") {
             value = Number.isInteger(parseInt(value)) ? parseInt(value) : value;
           } else if (
             propName === "meta_status"
             ) {
-            value = value.split(",")
+            value = value.split(",").filter((it: string) => it !== '' )
+          } else if (propName === "shelterapp_animal_type") {
+            value = value.split(",").filter((it: string) => it !== '' ).map((it: string) => parseInt(it))
           }
           const currentFilter = JSON.parse(JSON.stringify(this.filters));
           (currentFilter as any)[propName] = value;
@@ -247,8 +243,8 @@ export class AnimalsStore {
   }
 
   resetFilter() {
-    this.setFilters({"meta_status": Object.values(AnimalStatus)});
-    this.fetchCurrentAnimals()
+    this.setFilters({ meta_status: Object.values(AnimalStatus) });
+    this.fetchCurrentAnimals();
   }
 
   setHideFilters(hideFilters: boolean) {
@@ -263,7 +259,10 @@ export class AnimalsStore {
     if (this.filters.shelterapp_animal_type) {
       const value =
         this.typesData.find(
-          (animal) => animal.id === this.filters.shelterapp_animal_type
+          (type) =>
+            this.filters.shelterapp_animal_type?.find(
+              (it) => it === type.id
+            ) !== undefined
         )?.name || undefined;
       if (value) {
         newTitle += ` - ${value}`;
@@ -276,7 +275,9 @@ export class AnimalsStore {
       }
     }
     if (this.filters.meta_status) {
-      const combined = this.filters.meta_status.map((it: AnimalStatus) => animalStatus.find((e) => e.id === it)?.name).join(',')
+      const combined = this.filters.meta_status
+        .map((it: AnimalStatus) => animalStatus.find((e) => e.id === it)?.name)
+        .join(",");
       if (combined) {
         newTitle += ` - ${combined}`;
       }

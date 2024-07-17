@@ -18,6 +18,7 @@ import BirthDate from "./Birthdate";
 import Gender from "./Gender";
 import PayPalButton from "./PaypalButton";
 import SectionList from "./SectionList";
+import { AnimalStatus } from "../models/animalStatus";
 
 interface AnimalDetailProps {
   animalStoreContext: React.Context<AnimalsStore>;
@@ -74,7 +75,6 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
     sex,
     type,
     status,
-    wasFound, // not used in detail
     description,
     otherPictureFileUrls,
     illnesses,
@@ -104,21 +104,23 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
               )}
             </div>
           </div>
-          {status == "ADOPTED" && dateOfLeave && (
+          {status === AnimalStatus.Adopted && dateOfLeave && (
             <span className="text-center mb-2">
               seit {formatDate(dateOfLeave)}
             </span>
           )}
-          {status == "DECEASED" && dateOfDeath && (
+          {status === AnimalStatus.Deceased && dateOfDeath && (
             <span className="text-center mb-2">
               seit {formatDate(dateOfDeath)}
             </span>
           )}
-          {status != "DECEASED" && status != "ADOPTED" && dateOfAdmission && (
-            <span className="text-center mb-2">
-              seit {formatDate(dateOfAdmission)}
-            </span>
-          )}
+          {status !== AnimalStatus.Deceased &&
+            status !== AnimalStatus.Adopted &&
+            dateOfAdmission && (
+              <span className="text-center mb-2">
+                seit {formatDate(dateOfAdmission)}
+              </span>
+            )}
           <span
             className="rounded-lg mb-8 text-white py-3 font-bold text-center"
             style={{ backgroundColor: getCSSColorByCardColor(status!) }}
@@ -182,21 +184,25 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
                   otherPictureFileUrls?.map((data) => ({
                     original: data.url,
                     thumbnail: data.thumbnailUrl,
-                    renderItem: data.isVideo ? (item) => {
-                        return (
-                          <video
-                            className="px-[56px] w-full"
-                            controls={true}
-                            autoPlay={false}
-                            loop={true}
-                          >
-                            <source src={data.url} type="video/mp4" />
-                          </video>
-                        );
-                    } : undefined,
-                    renderThumbInner: data.isVideo ? () => {
-                      return <img alt="" src={data.thumbnailUrl} />;
-                    } : undefined,
+                    renderItem: data.isVideo
+                      ? (item) => {
+                          return (
+                            <video
+                              className="px-[56px] w-full"
+                              controls={true}
+                              autoPlay={false}
+                              loop={true}
+                            >
+                              <source src={data.url} type="video/mp4" />
+                            </video>
+                          );
+                        }
+                      : undefined,
+                    renderThumbInner: data.isVideo
+                      ? () => {
+                          return <img alt="" src={data.thumbnailUrl} />;
+                        }
+                      : undefined,
                   })) ?? []
                 }
                 showThumbnails={true}

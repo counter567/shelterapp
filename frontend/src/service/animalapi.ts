@@ -29,7 +29,7 @@ export interface PostFilter {
     | "title";
   slug?: string;
   status?: "publish" | "future" | "draft" | "pending" | "private";
-  shelterapp_animal_type?: number;
+  shelterapp_animal_type?: number[];
   shelterapp_animal_type_exclude?: number[];
   shelterapp_animal_allergies?: number[];
   shelterapp_animal_allergies_exclude?: number[];
@@ -63,6 +63,9 @@ const getAnimalsPaged = async (
   } as any;
   if (filter.meta_status) {
     options.meta_status = JSON.stringify(filter.meta_status);
+  }
+  if (!options.shelterapp_animal_type) {
+    delete options.shelterapp_animal_type;
   }
   const response = await requestData<AnimalSource[]>(
     "/wp/v2/shelterapp_animals",
