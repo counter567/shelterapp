@@ -282,7 +282,7 @@ class ShelterappAnimals
         if($post->post_type !== 'shelterapp_animals'){
             return;
         }
-        
+
 
         if(array_key_exists('otherPictureFileUrls', $_POST)) {
             $post_value = $_POST['otherPictureFileUrls'];
@@ -291,6 +291,15 @@ class ShelterappAnimals
 
         outLog('***********************************************');
         outLog('saving a post! Update to backend!');
+
+        // if the animal is trashed call sa_sync_delete_animal(id)
+        if($post->post_status === 'trash') {
+            outLog('Animal is trashed! Remove from backend!');
+            $this->sa_sync_delete_animal($post->ID);
+            delete_post_meta($post->ID, 'shelterapp_id');
+            return;
+        }
+        
     }
 
     function init_rest()
