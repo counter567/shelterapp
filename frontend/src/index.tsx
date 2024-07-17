@@ -21,9 +21,9 @@ roots.forEach((rootElement) => {
         maxAge={getNumber(rootElement, 'data-maxAge') || undefined}
         minAge={getNumber(rootElement, 'data-minAge', 1) || undefined}
         hideFilters={rootElement.getAttribute('data-hideFilters') === 'yes' || undefined}
-        wasFound={rootElement.getAttribute('data-wasFound') === 'yes' || undefined}
-        missing={rootElement.getAttribute('data-missing') === 'yes' || undefined}
-        privateAdoption={rootElement.getAttribute('data-privateAdoption') === 'yes' || undefined}
+        wasFound={rootElement.hasAttribute('data-wasFound') && rootElement.getAttribute('data-wasFound') !== '' ? (rootElement.getAttribute('data-wasFound') === 'yes') : undefined}
+        missing={rootElement.hasAttribute('data-missing') && rootElement.getAttribute('data-missing') !== '' ? (rootElement.getAttribute('data-missing') === 'yes') : undefined}
+        privateAdoption={rootElement.hasAttribute('data-privateAdoption') && rootElement.getAttribute('data-privateAdoption') !== '' ? (rootElement.getAttribute('data-privateAdoption') === 'yes') : undefined}
       />
     </React.StrictMode>
   );
