@@ -152,7 +152,9 @@ function shelterapp_plugin_setting_shelterapp_user_data()
                             }
                             async function sa_do_update(){
                                 while (true) {
-                                    const response = await fetch('/wp-json/sa/v1/update?test=1');
+                                    const response = await fetch('/wp-json/sa/v1/update?test=1', {
+                                        cache: 'no-cache',
+                                    });
                                     const data = await response.json();
                                     if(!data.success || data.processed == 0) {
                                         break;

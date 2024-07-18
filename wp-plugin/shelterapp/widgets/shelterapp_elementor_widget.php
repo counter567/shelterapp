@@ -133,31 +133,40 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
         $this->add_control(
             'wasFound',
             [
-                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'type' => \Elementor\Controls_Manager::SELECT,
                 'label' => esc_html__( 'Ist Fundtier', 'wordpress' ),
-                'label_on' => esc_html__( 'Ja', 'wordpress' ),
-                'label_off' => esc_html__( 'Nein', 'wordpress' ),
-                'default' => 'no',
+                'options' => array(
+                    '' => esc_html__( 'Egal', 'wordpress' ),
+                    'yes' => esc_html__( 'Ja', 'wordpress' ),
+                    'no' => esc_html__( 'Nein', 'wordpress' ),
+                            ),
+                'default' => '',
             ]
         );
         $this->add_control(
             'missing',
             [
-                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'type' => \Elementor\Controls_Manager::SELECT,
                 'label' => esc_html__( 'Wird vermisst', 'wordpress' ),
-                'label_on' => esc_html__( 'Ja', 'wordpress' ),
-                'label_off' => esc_html__( 'Nein', 'wordpress' ),
-                'default' => 'no',
+                'options' => array(
+                    '' => esc_html__( 'Egal', 'wordpress' ),
+                    'yes' => esc_html__( 'Ja', 'wordpress' ),
+                    'no' => esc_html__( 'Nein', 'wordpress' ),
+                            ),
+                'default' => '',
             ]
         );
         $this->add_control(
             'privateAdoption',
             [
-                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'type' => \Elementor\Controls_Manager::SELECT,
                 'label' => esc_html__( 'Ist Fremdvermittlung', 'wordpress' ),
-                'label_on' => esc_html__( 'Ja', 'wordpress' ),
-                'label_off' => esc_html__( 'Nein', 'wordpress' ),
-                'default' => 'no',
+                'options' => array(
+                    '' => esc_html__( 'Egal', 'wordpress' ),
+                    'yes' => esc_html__( 'Ja', 'wordpress' ),
+                    'no' => esc_html__( 'Nein', 'wordpress' ),
+                            ),
+                'default' => '',
             ]
         );
 

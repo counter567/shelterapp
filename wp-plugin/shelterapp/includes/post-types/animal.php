@@ -282,7 +282,7 @@ class ShelterappAnimals
         if($post->post_type !== 'shelterapp_animals'){
             return;
         }
-        
+
 
         if(array_key_exists('otherPictureFileUrls', $_POST)) {
             $post_value = $_POST['otherPictureFileUrls'];
@@ -291,6 +291,16 @@ class ShelterappAnimals
 
         outLog('***********************************************');
         outLog('saving a post! Update to backend!');
+
+        // if the animal is trashed call sa_sync_delete_animal(id)
+        if($post->post_status === 'trash') {
+            outLog('Animal is trashed! Remove from backend!');
+            $shelterapp_id = get_post_meta($post_id, 'shelterapp_id', true);
+            sa_sync_delete_animal($shelterapp_id);
+            delete_post_meta($post->ID, 'shelterapp_id');
+            return;
+        }
+        
     }
 
     function init_rest()
@@ -928,19 +938,6 @@ add_action('before_delete_post', function($post_id){
         $attachments = get_attached_media('image', $post_id);
         foreach ($attachments as $attachment) {
             wp_delete_attachment($attachment->ID, true);
-        }
-    }
-    $shelterapp_id = get_post_meta($post_id, 'shelterapp_id', true);
-    if(isset($shelterapp_id) && !empty($shelterapp_id)) {
-        outLog('Delete animal with id ' . $shelterapp_id);
-        try{
-            sa_sync_delete_animal($shelterapp_id);
-        } catch(Exception $e) {
-            outLog('There was an error during delete:');
-            outLog($e->getMessage());
-            outLog(array_map(function($entry){
-                return $entry['function'];
-            }, $e->getTrace()));
         }
     }
 });
