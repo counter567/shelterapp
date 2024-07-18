@@ -101,19 +101,19 @@ const AnimalCard = ({
             </h3>
             {status === AnimalStatus.Adopted && dateOfLeave && (
               <span className="text-center text-white">
-                {formatDate(dateOfLeave)}
+                am {formatDate(dateOfLeave)}
               </span>
             )}
             {status === AnimalStatus.Deceased && dateOfDeath && (
               <span className="text-center text-white">
-                {formatDate(dateOfDeath)}
+                am {formatDate(dateOfDeath)}
               </span>
             )}
             {status !== AnimalStatus.Deceased &&
               status !== AnimalStatus.Adopted &&
               dateOfAdmission && (
                 <span className="text-center text-white">
-                  {formatDate(dateOfAdmission)}
+                  Aufgenommen am: {formatDate(dateOfAdmission)}
                 </span>
               )}
           </div>
