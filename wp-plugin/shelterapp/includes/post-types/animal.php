@@ -143,6 +143,12 @@ class ShelterappAnimals
             );
             $args['meta_query'][] = $meta_query;
         }
+            if (isset($request['meta_orderby']) && $request['meta_orderby'] != '') {
+                $args['meta_type'] = 'DATE';
+                $args['meta_key'] = $request['meta_orderby'];
+                $args['orderby'] = 'meta_value';
+                $args['order'] = isset($request['meta_order']) ? $request['meta_order'] : 'DESC';
+            }
         return $args;
     }
 

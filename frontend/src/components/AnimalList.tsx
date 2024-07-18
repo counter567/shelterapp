@@ -34,6 +34,13 @@ export const ageFilter = [
   { id: 5, name: "Über 5 Jahre" },
 ];
 
+export const animalSort = [
+  { id: "DATE_OF_ADMISSION_ASC", name: "Aufnahmedatum aufsteigend" },
+  { id: "DATE_OF_ADMISSION_DSC", name: "Aufnahmedatum absteigend" },
+  { id: "DATE_OF_BIRTH_ASC", name: "Alter aufsteigend" },
+  { id: "DATE_OF_BIRTH_DSC", name: "Alter absteigend" }
+]
+
 interface AnimalListProps {
   hideFilters?: boolean;
   animalStoreContext: React.Context<AnimalsStore>;
@@ -143,6 +150,13 @@ export default observer(function AnimalList({
               label="Fremdvermittlung"
               callback={(value) =>
                 animalStore.setFilter("meta_private_adoption", value)
+              }
+            />
+            <DropDown
+              items={animalSort}
+              value={animalStore.orderBy}
+              callback={(value) =>
+                animalStore.setOrderBy(value)
               }
             />
           </div>

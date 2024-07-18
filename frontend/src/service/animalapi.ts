@@ -16,17 +16,8 @@ export interface PostFilter {
   exclude?: number[];
   include?: number[];
   offset?: number;
-  order?: "asc" | "desc";
-  orderby?:
-    | "author"
-    | "date"
-    | "id"
-    | "include"
-    | "modified"
-    | "parent"
-    | "relevance"
-    | "slug"
-    | "title";
+  meta_order?: "ASC" | "DESC";
+  meta_orderby?: string;
   slug?: string;
   status?: "publish" | "future" | "draft" | "pending" | "private";
   shelterapp_animal_type?: number[];
@@ -50,7 +41,7 @@ const cache = new Map<string, RequestResponseWithPagination & AnimalSource[]>();
 const getAnimalsPaged = async (
   page = 1,
   perPage = 10,
-  filter: AnimalFilterComputed = {}
+  filter: AnimalFilterComputed = {},
 ) => {
   let CacheEntry = cache.get(JSON.stringify({ page, perPage, filter }));
   if (CacheEntry) {
