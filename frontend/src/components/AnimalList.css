@@ -1,13 +1,5 @@
-.animals {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: space-between;
-}
-
 .animals > li {
-  flex:0 0 300px;
+  flex: 0 0 300px;
 }
 
 .dropdown-buttons {
@@ -16,7 +8,7 @@
 }
 @media screen and (max-width: 1200px) {
   .dropdown-buttons {
-      flex-wrap: wrap;
+    flex-wrap: wrap;
   }
   .dropdown-buttons > * {
     flex: 1 1 40%;
@@ -24,10 +16,10 @@
 }
 @media screen and (max-width: 600px) {
   .dropdown-buttons {
-      flex-wrap: wrap;
+    flex-wrap: wrap;
   }
   .dropdown-buttons > * {
-      flex: 0 0 100%;
+    flex: 0 0 100%;
   }
 }
 
@@ -54,7 +46,6 @@
 .animal-list-item {
   display: flex;
   flex-direction: column;
-
 }
 .animal-list-item > a {
   flex: 1 0 auto;

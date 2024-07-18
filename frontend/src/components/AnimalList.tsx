@@ -119,7 +119,7 @@ export default observer(function AnimalList({
                   true,
                   false
                 );
-                animalStore.fetchCurrentAnimals()
+                animalStore.fetchCurrentAnimals();
               }}
             />
           </div>
@@ -155,7 +155,7 @@ export default observer(function AnimalList({
           animalStore.setPage(page);
         }}
       ></Pagination>
-      <ul className="flex justify-center gap-4 animals mb-12">
+      <ul className="flex justify-center gap-4 animals mb-12 flex-wrap items-stretch">
         {animalStore.animals?.map((animal) => (
           <AnimalCard key={animal.id} animal={animal} />
         ))}
@@ -164,7 +164,7 @@ export default observer(function AnimalList({
         <div className="text-center mt-20">
           <h1 className="text-4xl font-bold mb-4">Keine Tiere gefunden</h1>
           <button
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="button font-normal"
             onClick={() => animalStore.resetFilter()}
           >
             Filter zurücksetzen

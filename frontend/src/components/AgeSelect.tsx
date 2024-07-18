@@ -7,9 +7,6 @@ interface AgeSelectProps {
   callback: (value: any) => void;
 }
 
-const defaultStyle =
-  "text-white whitespace-nowrap justify-between bg-blue-700 font-medium text-sm py-2.5 text-center inline-flex items-center dark:bg-blue-600";
-const buttonStyle = `${defaultStyle} w-full hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:hover:bg-blue-700 dark:focus:ring-blue-800`;
 const minWidth = "10px";
 const items_max = new Array(20).fill(0).map((_, i) => {
   return {
@@ -38,31 +35,28 @@ const AgeSelect = ({ value, defaultValue, callback }: AgeSelectProps) => {
     );
   };
   return (
-    <div className="flex text-right" style={{ minWidth: "20vw" }}>
-      <div
-        className={`rounded-l-lg grow-0 pl-5 pr-1 opacity-80  ${defaultStyle}`}
-      >
-        Alter:
-      </div>
-
+    <div className="flex items-center" style={{ minWidth: "20vw" }}>
+      <label className="font-bold mr-4">Alter:</label>
       <div className="grow" style={{ minWidth }}>
         <button
           data-dropdown-toggle="dropdown"
-          className={`${buttonStyle} px-1`}
+          className="button flex items-center justify-between w-full"
           type="button"
           onClick={() => setIsOpenMin((value) => !value)}
         >
-          {getSelectItemName(items_min, defaultValue[1], value[1])}
+          <span className="mr-1">
+            {getSelectItemName(items_min, defaultValue[1], value[1])}
+          </span>
           <SelectDownArrow className="w-2.5 h-2.5 ms-1" />
         </button>
         <div
           id="dropdown"
           className={
-            "z-20 bg-white divide-y divide-gray-100 shadow w-44 dark:bg-gray-700 absolute" +
+            "z-20 bg-white divide-y divide-gray-100 shadow w-40 absolute" +
             (isOpenMin ? " block" : " hidden")
           }
         >
-          <ul className="py-2 text-sm text-gray-700 dark:text-gray-200 relative">
+          <ul className="py-2 text-sm text-gray-700  relative">
             {items_min.map(({ name, id }, index) => (
               <li
                 key={index}
@@ -76,7 +70,7 @@ const AgeSelect = ({ value, defaultValue, callback }: AgeSelectProps) => {
                   ]);
                 }}
               >
-                <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer">
+                <span className="block px-4 py-2 hover:bg-gray-100   cursor-pointer">
                   {name}
                 </span>
               </li>
@@ -92,27 +86,27 @@ const AgeSelect = ({ value, defaultValue, callback }: AgeSelectProps) => {
           </div>
         )}
       </div>
-
-      <div className={`px-1 opacity-80  ${defaultStyle}`}>-</div>
-
+      <div className="font-bold mx-4">bis</div>
       <div className="grow" style={{ minWidth }}>
         <button
           data-dropdown-toggle="dropdown"
-          className={`${buttonStyle} pl-1 pr-5 rounded-r-lg`}
+          className="button flex items-center justify-between w-full"
           type="button"
           onClick={() => setIsOpenMax((value) => !value)}
         >
-          {getSelectItemName(items_max, defaultValue[0], value[0])}
+          <span className="mr-1">
+            {getSelectItemName(items_max, defaultValue[0], value[0])}
+          </span>
           <SelectDownArrow className="w-2.5 h-2.5 ms-1" />
         </button>
         <div
           id="dropdown"
           className={
-            "z-20 bg-white divide-y divide-gray-100 shadow w-44 dark:bg-gray-700 absolute" +
+            "z-20 bg-white divide-y divide-gray-100 shadow w-40 absolute" +
             (isOpenMax ? " block" : " hidden")
           }
         >
-          <ul className="py-2 text-sm text-gray-700 dark:text-gray-200 relative">
+          <ul className="py-2 text-sm text-gray-700 relative">
             {items_max.map(({ name, id }, index) => (
               <li
                 key={index}
@@ -126,7 +120,7 @@ const AgeSelect = ({ value, defaultValue, callback }: AgeSelectProps) => {
                   ]);
                 }}
               >
-                <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer">
+                <span className="block px-4 py-2 hover:bg-gray-100   cursor-pointer">
                   {name}
                 </span>
               </li>
