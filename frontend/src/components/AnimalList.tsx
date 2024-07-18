@@ -37,8 +37,8 @@ export const ageFilter = [
 export const animalSort = [
   { id: "DATE_OF_ADMISSION_ASC", name: "Aufnahmedatum aufsteigend" },
   { id: "DATE_OF_ADMISSION_DSC", name: "Aufnahmedatum absteigend" },
-  { id: "DATE_OF_BIRTH_ASC", name: "Alter aufsteigend" },
-  { id: "DATE_OF_BIRTH_DSC", name: "Alter absteigend" }
+  { id: "DATE_OF_BIRTH_DSC", name: "Alter aufsteigend" },
+  { id: "DATE_OF_BIRTH_ASC", name: "Alter absteigend" }
 ]
 
 interface AnimalListProps {

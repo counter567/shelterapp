@@ -38,7 +38,7 @@ export class AnimalsStore {
   toOrderAndOrderBy(sort: AnimalSort): [PostFilter["meta_order"], string] {
     let order: PostFilter['meta_order']
     let orderBy: string
-    switch (this.orderBy) {
+    switch (sort) {
         case "DATE_OF_ADMISSION_ASC": {
           order = "ASC"
           orderBy = "dateOfAdmission"
@@ -103,11 +103,11 @@ export class AnimalsStore {
     });
   }
 
-  setOrderBy = (value: AnimalSort, fetch: boolean = true) => {
+  setOrderBy = (value: AnimalSort, fetch: boolean = true, set: boolean = true) => {
     const [order, orderBy] = this.toOrderAndOrderBy(value)
     this.orderBy = value
-    this.setFilter("meta_order", order, true, false)
-    this.setFilter("meta_orderby", orderBy, true, fetch)
+    this.setFilter("meta_order", order, set, false)
+    this.setFilter("meta_orderby", orderBy, set, fetch)
   };
 
   setLoading = (value: boolean) => {
@@ -276,6 +276,14 @@ export class AnimalsStore {
           (currentFilter as any)[propName] = value;
           this.setFilters(currentFilter);
         });
+
+      if(this.filters.meta_order && this.filters.meta_orderby) {
+        if(this.filters.meta_order === "ASC") {
+          this.setOrderBy(this.filters.meta_orderby === "dateOfBirth" ? "DATE_OF_BIRTH_ASC" : "DATE_OF_ADMISSION_ASC", false, false);
+        } else {
+          this.setOrderBy(this.filters.meta_orderby === "dateOfBirth" ? "DATE_OF_BIRTH_DSC" : "DATE_OF_ADMISSION_DSC", false, false);
+        }
+      }
     }
   }
 

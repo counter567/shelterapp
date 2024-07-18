@@ -90,6 +90,11 @@ const AnimalCard = ({
               <BirthDate birthDate={dateOfBirth} />
             </span>
           )}
+          {!dateOfBirth && (
+            <span className="text-center font-bold text-gray-500">
+              Alter Unbekannt
+            </span>
+          )}
           <div className="card-bottom flex items-center w-full relative flex-col rounded-b mt-4 min-h-[42px]">
             <h3 className="text-center font-extrabold text-white">
               {germanStatus(status!)}
