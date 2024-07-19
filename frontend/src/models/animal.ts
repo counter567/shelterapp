@@ -39,6 +39,8 @@ export class Animal implements AnimalToFilterProps {
       missing: parseBoolean(props.missing!),
       privateAdoption: parseBoolean(props.privateAdoption!),
       isCastrated: parseBoolean(props.isCastrated!),
+      notes: props.notes,
+      supporters: props.supporters
     });
   }
 
@@ -85,6 +87,7 @@ export class Animal implements AnimalToFilterProps {
   chipNumber?: string;
   notes?: string;
   description?: string;
+  supporters?: string;
   internalNotes?: string;
   createdAt?: Date;
   updatedAt?: Date;

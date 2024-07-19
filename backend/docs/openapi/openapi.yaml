@@ -412,6 +412,13 @@ paths:
         schema:
           type: string
           nullable: true
+      - name: typeIsIn
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+          nullable: true
       - name: updatedAfter
         in: query
         schema:
@@ -1092,7 +1099,6 @@ components:
       - createdAt
       - updatedAt
       - notices
-      - supporters
       type: object
       properties:
         id:
@@ -1214,6 +1220,7 @@ components:
           type: string
         supporters:
           type: string
+          nullable: true
     AnimalEvent:
       required:
       - id

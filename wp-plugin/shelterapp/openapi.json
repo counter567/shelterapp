@@ -605,6 +605,16 @@
             "nullable" : true
           }
         }, {
+          "name" : "typeIsIn",
+          "in" : "query",
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            },
+            "nullable" : true
+          }
+        }, {
           "name" : "updatedAfter",
           "in" : "query",
           "schema" : {
@@ -1618,7 +1628,7 @@
   "components" : {
     "schemas" : {
       "Animal" : {
-        "required" : [ "id", "tenantId", "name", "dateOfAdmission", "type", "breedOne", "sex", "status", "createdAt", "updatedAt", "notices", "supporters" ],
+        "required" : [ "id", "tenantId", "name", "dateOfAdmission", "type", "breedOne", "sex", "status", "createdAt", "updatedAt", "notices" ],
         "type" : "object",
         "properties" : {
           "id" : {
@@ -1784,7 +1794,8 @@
             "type" : "string"
           },
           "supporters" : {
-            "type" : "string"
+            "type" : "string",
+            "nullable" : true
           }
         }
       },

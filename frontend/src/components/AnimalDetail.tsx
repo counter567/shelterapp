@@ -19,6 +19,7 @@ import Gender from "./Gender";
 import PayPalButton from "./PaypalButton";
 import SectionList from "./SectionList";
 import { AnimalStatus } from "../models/animalStatus";
+import HeartIcon from "../icons/heart";
 
 interface AnimalDetailProps {
   animalStoreContext: React.Context<AnimalsStore>;
@@ -78,6 +79,8 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
     description,
     otherPictureFileUrls,
     illnesses,
+    notes,
+    supporters
   } = animalStore.singleAnimal;
 
   return (
@@ -121,40 +124,43 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
                 seit {formatDate(dateOfAdmission)}
               </span>
             )}
-          <span
-            className="rounded-lg mb-8 text-white py-3 font-bold text-center"
-            style={{ backgroundColor: getCSSColorByCardColor(status!) }}
-          >
-            {germanStatus(status!)}
-          </span>
-          <h1 className="font-bold text-xl mb-2">Eigenschaften</h1>
-          {dateOfBirth && (
-            <span className="mb-2 flex items-center">
-              <CakeIcon className="mr-2" />{" "}
-              <BirthDate birthDate={dateOfBirth} />
-            </span>
-          )}
-          {animalStore.singleAnimal.getPersonalData().length > 0 && (
-            <SectionList
-              className="mb-4"
-              values={animalStore.singleAnimal.getPersonalData()}
+            <span
+              className="rounded-lg mb-8 text-white py-3 font-bold text-center"
+              style={{ backgroundColor: getCSSColorByCardColor(status!) }}
             >
-              <InfoIcon className="mr-2" />
-            </SectionList>
-          )}
-          <SectionList
-            className="mb-4"
-            heading="Krankheiten"
-            values={illnesses}
-          >
-            <CheckIcon className="mr-2" stroke="lightgreen" />
-          </SectionList>
-          {/*<SectionList className="mb-4" heading="Hinweis" values={[notes!]}>
+              {germanStatus(status!)}
+            </span>
+            {(dateOfBirth || animalStore.singleAnimal.getPersonalData().length > 0 || (illnesses? illnesses?.length : 0) > 0) && <>
+                <h1 className="font-bold text-xl mb-2">Eigenschaften</h1>
+                {dateOfBirth && (
+                  <span className="mb-2 flex items-center">
+                    <CakeIcon className="mr-2" />{" "}
+                    <BirthDate birthDate={dateOfBirth} />
+                  </span>
+                )}
+                {animalStore.singleAnimal.getPersonalData().length > 0 && (
+                  <SectionList
+                    className="mb-4"
+                    values={animalStore.singleAnimal.getPersonalData()}
+                  >
+                    <InfoIcon className="mr-2" />
+                  </SectionList>
+                )}
+                <SectionList
+                  className="mb-4"
+                  heading="Krankheiten"
+                  values={illnesses}
+                >
+
+                </SectionList>
+              </>
+            }
+            <SectionList className="mb-4" heading="Hinweise" values={(notes ? notes : undefined)?.split("\n")}>
             <InfoIcon className="mr-2" />
           </SectionList>
-          <SectionList className="mb-4" heading="Wir danken" values={donators}>
+          <SectionList className="mb-4" heading="Wir danken" values={(supporters ? supporters : undefined)?.split("\n")}>
             <HeartIcon className="mr-2" stroke="red" fill="red" />{" "}
-          </SectionList> */}
+          </SectionList>
           <PayPalButton name={name!} adress={getPaypalAdress()} />
         </div>
         <div className="p-4 w-full">
