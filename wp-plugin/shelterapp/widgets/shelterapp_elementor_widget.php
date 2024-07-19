@@ -177,8 +177,8 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
 				'options' => array(
                     'DATE_OF_ADMISSION_DSC' => esc_html__( 'Aufnahmedatum absteigend', 'wordpress' ),
                     'DATE_OF_ADMISSION_ASC' => esc_html__( 'Aufnahmedatum aufsteigend', 'wordpress' ),
-                    'DATE_OF_BIRTH_DSC' => esc_html__( 'Alter absteigend', 'wordpress' ),
-                    'DATE_OF_BIRTH_ASC' => esc_html__( 'Alter aufsteigend', 'wordpress' )
+                    'DATE_OF_BIRTH_DSC' => esc_html__( 'Alter aufsteigend', 'wordpress' ),
+                    'DATE_OF_BIRTH_ASC' => esc_html__( 'Alter absteigend', 'wordpress' )
                 ),
 				'default' => 'DATE_OF_ADMISSION_DSC',
 			]

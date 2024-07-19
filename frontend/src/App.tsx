@@ -40,7 +40,7 @@ function App(props: AppProps) {
     animalStore.setFilter("meta_was_found", props.wasFound, false)
     animalStore.setFilter("meta_missing", props.missing, false)
     animalStore.setFilter("meta_private_adoption", props.privateAdoption, false)
-    if(props.orderBy) animalStore.setOrderBy(props.orderBy, false)
+    if(props.orderBy) animalStore.setOrderBy(props.orderBy, false, false)
   }, []);
 
   if (!animalStoreContext) {
