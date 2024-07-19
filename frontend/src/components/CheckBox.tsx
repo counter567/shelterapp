@@ -23,11 +23,11 @@ const CheckBox = ({ value = false, label, callback }: CheckBoxProps) => {
             onChange={(ev) => {
               ev.target.checked ? callback(true) : callback(false);
             }}
-            className="w-5 h-5 cursor-pointer text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            className="w-5 h-5 cursor-pointer text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500   focus:ring-2  "
           />
           <label
             htmlFor={`sa-checkbox-${id}`}
-            className="ms-2 cursor-pointer text-sm font-medium text-gray-900 dark:text-gray-300"
+            className="ms-2 cursor-pointer text-sm font-medium text-gray-900 "
           >
             {label}
           </label>

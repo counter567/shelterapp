@@ -83,10 +83,7 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
   return (
     <div>
       <div className="my-4">
-        <button
-          onClick={navigateBack}
-          className="text-white bg-blue-700 text-sm px-5 py-2.5 rounded-lg"
-        >
+        <button onClick={navigateBack} className="button font-normal">
           Zurück
         </button>
       </div>

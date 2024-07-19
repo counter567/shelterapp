@@ -25,7 +25,7 @@ const DropDown = ({ items, value, defaultValue, callback }: DropDownProps) => {
       <div style={{ minWidth: "20vw" }}>
         <button
           data-dropdown-toggle="dropdown"
-          className="text-white w-full whitespace-nowrap justify-between bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="button flex justify-between items-center w-full"
           type="button"
           onClick={() => setIsOpen((value) => !value)}
         >
@@ -35,11 +35,11 @@ const DropDown = ({ items, value, defaultValue, callback }: DropDownProps) => {
         <div
           id="dropdown"
           className={
-            "z-20 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute" +
+            "z-20 bg-white divide-y divide-gray-100 rounded-lg shadow w-44  absolute" +
             (isOpen ? " block" : " hidden")
           }
         >
-          <ul className="py-2 text-sm text-gray-700 dark:text-gray-200 relative">
+          <ul className="py-2 text-sm text-gray-700  relative">
             {items.map(({ name, id }, index) => (
               <li
                 key={index}
@@ -48,7 +48,7 @@ const DropDown = ({ items, value, defaultValue, callback }: DropDownProps) => {
                   callback(id);
                 }}
               >
-                <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer">
+                <span className="block px-4 py-2 hover:bg-gray-100   cursor-pointer">
                   {name}
                 </span>
               </li>
