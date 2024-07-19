@@ -143,6 +143,12 @@ class ShelterappAnimals
             );
             $args['meta_query'][] = $meta_query;
         }
+            if (isset($request['meta_orderby']) && $request['meta_orderby'] != '') {
+                $args['meta_type'] = 'DATE';
+                $args['meta_key'] = $request['meta_orderby'];
+                $args['orderby'] = 'meta_value';
+                $args['order'] = isset($request['meta_order']) ? $request['meta_order'] : 'DESC';
+            }
         return $args;
     }
 
@@ -620,7 +626,6 @@ class ShelterappAnimals
             'dateOfLeave',
             'dateOfDeath',
             'status',
-            'notes',
             'internalNotes',
             'donationCall',
             'successStory',
@@ -630,6 +635,11 @@ class ShelterappAnimals
         $this->get_custom_input_group('Medizinisches', 40, [
             'castrated',
             'bloodType',
+        ], $animalSchema, $schema, $required);
+
+        $this->get_custom_input_group('Zusätzliches', 50, [
+            'notes',
+            'supporters',
         ], $animalSchema, $schema, $required);
 
         /*
@@ -735,7 +745,7 @@ class ShelterappAnimals
         switch ($type) {
             case 'string':
             case 'array':
-                $filedAsArea = array('notes', 'description', 'internalNotes');
+                $filedAsArea = array('notes', 'description', 'internalNotes', 'supporters');
                 $field = array(
                     'key' => 'field_' . $key,
                     'label' => isset($titleMappings[$key]) ? $titleMappings[$key] : $key,
@@ -927,6 +937,7 @@ $titleMappings = array(
     'privateAdoption' => 'Fremdvermittlung',
     'castrated' => 'Kastriert',
     'bloodType' => 'Blutgruppe',
+    'supporters' => 'Unterstützer'
 );
 
 

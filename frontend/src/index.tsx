@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AnimalStatus } from './models/animalStatus';
 import { AnimalSex } from './models/animalSex';
+import {AnimalSort} from "./models/animalSort";
 
 let roots = document.querySelectorAll('.shelterblock-root');
 if(roots.length === 0) {
@@ -24,6 +25,7 @@ roots.forEach((rootElement) => {
         wasFound={rootElement.hasAttribute('data-wasFound') && rootElement.getAttribute('data-wasFound') !== '' ? (rootElement.getAttribute('data-wasFound') === 'yes') : undefined}
         missing={rootElement.hasAttribute('data-missing') && rootElement.getAttribute('data-missing') !== '' ? (rootElement.getAttribute('data-missing') === 'yes') : undefined}
         privateAdoption={rootElement.hasAttribute('data-privateAdoption') && rootElement.getAttribute('data-privateAdoption') !== '' ? (rootElement.getAttribute('data-privateAdoption') === 'yes') : undefined}
+        orderBy={rootElement.getAttribute('data-orderBy') as AnimalSort || undefined}
       />
     </React.StrictMode>
   );

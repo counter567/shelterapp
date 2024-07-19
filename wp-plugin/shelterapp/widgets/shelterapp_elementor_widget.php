@@ -169,6 +169,20 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
                 'default' => '',
             ]
         );
+        $this->add_control(
+			'orderBy',
+			[
+				'type' => \Elementor\Controls_Manager::SELECT,
+				'label' => esc_html__( 'Sortieren nach', 'wordpress' ),
+				'options' => array(
+                    'DATE_OF_ADMISSION_DSC' => esc_html__( 'Aufnahmedatum absteigend', 'wordpress' ),
+                    'DATE_OF_ADMISSION_ASC' => esc_html__( 'Aufnahmedatum aufsteigend', 'wordpress' ),
+                    'DATE_OF_BIRTH_DSC' => esc_html__( 'Alter absteigend', 'wordpress' ),
+                    'DATE_OF_BIRTH_ASC' => esc_html__( 'Alter aufsteigend', 'wordpress' )
+                ),
+				'default' => 'DATE_OF_ADMISSION_DSC',
+			]
+		);
 
 
         $this->end_controls_section();
@@ -188,6 +202,7 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
         if(isset($settings['missing']) && !empty($settings['missing'])) $attributes['missing'] = $settings['missing'];
         if(isset($settings['privateAdoption']) && !empty($settings['privateAdoption'])) $attributes['privateAdoption'] = $settings['privateAdoption'];
         if(isset($settings['hideFilters']) && !empty($settings['hideFilters'])) $attributes['hideFilters'] = $settings['hideFilters'];
+        if(isset($settings['orderBy']) && !empty($settings['orderBy'])) $attributes['orderBy'] = $settings['orderBy'];
         include (plugin_dir_path(SHELTERAPP_PATH) . 'blocks/shelter-block-view/render.php');
 	}
 

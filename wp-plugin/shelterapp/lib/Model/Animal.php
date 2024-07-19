@@ -188,7 +188,7 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'created_at' => false,
         'updated_at' => false,
         'notices' => false,
-        'supporters' => false
+        'supporters' => true
     ];
 
     /**
@@ -573,9 +573,6 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         }
         if ($this->container['notices'] === null) {
             $invalidProperties[] = "'notices' can't be null";
-        }
-        if ($this->container['supporters'] === null) {
-            $invalidProperties[] = "'supporters' can't be null";
         }
         return $invalidProperties;
     }
@@ -1744,7 +1741,7 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Gets supporters
      *
-     * @return string
+     * @return string|null
      */
     public function getSupporters()
     {
@@ -1754,14 +1751,21 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets supporters
      *
-     * @param string $supporters supporters
+     * @param string|null $supporters supporters
      *
      * @return self
      */
     public function setSupporters($supporters)
     {
         if (is_null($supporters)) {
-            throw new \InvalidArgumentException('non-nullable supporters cannot be null');
+            array_push($this->openAPINullablesSetToNull, 'supporters');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('supporters', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
         }
         $this->container['supporters'] = $supporters;
 

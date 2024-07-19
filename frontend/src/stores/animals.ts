@@ -4,6 +4,7 @@ import { BehaviorSubject } from "rxjs";
 import { animalSex, animalStatus } from "../components/AnimalList";
 import { Animal } from "../models/animal";
 import { AnimalSex } from "../models/animalSex";
+import { AnimalSort } from "../models/animalSort";
 import { AnimalStatus } from "../models/animalStatus";
 import {
   PostFilter,
@@ -34,6 +35,34 @@ export interface TypeData {
 }
 
 export class AnimalsStore {
+  toOrderAndOrderBy(sort: AnimalSort): [PostFilter["meta_order"], string] {
+    let order: PostFilter['meta_order']
+    let orderBy: string
+    switch (sort) {
+        case "DATE_OF_ADMISSION_ASC": {
+          order = "ASC"
+          orderBy = "dateOfAdmission"
+          break;
+        }
+        default:
+        case "DATE_OF_ADMISSION_DSC":{
+          order = "DESC"
+          orderBy = "dateOfAdmission"
+          break;
+        }
+        case "DATE_OF_BIRTH_ASC": {
+          order = "ASC"
+          orderBy = "dateOfBirth"
+          break;
+        }
+        case "DATE_OF_BIRTH_DSC": {
+          order = "DESC"
+          orderBy = "dateOfBirth"
+          break;
+        }
+    }
+    return [order, orderBy]
+  }
   loading: boolean = false;
   animals: Animal[] = [];
   singleAnimal: Animal | null = null;
@@ -45,6 +74,7 @@ export class AnimalsStore {
   defaultTitle: string;
 
   typesData: TypeData[] = [];
+  orderBy: AnimalSort = "DATE_OF_ADMISSION_DSC";
 
   constructor() {
     this.defaultTitle = document.title;
@@ -69,8 +99,16 @@ export class AnimalsStore {
       setDefaultTitle: action,
       typesData: observable,
       setTypesData: action,
+      setOrderBy: action,
     });
   }
+
+  setOrderBy = (value: AnimalSort, fetch: boolean = true, set: boolean = true) => {
+    const [order, orderBy] = this.toOrderAndOrderBy(value)
+    this.orderBy = value
+    this.setFilter("meta_order", order, set, false)
+    this.setFilter("meta_orderby", orderBy, set, fetch)
+  };
 
   setLoading = (value: boolean) => {
     this.loading = value;
@@ -184,7 +222,6 @@ export class AnimalsStore {
 
     return filters;
   }
-
   setFilter<T extends keyof AnimalFilter>(
     filter: T,
     value: AnimalFilter[T],
@@ -239,6 +276,14 @@ export class AnimalsStore {
           (currentFilter as any)[propName] = value;
           this.setFilters(currentFilter);
         });
+
+      if(this.filters.meta_order && this.filters.meta_orderby) {
+        if(this.filters.meta_order === "ASC") {
+          this.setOrderBy(this.filters.meta_orderby === "dateOfBirth" ? "DATE_OF_BIRTH_ASC" : "DATE_OF_ADMISSION_ASC", false, false);
+        } else {
+          this.setOrderBy(this.filters.meta_orderby === "dateOfBirth" ? "DATE_OF_BIRTH_DSC" : "DATE_OF_ADMISSION_DSC", false, false);
+        }
+      }
     }
   }
 

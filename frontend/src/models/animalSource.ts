@@ -66,6 +66,12 @@ export interface AnimalSource {
      * @type {string}
      * @memberof Animal
      */
+    supporters?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof Animal
+     */
     mainPictureFileUrl?: string;
     /**
      *

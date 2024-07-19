@@ -7,6 +7,7 @@ import { AnimalSex } from "./models/animalSex";
 import { AnimalStatus } from "./models/animalStatus";
 import { getRouterBasePath } from "./service/url-helper";
 import { AnimalsStore } from "./stores/animals";
+import {AnimalSort} from "./models/animalSort";
 
 export interface AppProps {
   hideFilters?: boolean;
@@ -18,6 +19,7 @@ export interface AppProps {
   wasFound?: boolean;
   missing?: boolean;
   privateAdoption?: boolean;
+  orderBy?: AnimalSort
 }
 
 function App(props: AppProps) {
@@ -38,6 +40,7 @@ function App(props: AppProps) {
     animalStore.setFilter("meta_was_found", props.wasFound, false)
     animalStore.setFilter("meta_missing", props.missing, false)
     animalStore.setFilter("meta_private_adoption", props.privateAdoption, false)
+    if(props.orderBy) animalStore.setOrderBy(props.orderBy, false)
   }, []);
 
   if (!animalStoreContext) {

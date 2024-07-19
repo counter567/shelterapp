@@ -90,25 +90,30 @@ const AnimalCard = ({
               <BirthDate birthDate={dateOfBirth} />
             </span>
           )}
+          {!dateOfBirth && (
+            <span className="text-center font-bold text-gray-500">
+              Alter Unbekannt
+            </span>
+          )}
           <div className="animal-card-info card-bottom flex items-center w-full relative flex-col rounded-b mt-4 min-h-[42px]">
             <h3 className="animal-card-info-status text-center font-extrabold text-white">
               {germanStatus(status!)}
             </h3>
             {status === AnimalStatus.Adopted && dateOfLeave && (
               <span className="animal-card-info-date text-center text-white">
-                {formatDate(dateOfLeave)}
+                am {formatDate(dateOfLeave)}
               </span>
             )}
             {status === AnimalStatus.Deceased && dateOfDeath && (
               <span className="animal-card-info-date text-center text-white">
-                {formatDate(dateOfDeath)}
+                am {formatDate(dateOfDeath)}
               </span>
             )}
             {status !== AnimalStatus.Deceased &&
               status !== AnimalStatus.Adopted &&
               dateOfAdmission && (
                 <span className="animal-card-info-date text-center text-white">
-                  {formatDate(dateOfAdmission)}
+                  Aufgenommen am: {formatDate(dateOfAdmission)}
                 </span>
               )}
           </div>

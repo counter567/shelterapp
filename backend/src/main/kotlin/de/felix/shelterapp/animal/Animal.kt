@@ -70,7 +70,7 @@ class Animal: TenantPanacheEntity() {
     @Column(columnDefinition = "TEXT")
     var notices: String = ""
     @Column(columnDefinition = "TEXT")
-    var supporters: String = ""
+    var supporters: String? = null
 }
 
 enum class AnimalSex {

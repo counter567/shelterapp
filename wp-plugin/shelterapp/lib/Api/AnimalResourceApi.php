@@ -399,6 +399,7 @@ class AnimalResourceApi
      * @param  AnimalSex $sex sex (optional)
      * @param  \OpenAPI\Client\Model\AnimalStatus[] $status status (optional)
      * @param  string $type_contains type_contains (optional)
+     * @param  string[] $type_is_in type_is_in (optional)
      * @param  \DateTime $updated_after updated_after (optional)
      * @param  \DateTime $updated_before updated_before (optional)
      * @param  bool $was_found was_found (optional)
@@ -410,9 +411,9 @@ class AnimalResourceApi
      * @throws \InvalidArgumentException
      * @return \OpenAPI\Client\Model\Animal[]
      */
-    public function animalsGet($blood_type_contains = null, $breed_one_contains = null, $breed_two_contains = null, $chip_number_contains = null, $circumference_of_chest_above = null, $circumference_of_chest_below = null, $circumference_of_neck_above = null, $circumference_of_neck_below = null, $color_contains = null, $created_after = null, $created_before = null, $date_of_admission_after = null, $date_of_admission_before = null, $date_of_birth_after = null, $date_of_birth_before = null, $date_of_death_after = null, $date_of_death_before = null, $date_of_leave_after = null, $date_of_leave_before = null, $has_donation_call = null, $height_at_withers_above = null, $height_at_withers_below = null, $id = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back_above = null, $length_of_back_below = null, $name_contains = null, $page = null, $page_size = null, $sex = null, $status = null, $type_contains = null, $updated_after = null, $updated_before = null, $was_found = null, $weight_above = null, $weight_below = null, string $contentType = self::contentTypes['animalsGet'][0])
+    public function animalsGet($blood_type_contains = null, $breed_one_contains = null, $breed_two_contains = null, $chip_number_contains = null, $circumference_of_chest_above = null, $circumference_of_chest_below = null, $circumference_of_neck_above = null, $circumference_of_neck_below = null, $color_contains = null, $created_after = null, $created_before = null, $date_of_admission_after = null, $date_of_admission_before = null, $date_of_birth_after = null, $date_of_birth_before = null, $date_of_death_after = null, $date_of_death_before = null, $date_of_leave_after = null, $date_of_leave_before = null, $has_donation_call = null, $height_at_withers_above = null, $height_at_withers_below = null, $id = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back_above = null, $length_of_back_below = null, $name_contains = null, $page = null, $page_size = null, $sex = null, $status = null, $type_contains = null, $type_is_in = null, $updated_after = null, $updated_before = null, $was_found = null, $weight_above = null, $weight_below = null, string $contentType = self::contentTypes['animalsGet'][0])
     {
-        list($response) = $this->animalsGetWithHttpInfo($blood_type_contains, $breed_one_contains, $breed_two_contains, $chip_number_contains, $circumference_of_chest_above, $circumference_of_chest_below, $circumference_of_neck_above, $circumference_of_neck_below, $color_contains, $created_after, $created_before, $date_of_admission_after, $date_of_admission_before, $date_of_birth_after, $date_of_birth_before, $date_of_death_after, $date_of_death_before, $date_of_leave_after, $date_of_leave_before, $has_donation_call, $height_at_withers_above, $height_at_withers_below, $id, $is_castrated, $is_missing, $is_private_adoption, $is_public, $is_success_story, $length_of_back_above, $length_of_back_below, $name_contains, $page, $page_size, $sex, $status, $type_contains, $updated_after, $updated_before, $was_found, $weight_above, $weight_below, $contentType);
+        list($response) = $this->animalsGetWithHttpInfo($blood_type_contains, $breed_one_contains, $breed_two_contains, $chip_number_contains, $circumference_of_chest_above, $circumference_of_chest_below, $circumference_of_neck_above, $circumference_of_neck_below, $color_contains, $created_after, $created_before, $date_of_admission_after, $date_of_admission_before, $date_of_birth_after, $date_of_birth_before, $date_of_death_after, $date_of_death_before, $date_of_leave_after, $date_of_leave_before, $has_donation_call, $height_at_withers_above, $height_at_withers_below, $id, $is_castrated, $is_missing, $is_private_adoption, $is_public, $is_success_story, $length_of_back_above, $length_of_back_below, $name_contains, $page, $page_size, $sex, $status, $type_contains, $type_is_in, $updated_after, $updated_before, $was_found, $weight_above, $weight_below, $contentType);
         return $response;
     }
 
@@ -455,6 +456,7 @@ class AnimalResourceApi
      * @param  AnimalSex $sex (optional)
      * @param  \OpenAPI\Client\Model\AnimalStatus[] $status (optional)
      * @param  string $type_contains (optional)
+     * @param  string[] $type_is_in (optional)
      * @param  \DateTime $updated_after (optional)
      * @param  \DateTime $updated_before (optional)
      * @param  bool $was_found (optional)
@@ -466,9 +468,9 @@ class AnimalResourceApi
      * @throws \InvalidArgumentException
      * @return array of \OpenAPI\Client\Model\Animal[], HTTP status code, HTTP response headers (array of strings)
      */
-    public function animalsGetWithHttpInfo($blood_type_contains = null, $breed_one_contains = null, $breed_two_contains = null, $chip_number_contains = null, $circumference_of_chest_above = null, $circumference_of_chest_below = null, $circumference_of_neck_above = null, $circumference_of_neck_below = null, $color_contains = null, $created_after = null, $created_before = null, $date_of_admission_after = null, $date_of_admission_before = null, $date_of_birth_after = null, $date_of_birth_before = null, $date_of_death_after = null, $date_of_death_before = null, $date_of_leave_after = null, $date_of_leave_before = null, $has_donation_call = null, $height_at_withers_above = null, $height_at_withers_below = null, $id = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back_above = null, $length_of_back_below = null, $name_contains = null, $page = null, $page_size = null, $sex = null, $status = null, $type_contains = null, $updated_after = null, $updated_before = null, $was_found = null, $weight_above = null, $weight_below = null, string $contentType = self::contentTypes['animalsGet'][0])
+    public function animalsGetWithHttpInfo($blood_type_contains = null, $breed_one_contains = null, $breed_two_contains = null, $chip_number_contains = null, $circumference_of_chest_above = null, $circumference_of_chest_below = null, $circumference_of_neck_above = null, $circumference_of_neck_below = null, $color_contains = null, $created_after = null, $created_before = null, $date_of_admission_after = null, $date_of_admission_before = null, $date_of_birth_after = null, $date_of_birth_before = null, $date_of_death_after = null, $date_of_death_before = null, $date_of_leave_after = null, $date_of_leave_before = null, $has_donation_call = null, $height_at_withers_above = null, $height_at_withers_below = null, $id = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back_above = null, $length_of_back_below = null, $name_contains = null, $page = null, $page_size = null, $sex = null, $status = null, $type_contains = null, $type_is_in = null, $updated_after = null, $updated_before = null, $was_found = null, $weight_above = null, $weight_below = null, string $contentType = self::contentTypes['animalsGet'][0])
     {
-        $request = $this->animalsGetRequest($blood_type_contains, $breed_one_contains, $breed_two_contains, $chip_number_contains, $circumference_of_chest_above, $circumference_of_chest_below, $circumference_of_neck_above, $circumference_of_neck_below, $color_contains, $created_after, $created_before, $date_of_admission_after, $date_of_admission_before, $date_of_birth_after, $date_of_birth_before, $date_of_death_after, $date_of_death_before, $date_of_leave_after, $date_of_leave_before, $has_donation_call, $height_at_withers_above, $height_at_withers_below, $id, $is_castrated, $is_missing, $is_private_adoption, $is_public, $is_success_story, $length_of_back_above, $length_of_back_below, $name_contains, $page, $page_size, $sex, $status, $type_contains, $updated_after, $updated_before, $was_found, $weight_above, $weight_below, $contentType);
+        $request = $this->animalsGetRequest($blood_type_contains, $breed_one_contains, $breed_two_contains, $chip_number_contains, $circumference_of_chest_above, $circumference_of_chest_below, $circumference_of_neck_above, $circumference_of_neck_below, $color_contains, $created_after, $created_before, $date_of_admission_after, $date_of_admission_before, $date_of_birth_after, $date_of_birth_before, $date_of_death_after, $date_of_death_before, $date_of_leave_after, $date_of_leave_before, $has_donation_call, $height_at_withers_above, $height_at_withers_below, $id, $is_castrated, $is_missing, $is_private_adoption, $is_public, $is_success_story, $length_of_back_above, $length_of_back_below, $name_contains, $page, $page_size, $sex, $status, $type_contains, $type_is_in, $updated_after, $updated_before, $was_found, $weight_above, $weight_below, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -617,6 +619,7 @@ class AnimalResourceApi
      * @param  AnimalSex $sex (optional)
      * @param  \OpenAPI\Client\Model\AnimalStatus[] $status (optional)
      * @param  string $type_contains (optional)
+     * @param  string[] $type_is_in (optional)
      * @param  \DateTime $updated_after (optional)
      * @param  \DateTime $updated_before (optional)
      * @param  bool $was_found (optional)
@@ -627,9 +630,9 @@ class AnimalResourceApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function animalsGetAsync($blood_type_contains = null, $breed_one_contains = null, $breed_two_contains = null, $chip_number_contains = null, $circumference_of_chest_above = null, $circumference_of_chest_below = null, $circumference_of_neck_above = null, $circumference_of_neck_below = null, $color_contains = null, $created_after = null, $created_before = null, $date_of_admission_after = null, $date_of_admission_before = null, $date_of_birth_after = null, $date_of_birth_before = null, $date_of_death_after = null, $date_of_death_before = null, $date_of_leave_after = null, $date_of_leave_before = null, $has_donation_call = null, $height_at_withers_above = null, $height_at_withers_below = null, $id = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back_above = null, $length_of_back_below = null, $name_contains = null, $page = null, $page_size = null, $sex = null, $status = null, $type_contains = null, $updated_after = null, $updated_before = null, $was_found = null, $weight_above = null, $weight_below = null, string $contentType = self::contentTypes['animalsGet'][0])
+    public function animalsGetAsync($blood_type_contains = null, $breed_one_contains = null, $breed_two_contains = null, $chip_number_contains = null, $circumference_of_chest_above = null, $circumference_of_chest_below = null, $circumference_of_neck_above = null, $circumference_of_neck_below = null, $color_contains = null, $created_after = null, $created_before = null, $date_of_admission_after = null, $date_of_admission_before = null, $date_of_birth_after = null, $date_of_birth_before = null, $date_of_death_after = null, $date_of_death_before = null, $date_of_leave_after = null, $date_of_leave_before = null, $has_donation_call = null, $height_at_withers_above = null, $height_at_withers_below = null, $id = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back_above = null, $length_of_back_below = null, $name_contains = null, $page = null, $page_size = null, $sex = null, $status = null, $type_contains = null, $type_is_in = null, $updated_after = null, $updated_before = null, $was_found = null, $weight_above = null, $weight_below = null, string $contentType = self::contentTypes['animalsGet'][0])
     {
-        return $this->animalsGetAsyncWithHttpInfo($blood_type_contains, $breed_one_contains, $breed_two_contains, $chip_number_contains, $circumference_of_chest_above, $circumference_of_chest_below, $circumference_of_neck_above, $circumference_of_neck_below, $color_contains, $created_after, $created_before, $date_of_admission_after, $date_of_admission_before, $date_of_birth_after, $date_of_birth_before, $date_of_death_after, $date_of_death_before, $date_of_leave_after, $date_of_leave_before, $has_donation_call, $height_at_withers_above, $height_at_withers_below, $id, $is_castrated, $is_missing, $is_private_adoption, $is_public, $is_success_story, $length_of_back_above, $length_of_back_below, $name_contains, $page, $page_size, $sex, $status, $type_contains, $updated_after, $updated_before, $was_found, $weight_above, $weight_below, $contentType)
+        return $this->animalsGetAsyncWithHttpInfo($blood_type_contains, $breed_one_contains, $breed_two_contains, $chip_number_contains, $circumference_of_chest_above, $circumference_of_chest_below, $circumference_of_neck_above, $circumference_of_neck_below, $color_contains, $created_after, $created_before, $date_of_admission_after, $date_of_admission_before, $date_of_birth_after, $date_of_birth_before, $date_of_death_after, $date_of_death_before, $date_of_leave_after, $date_of_leave_before, $has_donation_call, $height_at_withers_above, $height_at_withers_below, $id, $is_castrated, $is_missing, $is_private_adoption, $is_public, $is_success_story, $length_of_back_above, $length_of_back_below, $name_contains, $page, $page_size, $sex, $status, $type_contains, $type_is_in, $updated_after, $updated_before, $was_found, $weight_above, $weight_below, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -676,6 +679,7 @@ class AnimalResourceApi
      * @param  AnimalSex $sex (optional)
      * @param  \OpenAPI\Client\Model\AnimalStatus[] $status (optional)
      * @param  string $type_contains (optional)
+     * @param  string[] $type_is_in (optional)
      * @param  \DateTime $updated_after (optional)
      * @param  \DateTime $updated_before (optional)
      * @param  bool $was_found (optional)
@@ -686,10 +690,10 @@ class AnimalResourceApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function animalsGetAsyncWithHttpInfo($blood_type_contains = null, $breed_one_contains = null, $breed_two_contains = null, $chip_number_contains = null, $circumference_of_chest_above = null, $circumference_of_chest_below = null, $circumference_of_neck_above = null, $circumference_of_neck_below = null, $color_contains = null, $created_after = null, $created_before = null, $date_of_admission_after = null, $date_of_admission_before = null, $date_of_birth_after = null, $date_of_birth_before = null, $date_of_death_after = null, $date_of_death_before = null, $date_of_leave_after = null, $date_of_leave_before = null, $has_donation_call = null, $height_at_withers_above = null, $height_at_withers_below = null, $id = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back_above = null, $length_of_back_below = null, $name_contains = null, $page = null, $page_size = null, $sex = null, $status = null, $type_contains = null, $updated_after = null, $updated_before = null, $was_found = null, $weight_above = null, $weight_below = null, string $contentType = self::contentTypes['animalsGet'][0])
+    public function animalsGetAsyncWithHttpInfo($blood_type_contains = null, $breed_one_contains = null, $breed_two_contains = null, $chip_number_contains = null, $circumference_of_chest_above = null, $circumference_of_chest_below = null, $circumference_of_neck_above = null, $circumference_of_neck_below = null, $color_contains = null, $created_after = null, $created_before = null, $date_of_admission_after = null, $date_of_admission_before = null, $date_of_birth_after = null, $date_of_birth_before = null, $date_of_death_after = null, $date_of_death_before = null, $date_of_leave_after = null, $date_of_leave_before = null, $has_donation_call = null, $height_at_withers_above = null, $height_at_withers_below = null, $id = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back_above = null, $length_of_back_below = null, $name_contains = null, $page = null, $page_size = null, $sex = null, $status = null, $type_contains = null, $type_is_in = null, $updated_after = null, $updated_before = null, $was_found = null, $weight_above = null, $weight_below = null, string $contentType = self::contentTypes['animalsGet'][0])
     {
         $returnType = '\OpenAPI\Client\Model\Animal[]';
-        $request = $this->animalsGetRequest($blood_type_contains, $breed_one_contains, $breed_two_contains, $chip_number_contains, $circumference_of_chest_above, $circumference_of_chest_below, $circumference_of_neck_above, $circumference_of_neck_below, $color_contains, $created_after, $created_before, $date_of_admission_after, $date_of_admission_before, $date_of_birth_after, $date_of_birth_before, $date_of_death_after, $date_of_death_before, $date_of_leave_after, $date_of_leave_before, $has_donation_call, $height_at_withers_above, $height_at_withers_below, $id, $is_castrated, $is_missing, $is_private_adoption, $is_public, $is_success_story, $length_of_back_above, $length_of_back_below, $name_contains, $page, $page_size, $sex, $status, $type_contains, $updated_after, $updated_before, $was_found, $weight_above, $weight_below, $contentType);
+        $request = $this->animalsGetRequest($blood_type_contains, $breed_one_contains, $breed_two_contains, $chip_number_contains, $circumference_of_chest_above, $circumference_of_chest_below, $circumference_of_neck_above, $circumference_of_neck_below, $color_contains, $created_after, $created_before, $date_of_admission_after, $date_of_admission_before, $date_of_birth_after, $date_of_birth_before, $date_of_death_after, $date_of_death_before, $date_of_leave_after, $date_of_leave_before, $has_donation_call, $height_at_withers_above, $height_at_withers_below, $id, $is_castrated, $is_missing, $is_private_adoption, $is_public, $is_success_story, $length_of_back_above, $length_of_back_below, $name_contains, $page, $page_size, $sex, $status, $type_contains, $type_is_in, $updated_after, $updated_before, $was_found, $weight_above, $weight_below, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -766,6 +770,7 @@ class AnimalResourceApi
      * @param  AnimalSex $sex (optional)
      * @param  \OpenAPI\Client\Model\AnimalStatus[] $status (optional)
      * @param  string $type_contains (optional)
+     * @param  string[] $type_is_in (optional)
      * @param  \DateTime $updated_after (optional)
      * @param  \DateTime $updated_before (optional)
      * @param  bool $was_found (optional)
@@ -776,8 +781,9 @@ class AnimalResourceApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function animalsGetRequest($blood_type_contains = null, $breed_one_contains = null, $breed_two_contains = null, $chip_number_contains = null, $circumference_of_chest_above = null, $circumference_of_chest_below = null, $circumference_of_neck_above = null, $circumference_of_neck_below = null, $color_contains = null, $created_after = null, $created_before = null, $date_of_admission_after = null, $date_of_admission_before = null, $date_of_birth_after = null, $date_of_birth_before = null, $date_of_death_after = null, $date_of_death_before = null, $date_of_leave_after = null, $date_of_leave_before = null, $has_donation_call = null, $height_at_withers_above = null, $height_at_withers_below = null, $id = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back_above = null, $length_of_back_below = null, $name_contains = null, $page = null, $page_size = null, $sex = null, $status = null, $type_contains = null, $updated_after = null, $updated_before = null, $was_found = null, $weight_above = null, $weight_below = null, string $contentType = self::contentTypes['animalsGet'][0])
+    public function animalsGetRequest($blood_type_contains = null, $breed_one_contains = null, $breed_two_contains = null, $chip_number_contains = null, $circumference_of_chest_above = null, $circumference_of_chest_below = null, $circumference_of_neck_above = null, $circumference_of_neck_below = null, $color_contains = null, $created_after = null, $created_before = null, $date_of_admission_after = null, $date_of_admission_before = null, $date_of_birth_after = null, $date_of_birth_before = null, $date_of_death_after = null, $date_of_death_before = null, $date_of_leave_after = null, $date_of_leave_before = null, $has_donation_call = null, $height_at_withers_above = null, $height_at_withers_below = null, $id = null, $is_castrated = null, $is_missing = null, $is_private_adoption = null, $is_public = null, $is_success_story = null, $length_of_back_above = null, $length_of_back_below = null, $name_contains = null, $page = null, $page_size = null, $sex = null, $status = null, $type_contains = null, $type_is_in = null, $updated_after = null, $updated_before = null, $was_found = null, $weight_above = null, $weight_below = null, string $contentType = self::contentTypes['animalsGet'][0])
     {
+
 
 
 
@@ -1148,6 +1154,15 @@ class AnimalResourceApi
             $type_contains,
             'typeContains', // param base name
             'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $type_is_in,
+            'typeIsIn', // param base name
+            'array', // openApiType
             'form', // style
             true, // explode
             false // required
