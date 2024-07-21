@@ -2,6 +2,11 @@
   margin: auto;
 }
 
-.button {
+
+#root :is(.button) {
   @apply text-white text-nowrap bg-blue-700 font-medium text-sm w-min px-5 py-2.5 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300;
+  background-color: var(--e-global-color-primary, var(--wp--preset--color--custom-primary, rgb(29 78 216 / var(--tw-bg-opacity))));
+}
+#root :is(.button:hover) {
+  background-color: color-mix(in srgb, var(--e-global-color-primary, var(--wp--preset--color--custom-primary, rgb(29 78 216 / var(--tw-bg-opacity)))) 80%, black) !important;
 }
