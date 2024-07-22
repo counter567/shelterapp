@@ -14,7 +14,7 @@ const CheckBox = ({ value = false, label, callback }: CheckBoxProps) => {
   const [id] = useState(checkbox++);
   return (
     <>
-      <div style={{ minWidth: "20vw" }}>
+      <div>
         <div className="flex items-center">
           <input
             id={`sa-checkbox-${id}`}

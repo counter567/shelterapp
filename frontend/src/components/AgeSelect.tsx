@@ -35,7 +35,7 @@ const AgeSelect = ({ value, defaultValue, callback }: AgeSelectProps) => {
     );
   };
   return (
-    <div className="flex items-center" style={{ minWidth: "20vw" }}>
+    <div className="flex items-center">
       <label className="font-bold mr-4">Alter:</label>
       <div className="grow" style={{ minWidth }}>
         <button

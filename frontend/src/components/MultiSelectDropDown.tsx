@@ -32,7 +32,7 @@ const MultiSelectDropDown = ({
   };
   return (
     <>
-      <div style={{ minWidth: "20vw" }}>
+      <div>
         <button
           data-dropdown-toggle="dropdown"
           className="button flex justify-between items-center w-full"
