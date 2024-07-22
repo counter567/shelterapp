@@ -12,7 +12,8 @@ export interface RequestResponseWithPagination {
 export async function requestData<T>(
   path: string | URL,
   data?: RequestData,
-  initOptions: RequestInit = {}
+  initOptions: RequestInit = {},
+  retry = 3,
 ) {
   const { nonce, root } = await getNonce();
   let url: URL;
@@ -76,10 +77,16 @@ export async function requestData<T>(
     // return data
     return data;
   } catch (error) {
-    console.error("Fehler beim Abrufen der Daten:", error);
-    throw new Error(
-      `Fehler beim Abrufen der Daten: ${(error as Error).message}`
-    );
+    if(retry <= 0) {
+      console.error("Fehler beim Abrufen der Daten:", error);
+      throw new Error(
+        `Fehler beim Abrufen der Daten: ${(error as Error).message}`
+      );
+    } else {
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // 1s
+      return requestData(path, data, initOptions, retry - 1);
+    }
+    
   }
 }
 
