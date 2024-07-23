@@ -95,7 +95,7 @@ const AnimalCard = ({
               Alter Unbekannt
             </span>
           )}
-          <div className="animal-card-info card-bottom flex items-center w-full relative flex-col rounded-b mt-4 min-h-[42px]">
+          <div className="animal-card-info justify-center card-bottom flex items-center w-full relative flex-col rounded-b mt-4 min-h-[42px]">
             <h3 className="animal-card-info-status text-center font-extrabold text-white">
               {germanStatus(status!)}
             </h3>
@@ -113,7 +113,7 @@ const AnimalCard = ({
               status !== AnimalStatus.Adopted &&
               dateOfAdmission && (
                 <span className="animal-card-info-date text-center text-white">
-                  Aufgenommen am: {formatDate(dateOfAdmission)}
+                  Aufgenommen am {formatDate(dateOfAdmission)}
                 </span>
               )}
           </div>
