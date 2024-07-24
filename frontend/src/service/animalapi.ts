@@ -1,5 +1,4 @@
 import { AnimalSource } from "../models/animalSource";
-import { AnimalStatus } from "../models/animalStatus";
 import { AnimalFilterComputed, TypeData } from "../stores/animals";
 import { RequestResponseWithPagination, requestData } from "./requestData";
 
@@ -66,7 +65,7 @@ const getAnimalsPaged = async (
   return response;
 };
 
-const getAllanimals = async (perPage = 10) => {
+/*const getAllanimals = async (perPage = 10) => {
   let page = 1;
   const animalsSource = [] as AnimalSource[];
   while (true) {
@@ -88,7 +87,7 @@ const getAllanimals = async (perPage = 10) => {
     page++;
   }
   return animalsSource;
-};
+};*/
 
 const getAnimal = async (slug: string) => {
   const animals = getAnimalsPaged(1, 1, { slug: slug });
@@ -110,4 +109,4 @@ const getAnimalTypes = async () => {
   })) as TypeData[];
 };
 
-export { getAllanimals, getAnimal, getAnimalTypes, getAnimalsPaged };
+export { getAnimal, getAnimalTypes, getAnimalsPaged };

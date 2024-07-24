@@ -80,7 +80,7 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
     otherPictureFileUrls,
     illnesses,
     notes,
-    supporters
+    supporters,
   } = animalStore.singleAnimal;
 
   return (

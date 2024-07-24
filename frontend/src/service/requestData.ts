@@ -14,7 +14,7 @@ export async function requestData<T>(
   data?: RequestData,
   initOptions: RequestInit = {},
   retry = 3,
-) {
+): Promise<RequestResponseWithPagination & T> {
   const { nonce, root } = await getNonce();
   let url: URL;
   // extract path

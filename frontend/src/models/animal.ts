@@ -123,6 +123,9 @@ export class Animal implements AnimalToFilterProps {
     if (this.lengthOfBack) result.push(`Rückenlänge: ${this.lengthOfBack} cm`);
     if (this.circumferenceOfChest)
       result.push(`Brustumfang: ${this.circumferenceOfChest} cm`);
+    if (this.castrated) {
+      result.push(`Kastriert`)
+    }
     return result;
   }
 }
