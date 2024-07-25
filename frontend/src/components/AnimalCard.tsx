@@ -113,7 +113,7 @@ const AnimalCard = ({
               status !== AnimalStatus.Adopted &&
               dateOfAdmission && (
                 <span className="animal-card-info-date text-center text-white">
-                  Eingestellt am {formatDate(dateOfAdmission)}
+                  Aufgenommen am {formatDate(dateOfAdmission)}
                 </span>
               )}
           </div>
