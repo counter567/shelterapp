@@ -300,10 +300,14 @@ class ShelterappAnimals
 
         // if the animal is trashed call sa_sync_delete_animal(id)
         if($post->post_status === 'trash') {
-            outLog('Animal is trashed! Remove from backend!');
             $shelterapp_id = get_post_meta($post_id, 'shelterapp_id', true);
-            sa_sync_delete_animal($shelterapp_id);
-            delete_post_meta($post->ID, 'shelterapp_id');
+            outLog('Animal is trashed! Remove from backend!');
+            if($shelterapp_id != null and $shelterapp_id != '') {
+                sa_sync_delete_animal($shelterapp_id);
+                delete_post_meta($post->ID, 'shelterapp_id');
+            }else {
+                outLog("Animal is not yet synced, skipping backend deletion");
+            }
             return;
         }
         
