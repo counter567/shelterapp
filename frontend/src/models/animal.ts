@@ -15,7 +15,7 @@ export class Animal implements AnimalToFilterProps {
     const props = { ...animalSource.shelterapp_meta };
     // console.log(props.dateOfBirth);
     Object.assign(this, props, {
-      name: animalSource.title.rendered,
+      name: replaceSpecial(animalSource.title.rendered),
       id: animalSource.id,
       slug: animalSource.slug,
 
@@ -225,3 +225,8 @@ export interface ImageMeta {
   orientation: string;
   keywords: any[];
 }
+function replaceSpecial(rendered: string): string {
+    return rendered
+      .replaceAll("&#038;","&")
+}
+
