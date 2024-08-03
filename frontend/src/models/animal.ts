@@ -228,5 +228,6 @@ export interface ImageMeta {
 function replaceSpecial(rendered: string): string {
     return rendered
       .replaceAll("&#038;","&")
+      .replaceAll("&amp;", "+")
 }
 
