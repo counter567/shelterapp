@@ -65,6 +65,7 @@ class AnimalResource {
         @QueryParam("createdAfter") createdAfter: LocalDateTime?,
         @QueryParam("updatedBefore") updatedBefore: LocalDateTime?,
         @QueryParam("updatedAfter") updatedAfter: LocalDateTime?,
+        @QueryParam("fullyVaccinated") fullyVaccinated: Boolean?
     ) = withPanacheSession {
         val tenantId = jwt.getTenantIdOrThrow()
         val fixedStatus = if(status?.isEmpty() == true) {
@@ -77,6 +78,8 @@ class AnimalResource {
         } else {
             typeIsIn
         }
+        println(updatedBefore)
+        println(updatedAfter)
         val params = listOf(
             PanacheQueryParameter(Animal::tenantId.name, tenantId),
             PanacheQueryParameter(Animal::name.name, nameContains, PanacheQueryParameter.Type.LIKE),
@@ -119,6 +122,7 @@ class AnimalResource {
             PanacheQueryParameter(Animal::createdAt.name, createdAfter, PanacheQueryParameter.Type.GREATER_THAN),
             PanacheQueryParameter(Animal::updatedAt.name, updatedBefore, PanacheQueryParameter.Type.LESS_THAN),
             PanacheQueryParameter(Animal::updatedAt.name, updatedAfter, PanacheQueryParameter.Type.GREATER_THAN),
+            PanacheQueryParameter(Animal::fullyVaccinated.name, fullyVaccinated)
             )
         val queryParameters = PanacheQueryParameters(params, page ?: 0, pageSize ?: 20)
         return@withPanacheSession try {

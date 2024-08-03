@@ -94,7 +94,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'created_at' => '\DateTime',
         'updated_at' => '\DateTime',
         'notices' => 'string',
-        'supporters' => 'string'
+        'supporters' => 'string',
+        'fully_vaccinated' => 'bool'
     ];
 
     /**
@@ -142,7 +143,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'created_at' => 'date-time',
         'updated_at' => 'date-time',
         'notices' => null,
-        'supporters' => null
+        'supporters' => null,
+        'fully_vaccinated' => null
     ];
 
     /**
@@ -188,7 +190,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'created_at' => false,
         'updated_at' => false,
         'notices' => false,
-        'supporters' => true
+        'supporters' => true,
+        'fully_vaccinated' => false
     ];
 
     /**
@@ -314,7 +317,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'created_at' => 'createdAt',
         'updated_at' => 'updatedAt',
         'notices' => 'notices',
-        'supporters' => 'supporters'
+        'supporters' => 'supporters',
+        'fully_vaccinated' => 'fullyVaccinated'
     ];
 
     /**
@@ -360,7 +364,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'created_at' => 'setCreatedAt',
         'updated_at' => 'setUpdatedAt',
         'notices' => 'setNotices',
-        'supporters' => 'setSupporters'
+        'supporters' => 'setSupporters',
+        'fully_vaccinated' => 'setFullyVaccinated'
     ];
 
     /**
@@ -406,7 +411,8 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         'created_at' => 'getCreatedAt',
         'updated_at' => 'getUpdatedAt',
         'notices' => 'getNotices',
-        'supporters' => 'getSupporters'
+        'supporters' => 'getSupporters',
+        'fully_vaccinated' => 'getFullyVaccinated'
     ];
 
     /**
@@ -504,6 +510,7 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('updated_at', $data ?? [], null);
         $this->setIfExists('notices', $data ?? [], null);
         $this->setIfExists('supporters', $data ?? [], null);
+        $this->setIfExists('fully_vaccinated', $data ?? [], null);
     }
 
     /**
@@ -1768,6 +1775,33 @@ class Animal implements ModelInterface, ArrayAccess, \JsonSerializable
             }
         }
         $this->container['supporters'] = $supporters;
+
+        return $this;
+    }
+
+    /**
+     * Gets fully_vaccinated
+     *
+     * @return bool|null
+     */
+    public function getFullyVaccinated()
+    {
+        return $this->container['fully_vaccinated'];
+    }
+
+    /**
+     * Sets fully_vaccinated
+     *
+     * @param bool|null $fully_vaccinated fully_vaccinated
+     *
+     * @return self
+     */
+    public function setFullyVaccinated($fully_vaccinated)
+    {
+        if (is_null($fully_vaccinated)) {
+            throw new \InvalidArgumentException('non-nullable fully_vaccinated cannot be null');
+        }
+        $this->container['fully_vaccinated'] = $fully_vaccinated;
 
         return $this;
     }

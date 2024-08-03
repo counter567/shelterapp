@@ -1,4 +1,7 @@
 <?php
+
+use OpenAPI\Client\ApiException;
+
 defined('ABSPATH') or die("");
 global $preventPreGetPosts;
 $preventPreGetPosts = false;
@@ -303,7 +306,13 @@ class ShelterappAnimals
             $shelterapp_id = get_post_meta($post_id, 'shelterapp_id', true);
             outLog('Animal is trashed! Remove from backend!');
             if($shelterapp_id != null and $shelterapp_id != '') {
-                sa_sync_delete_animal($shelterapp_id);
+                try {
+                    sa_sync_delete_animal($shelterapp_id);
+                } catch (ApiException $e) {
+                    if(!($e->getCode() == 404)) {
+                        throw $e;
+                    }
+                }
                 delete_post_meta($post->ID, 'shelterapp_id');
             }else {
                 outLog("Animal is not yet synced, skipping backend deletion");
@@ -634,6 +643,7 @@ class ShelterappAnimals
             'donationCall',
             'successStory',
             'privateAdoption',
+            'fullyVaccinated'
         ], $animalSchema, $schema, $required);
 
         $this->get_custom_input_group('Medizinisches', 40, [
@@ -916,6 +926,7 @@ $filteredMetaFields = [
 
 global $titleMappings;
 $titleMappings = array(
+    'fullyVaccinated' => 'Komplett geimpft',
     'dateOfBirth' => 'Geburtstag',
     'sex' => 'Geschlecht',
     'color' => 'Farbe',

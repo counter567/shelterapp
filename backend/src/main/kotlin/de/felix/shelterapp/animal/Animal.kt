@@ -71,6 +71,8 @@ class Animal: TenantPanacheEntity() {
     var notices: String = ""
     @Column(columnDefinition = "TEXT")
     var supporters: String? = null
+    @Column(nullable = false, columnDefinition = "boolean DEFAULT false")
+    var fullyVaccinated: Boolean = false
 }
 
 enum class AnimalSex {
