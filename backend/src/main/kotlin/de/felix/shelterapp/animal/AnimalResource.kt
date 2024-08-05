@@ -78,8 +78,6 @@ class AnimalResource {
         } else {
             typeIsIn
         }
-        println(updatedBefore)
-        println(updatedAfter)
         val params = listOf(
             PanacheQueryParameter(Animal::tenantId.name, tenantId),
             PanacheQueryParameter(Animal::name.name, nameContains, PanacheQueryParameter.Type.LIKE),
