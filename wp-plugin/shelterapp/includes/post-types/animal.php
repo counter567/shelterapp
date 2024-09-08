@@ -66,7 +66,23 @@ class ShelterappAnimals
 
         add_filter( 'rest_shelterapp_animals_query', array($this, 'filter_posts'), 999, 2 );
         
+        add_action('admin_notices', array($this, 'show_custom_message_in_editor'));
         
+        
+    }
+
+    function show_custom_message_in_editor() {
+        if (isset($_GET['sa_animal_message'])) {
+            switch ($_GET['sa_animal_message']) {
+                case 400:
+                    $message = 'Das Tier konnte nicht synchronisiert werden, da nicht alle Pflichtfelder ausgefüllt sind.';
+                    break;
+                default:
+                    $message = 'Ein unbekannter Fehler ist aufgetreten.';
+                    break;
+            }
+            echo '<div class="notice notice-error is-dismissible"><p>' . $message . '</p></div>';
+        }
     }
 
     function filter_posts( $args, $request ) {
@@ -296,7 +312,7 @@ class ShelterappAnimals
         }
 
         outLog('***********************************************');
-        outLog('saving a post! Update to backend!');
+        outLog('saving a post! Update to backend! ' . $post->post_status);
 
         // if the animal is trashed call sa_sync_delete_animal(id)
         if($post->post_status === 'trash') {
@@ -309,6 +325,47 @@ class ShelterappAnimals
                 outLog("Animal is not yet synced, skipping backend deletion");
             }
             return;
+        } else if ($post->post_status === 'auto-draft') {
+            outLog('Animal is auto-draft, skipping sync');
+            return;
+        }
+        else {
+            $client = sa_get_animal_resource_client();
+            if (!$client) {
+                outLog('Could not get client, no token or token expired.');
+                return;
+            }
+
+            $shelterapp_id = get_post_meta($post_id, 'shelterapp_id', true);
+            $animal = sa_sync_map_post_to_animal($post);
+            if(isset($animal)){
+                try{
+                    if($shelterapp_id) {
+                        // update
+                        $result = $client->animalsPut($animal);
+                        // bump the edit time of the post
+                        // wp_update_post(array('ID' => $post_id));
+                        outLog('animal updated. ID: ' . $shelterapp_id);
+                    } else {
+                        // create
+                        $result = $client->animalsPost($animal);
+                        if(isset($result) && !empty($result))
+                        $shelterapp_id = $result->getId();
+                        update_post_meta($post->ID, 'shelterapp_id', $shelterapp_id);
+                        outLog('new animal added. ID: ' . $shelterapp_id);
+                    }
+                } catch(Exception $e) {
+                    outLog('Animal is not valid, skipping sync');
+                    outLog($e->getMessage());
+
+                    // show a message in the editor
+                    add_filter('redirect_post_location', function($location) use ($e) {
+                        return add_query_arg('sa_animal_message', $e->getCode(), $location);
+                    });
+                    return;
+                }
+            }
+                
         }
         
     }
