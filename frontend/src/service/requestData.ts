@@ -34,6 +34,7 @@ export async function requestData<T>(
 
   // set nonce to request header
   headers.append("X-WP-Nonce", nonce);
+  headers.append("cache-control", 'no-store');
 
   // apply data to request
   if (data) {
@@ -62,6 +63,7 @@ export async function requestData<T>(
 
   // request stuff
   try {
+    options.cache = "no-cache";
     const response = await fetch(url.toString(), options);
     if (!response.ok) {
       throw new Error(`Fehler beim Abrufen der Daten: ${response.statusText}`);
