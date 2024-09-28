@@ -65,8 +65,14 @@ class ShelterappAnimals
         }
 
         add_filter( 'rest_shelterapp_animals_query', array($this, 'filter_posts'), 999, 2 );
+        add_filter( 'manage_edit-shelterapp_animals_sortable_columns', array($this, 'sortable_columns') );
         
         
+    }
+
+    function sortable_columns($columns) {
+        $columns['taxonomy-shelterapp_animal_type'] = 'taxonomy-shelterapp_animal_type';
+        return $columns;
     }
 
     function filter_posts( $args, $request ) {
