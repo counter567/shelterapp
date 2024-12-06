@@ -14,6 +14,11 @@ $sa_sync_config = array(
 function sa_sync_delete_animal(string $id){
     global $sa_sync_config;
     $client = sa_get_animal_resource_client();
+    if (!$client) {
+        outLog('Could not get client, no token or token expired.');
+        return;
+    }
+    
     $client->animalsDelete($id);
 }
 
@@ -89,13 +94,15 @@ function sa_sync_sync_animals(){
         foreach ($posts as $post) {
             // send animal to backend
             $animal = sa_sync_map_post_to_animal($post);
-            try{
-                $result = $client->animalsPost($animal);
-                if(isset($result) && !empty($result))
-                $shelterappID = $result->getId();
-                update_post_meta($post->ID, 'shelterapp_id', $shelterappID);
-            } catch (Exception $e) {
-                outLog('Error while sending animal to backend: ' . $e->getMessage());
+            if(isset($animal)){
+                try{
+                    $result = $client->animalsPost($animal);
+                    if(isset($result) && !empty($result))
+                    $shelterappID = $result->getId();
+                    update_post_meta($post->ID, 'shelterapp_id', $shelterappID);
+                } catch (Exception $e) {
+                    outLog('Error while sending animal to backend: ' . $e->getMessage());
+                }
             }
         }
 }
@@ -112,7 +119,7 @@ function sa_sync_map_post_to_animal(WP_Post $post){
         $animal->setId($shelterappId);
     }
     $animal->setName($post->post_title);
-    outLog(get_the_terms($post->ID, 'shelterapp_animal_type'));
+    // outLog(get_the_terms($post->ID, 'shelterapp_animal_type'));
 
     $type = get_the_terms($post->ID, 'shelterapp_animal_type');
     if(isset($type) && is_array($type) && count($type) > 0) {
@@ -152,7 +159,7 @@ function sa_sync_map_post_to_animal(WP_Post $post){
     // get otherPictureFileUrls and set as other_picture_file_urls
     $otherImages = array();
     $images = get_post_meta($post->ID, 'otherPictureFileUrls', true);
-    outLog($images);
+    // outLog($images);
     if (isset($images) && is_array($images) && count($images) > 0) {
         foreach ($images as $image) {
             array_push($otherImages, wp_get_attachment_image_url($image, 'full'));
@@ -160,7 +167,6 @@ function sa_sync_map_post_to_animal(WP_Post $post){
     }
     $animal->setOtherPictureFileUrls($otherImages);
 
-    outLog($animal);
     return $animal;
 }
 
