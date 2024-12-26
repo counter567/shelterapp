@@ -172,7 +172,7 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
             )
           </span>
           {description && (
-            <div className="animal-detail-description bg-neutral-100 mt-2 mb-4 border rounded-lg padding p-4 text-xl">
+            <div className="animal-detail-description bg-neutral-100 mt-2 mb-4 border rounded-lg padding p-4 text-xl break-on-line">
               {description}
             </div>
           )}

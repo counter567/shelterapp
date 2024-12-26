@@ -3,16 +3,16 @@
 Plugin Name: Shelterapp
 Plugin URI: 
 Description: Worpress integration of the shelterapp
-Version: 0.1.118
+Version: 0.1.119
 Requires at least: 
 Requires PHP: 8.1
-Author: Jan Sobotta
-Author URI: https://sobotta.digital/
+Author: Jan Sobotta, Felix Specht
+Author URI: https://sobotta.digital/, https://github.com/counter567/shelterapp,
 License: 
 Text Domain: shelterapp
 */
 define('SHELTERAPP_PATH', __FILE__);
-define('SHELTERAPP_VERSION', '0.1.118');
+define('SHELTERAPP_VERSION', '0.1.119');
 include_once (__DIR__ . '/includes/index.php');
 include_once (__DIR__ . '/blocks/index.php');
 

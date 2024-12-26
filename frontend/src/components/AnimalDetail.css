@@ -45,3 +45,6 @@
 .image-gallery-slides > div > img {
   max-height: 100% !important;
 }
+.break-on-line {
+  white-space: pre-line;
+}
