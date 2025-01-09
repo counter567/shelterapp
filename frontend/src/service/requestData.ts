@@ -1,4 +1,4 @@
-import getNonce from "./nonce-helper";
+import getRoot from "./nonce-helper";
 
 type RequestData = { [key: string]: any };
 
@@ -15,7 +15,7 @@ export async function requestData<T>(
   initOptions: RequestInit = {},
   retry = 3,
 ): Promise<RequestResponseWithPagination & T> {
-  const { nonce, root } = await getNonce();
+  const root = await getRoot();
   let url: URL;
   // extract path
   if (typeof path === "string") {
@@ -31,9 +31,6 @@ export async function requestData<T>(
     ...initOptions,
     headers,
   } as RequestInit;
-
-  // set nonce to request header
-  headers.append("X-WP-Nonce", nonce);
   headers.append("cache-control", 'no-store');
 
   // apply data to request
