@@ -24,6 +24,9 @@ export interface AnimalFilter extends PostFilter {
   meta_missing?: boolean;
   meta_private_adoption?: boolean;
 }
+export interface AnimalProperties{
+  hideAnimalDatesInList: boolean;
+}
 export interface AnimalFilterComputed extends PostFilter {
   meta_status?: AnimalStatus | AnimalStatus[];
   meta_sex?: AnimalSex | number;
@@ -70,6 +73,9 @@ export class AnimalsStore {
   maxPages = 1;
   postsPerPage = 10;
   filters: AnimalFilter = {};
+  properties: AnimalProperties = {
+    hideAnimalDatesInList: false,
+  };
   hideFilters = false;
   defaultTitle: string;
 
@@ -92,6 +98,7 @@ export class AnimalsStore {
       postsPerPage: observable,
       setPostsPerPage: action,
       filters: observable,
+      properties: observable,
       setFilters: action,
       hideFilters: observable,
       setHideFilters: action,
@@ -100,6 +107,7 @@ export class AnimalsStore {
       typesData: observable,
       setTypesData: action,
       setOrderBy: action,
+      setProperties: action
     });
   }
 
@@ -124,6 +132,9 @@ export class AnimalsStore {
   setFilters = (value: AnimalFilter) => {
     this.filters = value;
   };
+  setProperties = (value: AnimalProperties) => {
+    this.properties = value;
+  }
 
   setDefaultTitle = (value: string) => {
     this.defaultTitle = value;
@@ -221,6 +232,14 @@ export class AnimalsStore {
     }
 
     return filters;
+  }
+  setProperty<T extends keyof AnimalProperties>(
+      property: T,
+      value: AnimalProperties[T]
+  ) {
+    const currentProperties = JSON.parse(JSON.stringify(this.properties));
+    currentProperties[property] = value;
+    this.setProperties(currentProperties)
   }
   setFilter<T extends keyof AnimalFilter>(
     filter: T,

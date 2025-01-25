@@ -171,7 +171,7 @@ export default observer(function AnimalList({
       ></Pagination>
       <ul className="flex justify-center gap-4 animals mb-12 flex-wrap items-stretch">
         {animalStore.animals?.map((animal) => (
-          <AnimalCard key={animal.id} animal={animal} />
+          <AnimalCard key={animal.id} animal={animal} properties={animalStore.properties}/>
         ))}
       </ul>
       {!animalStore.loading && animalStore.animals.length === 0 && (

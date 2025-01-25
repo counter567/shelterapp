@@ -16,7 +16,6 @@ class SaDateTime extends DateTime
 
 class ShelterappAnimals
 {
-    private $isSyncing = false;
     private $rest_is_init = false;
     public $blockView = 0;
 
@@ -39,30 +38,6 @@ class ShelterappAnimals
         // blocks, widgets, shortcodes
         add_action( 'elementor/widgets/register', array($this, 'register_elementor_widget') );
         add_shortcode('shelterapp_view', array($this, 'doShortcode'));
-
-        // cronjob stuff
-        add_filter( 'cron_schedules', array($this, 'example_add_cron_interval'), 1000);
-        add_action( 'sa_cron_perform_sync', array($this, 'cron_perform_sync') );
-
-        // check if the wp-cron.php is executed
-        if(isDebug()) {
-            // define stub for cronjob
-            add_action( 'sa_cron_perform_sync', function(){} );
-            // always call the cronjob
-            add_action('init', function(){
-                if (defined('DOING_CRON') && DOING_CRON) {
-                    outLog('Doing cron');
-                    $this->cron_perform_sync();
-                }
-            }, 101);
-        } else {
-            // define cron job callback
-            add_action( 'sa_cron_perform_sync', array($this, 'cron_perform_sync') );
-            // ensure cronjob is set
-            if( !wp_next_scheduled( 'sa_cron_perform_sync' ) ){
-                wp_schedule_event( time(), 'five_minutes', 'sa_cron_perform_sync' );
-            }
-        }
 
         add_filter( 'rest_shelterapp_animals_query', array($this, 'filter_posts'), 999, 2 );
         add_filter( 'manage_edit-shelterapp_animals_sortable_columns', array($this, 'sortable_columns') );
@@ -156,14 +131,6 @@ class ShelterappAnimals
                 $args['order'] = isset($request['meta_order']) ? $request['meta_order'] : 'DESC';
             }
         return $args;
-    }
-
-    function example_add_cron_interval( $schedules ) {
-        $schedules['five_minutes'] = array(
-            'interval' => 5*60,
-            'display' => esc_html__( 'Every Five Minutes' ),
-        );
-        return $schedules;
     }
 
     function register_elementor_widget( $widgets_manager ) {
@@ -300,22 +267,6 @@ class ShelterappAnimals
             $post_value = $_POST['otherPictureFileUrls'];
             update_post_meta($post->ID, 'otherPictureFileUrls', $post_value);
         }
-
-        outLog('***********************************************');
-        outLog('saving a post! Update to backend!');
-
-        // if the animal is trashed call sa_sync_delete_animal(id)
-        if($post->post_status === 'trash') {
-            $shelterapp_id = get_post_meta($post_id, 'shelterapp_id', true);
-            outLog('Animal is trashed! Remove from backend!');
-            if($shelterapp_id != null and $shelterapp_id != '') {
-                sa_sync_delete_animal($shelterapp_id);
-                delete_post_meta($post->ID, 'shelterapp_id');
-            }else {
-                outLog("Animal is not yet synced, skipping backend deletion");
-            }
-            return;
-        }
         
     }
 
@@ -339,7 +290,6 @@ class ShelterappAnimals
                 'callback' => function ($data) {
                     return array (
                         'root' => esc_url_raw(rest_url()),
-                        'nonce' => wp_create_nonce('wp_rest'),
                         'publicUrlBase' => plugin_dir_url(SHELTERAPP_PATH) . 'public'
                     );
                 },
@@ -577,9 +527,8 @@ class ShelterappAnimals
             }
         }
         flush_rewrite_rules();
-
-        if( !wp_next_scheduled( 'sa_cron_perform_sync' ) ){
-            wp_schedule_event( time(), 'five_minutes', 'sa_cron_perform_sync' );
+        if( wp_next_scheduled( 'sa_cron_perform_sync' ) ){
+            wp_clear_scheduled_hook( 'sa_cron_perform_sync' );
         }
     }
 
@@ -594,10 +543,6 @@ class ShelterappAnimals
             }
         }
         flush_rewrite_rules();
-
-        if( wp_next_scheduled( 'sa_cron_perform_sync' ) ){
-            wp_clear_scheduled_hook( 'sa_cron_perform_sync' );
-        }
     }
 
     function register_custom_fields()
@@ -866,41 +811,6 @@ class ShelterappAnimals
                 return $field;
             default:
                 throw new \Exception('Unknown type: ' . $type);
-        }
-    }
-
-    function cron_perform_sync()
-    {
-        $this->isSyncing = true;
-        error_log('============================================');
-
-        if(isDebug()){
-            error_log('Delete old animals...');
-            // @REMOVE: clear animals for debug
-            $args = array(
-                'post_type' => 'shelterapp_animals',
-                'post_status' => 'any',
-                'posts_per_page' => -1,
-            );
-            $posts = get_posts($args);
-            foreach ($posts as $post) {
-                // delete the post
-                wp_delete_post($post->ID, true);
-            }
-        }
-
-        error_log('Import animals...');
-        try{
-            sa_sync_sync_animals();
-            return true;
-        } catch(Exception $e) {
-            outLog('There was an error during sync:');
-            outLog($e->getMessage());
-            outLog(array_map(function($entry){
-                return $entry['function'];
-            }, $e->getTrace()));
-            $this->isSyncing = false;
-            return false;
         }
     }
 }

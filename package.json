@@ -7,7 +7,7 @@
     "frontend:dev": "cd frontend && npm run watch",
     "predev": "npm run generate",
     "generate": "dotenv -- turbo run generate",
-    "stop container": "docker stop wp-plugin-wordpress-1 wp-plugin-backend-db-1 wp-plugin-wp-db-1"
+    "stop container": "docker stop wp-plugin-wordpress-1 wp-plugin-wp-db-1"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
@@ -17,7 +17,6 @@
   "packageManager": "npm@8.19.4",
   "workspaces": [
     "wp-plugin/",
-    "backend/",
     "wp-plugin/blocks/*"
   ],
   "dependencies": {

@@ -4,12 +4,6 @@ services:
   wp-db:
     volumes:
       - wp-db:/var/lib/mysql
-
-  backend-db:
-    volumes:
-      - backend-db:/var/lib/postgresql/data
-
 volumes:
   shelterapp:
   wp-db:
-  backend-db:

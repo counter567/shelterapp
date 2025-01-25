@@ -19,7 +19,8 @@ export interface AppProps {
   wasFound?: boolean;
   missing?: boolean;
   privateAdoption?: boolean;
-  orderBy?: AnimalSort
+  orderBy?: AnimalSort,
+  hideDates?: boolean;
 }
 
 function App(props: AppProps) {
@@ -40,6 +41,7 @@ function App(props: AppProps) {
     animalStore.setFilter("meta_was_found", props.wasFound, false)
     animalStore.setFilter("meta_missing", props.missing, false)
     animalStore.setFilter("meta_private_adoption", props.privateAdoption, false)
+    animalStore.setProperty("hideAnimalDatesInList", props.hideDates??false);
     if(props.orderBy) animalStore.setOrderBy(props.orderBy, false, false)
   }, []);
 

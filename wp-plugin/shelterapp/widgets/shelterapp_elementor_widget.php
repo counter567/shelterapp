@@ -144,6 +144,18 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
             ]
         );
         $this->add_control(
+            'hideDates',
+            [
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'label' => esc_html__( 'Datum verstecken', 'wordpress' ),
+                'options' => array(
+                    'yes' => esc_html__( 'Ja', 'wordpress' ),
+                    'no' => esc_html__( 'Nein', 'wordpress' ),
+                ),
+                'default' => 'no',
+            ]
+        );
+        $this->add_control(
             'missing',
             [
                 'type' => \Elementor\Controls_Manager::SELECT,
@@ -203,6 +215,7 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
         if(isset($settings['privateAdoption']) && !empty($settings['privateAdoption'])) $attributes['privateAdoption'] = $settings['privateAdoption'];
         if(isset($settings['hideFilters']) && !empty($settings['hideFilters'])) $attributes['hideFilters'] = $settings['hideFilters'];
         if(isset($settings['orderBy']) && !empty($settings['orderBy'])) $attributes['orderBy'] = $settings['orderBy'];
+        if(isset($settings['hideDates']) && !empty($settings['hideDates'])) $attributes['hideDates'] = $settings['hideDates'];
         include (plugin_dir_path(SHELTERAPP_PATH) . 'blocks/shelter-block-view/render.php');
 	}
 

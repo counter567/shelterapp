@@ -9,9 +9,11 @@ import { getRouterBasePath } from "../service/url-helper";
 import BirthDate from "./Birthdate";
 import Gender from "./Gender";
 import Ribbon from "./ribbon/Ribbon";
+import {AnimalProperties} from "../stores/animals";
 
 interface AnimalCardProps {
   animal: Animal;
+  properties: AnimalProperties;
 }
 
 const AnimalCard = ({
@@ -33,6 +35,9 @@ const AnimalCard = ({
     missing,
     privateAdoption,
   },
+  properties: {
+    hideAnimalDatesInList
+  }
 }: AnimalCardProps) => {
   const getCardClass = (status?: AnimalStatus) => {
     if (!status) throw new Error("Status not set");
@@ -99,6 +104,8 @@ const AnimalCard = ({
             <h3 className="animal-card-info-status text-center font-extrabold text-white">
               {germanStatus(status!)}
             </h3>
+            {!hideAnimalDatesInList &&
+                <>
             {status === AnimalStatus.Adopted && dateOfLeave && (
               <span className="animal-card-info-date text-center text-white">
                 am {formatDate(dateOfLeave)}
@@ -116,6 +123,8 @@ const AnimalCard = ({
                   Aufgenommen am {formatDate(dateOfAdmission)}
                 </span>
               )}
+                </>
+            }
           </div>
         </div>
       </a>

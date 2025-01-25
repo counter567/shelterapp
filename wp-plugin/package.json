@@ -2,7 +2,7 @@
     "name": "wp-plugin",
     "version": "0.0.1",
     "description": "",
-    "author": "Jan Sobotta",
+    "author": "Jan Sobotta, Felix Specht, Sven Kernke",
     "private": true,
     "license": "UNLICENSED",
     "scripts": {

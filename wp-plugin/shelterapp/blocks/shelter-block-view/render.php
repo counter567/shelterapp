@@ -27,7 +27,7 @@ wp_localize_script(
 if (defined('WP_DEBUG') && true == WP_DEBUG) {
 	?>
 
-	<div 
+	<div
 		data-type="<?php echo isset($attributes['type']) ? $attributes['type'] : '' ?>"
 		<?php echo get_block_wrapper_attributes(); ?>
 	>
@@ -51,7 +51,7 @@ if (defined('WP_DEBUG') && true == WP_DEBUG) {
 		data-missing="<?php echo isset($attributes['missing']) ? $attributes['missing'] : '' ?>"
 		data-privateAdoption="<?php echo isset($attributes['privateAdoption']) ? $attributes['privateAdoption'] : '' ?>"
 		data-hideFilters="<?php echo is_post_type_archive('shelterapp_animals') || is_singular('shelterapp_animals') ? 'false' : (isset($attributes['hideFilters']) ? $attributes['hideFilters'] : 'false') ?>"
-		data-orderBy="<?php echo isset($attributes['orderBy']) ? $attributes['orderBy'] : '' ?>"
+		data-hideDates="<?php echo isset($attributes['hideDates']) ? $attributes['hideDates'] : 'false' ?>"
 		<?php echo get_block_wrapper_attributes(); ?>
 	>
 	</div>
