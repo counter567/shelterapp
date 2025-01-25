@@ -52,6 +52,7 @@ if (defined('WP_DEBUG') && true == WP_DEBUG) {
 		data-privateAdoption="<?php echo isset($attributes['privateAdoption']) ? $attributes['privateAdoption'] : '' ?>"
 		data-hideFilters="<?php echo is_post_type_archive('shelterapp_animals') || is_singular('shelterapp_animals') ? 'false' : (isset($attributes['hideFilters']) ? $attributes['hideFilters'] : 'false') ?>"
 		data-hideDates="<?php echo isset($attributes['hideDates']) ? $attributes['hideDates'] : 'false' ?>"
+		data-orderBy="<?php echo isset($attributes['orderBy']) ? $attributes['orderBy'] : '' ?>"
 		<?php echo get_block_wrapper_attributes(); ?>
 	>
 	</div>
