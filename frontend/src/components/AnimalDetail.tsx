@@ -104,29 +104,32 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
               )}
             </div>
           </div>
-          {status === AnimalStatus.Adopted && dateOfLeave && (
-            <span className="animal-detail-date text-center mb-2">
-              seit {formatDate(dateOfLeave)}
-            </span>
-          )}
-          {status === AnimalStatus.Deceased && dateOfDeath && (
-            <span className="animal-detail-date text-center mb-2">
-              seit {formatDate(dateOfDeath)}
-            </span>
-          )}
-          {status !== AnimalStatus.Deceased &&
-            status !== AnimalStatus.Adopted &&
-            dateOfAdmission && (
-              <span className="animal-detail-date text-center mb-2">
-                seit {formatDate(dateOfAdmission)}
-              </span>
-            )}
+          <div className="mb-8 flex flex-col">
             <span
-              className="animal-detail-status rounded-lg mb-8 text-white py-3 font-bold text-center"
+              className="animal-detail-status rounded-lg text-white py-3 font-bold text-center"
               style={{ backgroundColor: getCSSColorByCardColor(status!) }}
             >
-              {germanStatus(status!)}
+              {germanStatus(status!)} <br/>
+              {status === AnimalStatus.Adopted && dateOfLeave && (
+                  <>
+              seit {formatDate(dateOfLeave)}
+            </>
+              )}
+              {status === AnimalStatus.Deceased && dateOfDeath && (
+                  <>
+              am {formatDate(dateOfDeath)}
+            </>
+              )}
+              {status !== AnimalStatus.Deceased &&
+                  status !== AnimalStatus.Adopted &&
+                  dateOfAdmission && (
+                      <>
+                seit {formatDate(dateOfAdmission)}
+              </>
+                  )}
             </span>
+          {(dateOfAdmission && status !== AnimalStatus.New) && <span>Aufgenommen am {formatDate(dateOfAdmission)}</span>}
+          </div>
             {(dateOfBirth || animalStore.singleAnimal.getPersonalData().length > 0 || (illnesses? illnesses?.length : 0) > 0) && <>
                 <h1 className="animal-detail-props font-bold text-xl mb-2">Eigenschaften</h1>
                 {dateOfBirth && (
