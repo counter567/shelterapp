@@ -176,7 +176,9 @@ export default observer(function AnimalList({
       </ul>
       {!animalStore.loading && animalStore.animals.length === 0 && (
         <div className="text-center mt-20">
-          <h1 className="text-4xl font-bold mb-4">Keine Tiere gefunden</h1>
+          <h1 className="text-4xl font-bold mb-4">
+              {animalStore.properties.customNoResultMessage ? animalStore.properties.customNoResultMessage : "Keine Tiere gefunden"}
+          </h1>
           <button
             className="button font-normal"
             onClick={() => animalStore.resetFilter()}

@@ -90,16 +90,19 @@ const AnimalCard = ({
             {sex && <Gender sex={sex} />}
             {type && type}
           </span>
-          {dateOfBirth && (
+          {
+            !hideAnimalDatesInList &&(
+          dateOfBirth && (
             <span className="animal-card-date text-center font-bold text-gray-500">
               <BirthDate birthDate={dateOfBirth} />
             </span>
-          )}
-          {!dateOfBirth && (
+          )||
+          !dateOfBirth && (
             <span className="text-center font-bold text-gray-500">
               Alter Unbekannt
             </span>
-          )}
+          ))
+          }
           <div className="animal-card-info justify-center card-bottom flex items-center w-full relative flex-col rounded-b mt-4 min-h-[42px]">
             <h3 className="animal-card-info-status text-center font-extrabold text-white">
               {germanStatus(status!)}

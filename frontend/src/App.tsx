@@ -21,6 +21,7 @@ export interface AppProps {
   privateAdoption?: boolean;
   orderBy?: AnimalSort,
   hideDates?: boolean;
+  customNoResultMessage?: string;
 }
 
 function App(props: AppProps) {
@@ -42,6 +43,7 @@ function App(props: AppProps) {
     animalStore.setFilter("meta_missing", props.missing, false)
     animalStore.setFilter("meta_private_adoption", props.privateAdoption, false)
     animalStore.setProperty("hideAnimalDatesInList", props.hideDates??false);
+    animalStore.setProperty("customNoResultMessage", props.customNoResultMessage)
     if(props.orderBy) animalStore.setOrderBy(props.orderBy, false, false)
   }, []);
 

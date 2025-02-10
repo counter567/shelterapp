@@ -118,6 +118,14 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
 				'default' => 0,
 			]
 		);
+        $this->add_control(
+            'customNoResultMessage',
+            [
+                'label'       => esc_html__( 'Eigener Text bei leerem Ergebnis', 'wordpress' ),
+                'type'        => \Elementor\Controls_Manager::TEXT,
+                'default'     => __( '', 'plugin-domain' ),
+            ]
+        );
 		$this->add_control(
 			'maxAge',
 			[
@@ -216,6 +224,7 @@ class Shelterapp_Elementor_Widget extends \Elementor\Widget_Base {
         if(isset($settings['hideFilters']) && !empty($settings['hideFilters'])) $attributes['hideFilters'] = $settings['hideFilters'];
         if(isset($settings['orderBy']) && !empty($settings['orderBy'])) $attributes['orderBy'] = $settings['orderBy'];
         if(isset($settings['hideDates']) && !empty($settings['hideDates'])) $attributes['hideDates'] = $settings['hideDates'];
+        if(isset($settings['customNoResultMessage']) && !empty($settings['customNoResultMessage'])) $attributes['customNoResultMessage'] = $settings['customNoResultMessage'];
         include (plugin_dir_path(SHELTERAPP_PATH) . 'blocks/shelter-block-view/render.php');
 	}
 

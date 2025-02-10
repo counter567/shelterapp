@@ -27,6 +27,7 @@ roots.forEach((rootElement) => {
         privateAdoption={rootElement.hasAttribute('data-privateAdoption') && rootElement.getAttribute('data-privateAdoption') !== '' ? (rootElement.getAttribute('data-privateAdoption') === 'yes') : undefined}
         hideDates={rootElement.hasAttribute('data-hideDates') && rootElement.getAttribute('data-hideDates') !== '' ? (rootElement.getAttribute('data-hideDates') === 'yes') : false}
         orderBy={rootElement.getAttribute('data-orderBy') as AnimalSort || undefined}
+        customNoResultMessage={rootElement.getAttribute('data-custom-no-result-message') || undefined}
       />
     </React.StrictMode>
   );

@@ -110,25 +110,26 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
               style={{ backgroundColor: getCSSColorByCardColor(status!) }}
             >
               {germanStatus(status!)} <br/>
-              {status === AnimalStatus.Adopted && dateOfLeave && (
+              {status === AnimalStatus.Adopted && dateOfLeave && !animalStore.properties.hideAnimalDatesInList && (
                   <>
               seit {formatDate(dateOfLeave)}
             </>
               )}
-              {status === AnimalStatus.Deceased && dateOfDeath && (
+              {status === AnimalStatus.Deceased && dateOfDeath && !animalStore.properties.hideAnimalDatesInList && (
                   <>
               am {formatDate(dateOfDeath)}
             </>
               )}
               {status !== AnimalStatus.Deceased &&
                   status !== AnimalStatus.Adopted &&
+                  !animalStore.properties.hideAnimalDatesInList &&
                   dateOfAdmission && (
                       <>
                 seit {formatDate(dateOfAdmission)}
               </>
                   )}
             </span>
-          {(dateOfAdmission && status !== AnimalStatus.New) && <span>Aufgenommen am {formatDate(dateOfAdmission)}</span>}
+          {(dateOfAdmission && status !== AnimalStatus.New && !animalStore.properties.hideAnimalDatesInList) && <span>Aufgenommen am {formatDate(dateOfAdmission)}</span>}
           </div>
             {(dateOfBirth || animalStore.singleAnimal.getPersonalData().length > 0 || (illnesses? illnesses?.length : 0) > 0) && <>
                 <h1 className="animal-detail-props font-bold text-xl mb-2">Eigenschaften</h1>
