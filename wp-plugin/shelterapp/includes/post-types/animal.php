@@ -19,6 +19,10 @@ class ShelterappAnimals
     private $rest_is_init = false;
     public $blockView = 0;
 
+    private $openapi_schema = null;
+    private $openapi_animal_schema = null;
+
+
     function __construct()
     {
         // plugin init hooks
@@ -41,9 +45,293 @@ class ShelterappAnimals
 
         add_filter( 'rest_shelterapp_animals_query', array($this, 'filter_posts'), 999, 2 );
         add_filter( 'manage_edit-shelterapp_animals_sortable_columns', array($this, 'sortable_columns') );
-        
-        
+
+        add_action('restrict_manage_posts', array($this, 'add_admin_list_filters'));
+        add_action('pre_get_posts', array($this, 'apply_admin_list_filters'));
+
     }
+
+    // ---------------------------
+    // OpenAPI helpers (shared with filters)
+    // ---------------------------
+
+    private function load_openapi_schema(): void
+    {
+        if ($this->openapi_schema !== null && $this->openapi_animal_schema !== null) {
+            return;
+        }
+        $file = @file_get_contents(dirname(__FILE__) . '/../../openapi.json');
+        if ($file === false) {
+            $this->openapi_schema = null;
+            $this->openapi_animal_schema = null;
+            return;
+        }
+        $schema = json_decode($file, true);
+        if (!is_array($schema)) {
+            $this->openapi_schema = null;
+            $this->openapi_animal_schema = null;
+            return;
+        }
+        $this->openapi_schema = $schema;
+        $this->openapi_animal_schema = $schema['components']['schemas']['Animal']['properties'] ?? null;
+    }
+
+    private function get_field_definition(string $fieldKey): ?array
+    {
+        $this->load_openapi_schema();
+        if (!$this->openapi_animal_schema || !isset($this->openapi_animal_schema[$fieldKey])) {
+            return null;
+        }
+        $def = $this->openapi_animal_schema[$fieldKey];
+
+        // Resolve $ref in allOf if present (similar to register_custom_fields)
+        if (isset($def['allOf']) && is_array($def['allOf']) && count($def['allOf']) > 0) {
+            $entry = $def['allOf'][0];
+            if (isset($entry['$ref'])) {
+                $def['$ref'] = $entry['$ref'];
+            }
+        }
+        return $def;
+    }
+
+    private function resolve_ref(array $def): ?array
+    {
+        $this->load_openapi_schema();
+        if (!isset($def['$ref']) || !$this->openapi_schema) {
+            return null;
+        }
+        $name = basename($def['$ref']);
+        return $this->openapi_schema['components']['schemas'][$name] ?? null;
+    }
+
+    private function translate_enum_label(string $fieldKey, string $value): string
+    {
+        if ($fieldKey === 'status') {
+            // German labels for the status enum
+            static $labels = array(
+                'NEW'             => 'Neu',
+                'SEARCHING'       => 'Suchend',
+                'REQUEST_STOP'    => 'Anfrage gestoppt',
+                'EMERGENCY'       => 'Notfall',
+                'RESERVED'        => 'Reserviert',
+                'ADOPTED'         => 'Vermittelt',
+                'FINAL_CARE'      => 'Endpflege',
+                'COURT_OF_GRACE'  => 'Gnadenhof',
+                'DECEASED'        => 'Verstorben',
+            );
+            return $labels[$value] ?? $value;
+        }
+
+        // Default: return raw value if no translation exists
+        return $value;
+    }
+
+
+    private function get_enum_choices(string $fieldKey): array
+    {
+        $def = $this->get_field_definition($fieldKey);
+        if (!$def) return [];
+
+        // direct enum on field
+        if (isset($def['enum']) && is_array($def['enum'])) {
+            // return as value => label
+            return array_combine($def['enum'], $def['enum']);
+        }
+
+        // enum via $ref
+        $ref = $this->resolve_ref($def);
+        if ($ref && isset($ref['enum']) && is_array($ref['enum'])) {
+            return array_combine($ref['enum'], $ref['enum']);
+        }
+
+        return [];
+    }
+
+    private function get_field_type(string $fieldKey): ?string
+    {
+        $def = $this->get_field_definition($fieldKey);
+        if (!$def) return null;
+
+        // check $ref types you mapped in register_custom_fields
+        if (isset($def['allOf']) && is_array($def['allOf']) && count($def['allOf']) > 0) {
+            $entry = $def['allOf'][0];
+            if (isset($entry['$ref'])) {
+                $def['$ref'] = $entry['$ref'];
+            }
+        }
+        if (isset($def['$ref'])) {
+            $ref = $this->resolve_ref($def);
+            if ($ref) {
+                // Map special refs you used in register_custom_fields
+                $name = basename($def['$ref']);
+                if ($name === 'LocalDate') return 'date';
+                if ($name === 'LocalDateTime') return 'datetime';
+                if (isset($ref['enum'])) return 'enum';
+            }
+        }
+
+        // fallback to native type
+        return $def['type'] ?? null;
+    }
+
+
+
+
+    function add_admin_list_filters()
+    {
+        global $typenow;
+        if ($typenow !== 'shelterapp_animals') {
+            return;
+        }
+
+        // Status select from OpenAPI enum, labels translated
+        $status_selected = isset($_GET['sa_meta_status']) ? sanitize_text_field($_GET['sa_meta_status']) : '';
+        $status_choices = $this->get_enum_choices('status');
+
+        if (!empty($status_choices)) {
+            ?>
+            <select name="sa_meta_status">
+                <option value=""><?php esc_html_e('Alle Status', 'shelterapp'); ?></option>
+                <?php foreach ($status_choices as $val => $_rawLabel): ?>
+                    <?php $label = $this->translate_enum_label('status', $val); ?>
+                    <option value="<?php echo esc_attr($val); ?>" <?php selected($status_selected, $val); ?>>
+                        <?php echo esc_html($label); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <?php
+        } else {
+            ?>
+            <input
+                type="text"
+                name="sa_meta_status"
+                placeholder="<?php esc_attr_e('Status', 'shelterapp'); ?>"
+                value="<?php echo esc_attr($status_selected); ?>"
+            />
+            <?php
+        }
+
+        // Optional: also build Sex from enum, if present
+        $sex_selected = isset($_GET['sa_meta_sex']) ? sanitize_text_field($_GET['sa_meta_sex']) : '';
+        $sex_choices = $this->get_enum_choices('sex');
+        if (!empty($sex_choices)) {
+            ?>
+            <select name="sa_meta_sex">
+                <option value=""><?php esc_html_e('Alle Geschlechter', 'shelterapp'); ?></option>
+                <?php foreach ($sex_choices as $val => $label): ?>
+                    <option value="<?php echo esc_attr($val); ?>" <?php selected($sex_selected, $val); ?>>
+                        <?php echo esc_html($label); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <?php
+        } else {
+            ?>
+            <select name="sa_meta_sex">
+                <option value=""><?php esc_html_e('Alle Geschlechter', 'shelterapp'); ?></option>
+                <option value="Male"   <?php selected($sex_selected, 'Male'); ?>><?php esc_html_e('Männlich', 'shelterapp'); ?></option>
+                <option value="Female" <?php selected($sex_selected, 'Female'); ?>><?php esc_html_e('Weiblich', 'shelterapp'); ?></option>
+            </select>
+            <?php
+        }
+
+        // Booleans as dropdowns (from schema types, but simple fixed UI is fine)
+        $bool_options = array(
+            ''  => __('Alle', 'shelterapp'),
+            '1' => __('Ja', 'shelterapp'),
+            '0' => __('Nein', 'shelterapp'),
+        );
+
+        $selected_pa      = isset($_GET['sa_meta_private_adoption']) ? sanitize_text_field($_GET['sa_meta_private_adoption']) : '';
+        $selected_found   = isset($_GET['sa_meta_was_found']) ? sanitize_text_field($_GET['sa_meta_was_found']) : '';
+        $selected_missing = isset($_GET['sa_meta_missing']) ? sanitize_text_field($_GET['sa_meta_missing']) : '';
+
+        ?>
+        <select name="sa_meta_private_adoption">
+            <?php foreach ($bool_options as $val => $label): ?>
+                <option value="<?php echo esc_attr($val); ?>" <?php selected($selected_pa, $val); ?>>
+                    <?php echo esc_html(sprintf(__('Fremdvermittlung: %s', 'shelterapp'), $label)); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+
+        <select name="sa_meta_was_found">
+            <?php foreach ($bool_options as $val => $label): ?>
+                <option value="<?php echo esc_attr($val); ?>" <?php selected($selected_found, $val); ?>>
+                    <?php echo esc_html(sprintf(__('Gefunden: %s', 'shelterapp'), $label)); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+
+        <select name="sa_meta_missing">
+            <?php foreach ($bool_options as $val => $label): ?>
+                <option value="<?php echo esc_attr($val); ?>" <?php selected($selected_missing, $val); ?>>
+                    <?php echo esc_html(sprintf(__('Vermisst: %s', 'shelterapp'), $label)); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+        <?php
+    }
+
+
+    // ---------------------------
+    // Admin List Filters (Query)
+    // ---------------------------
+
+    function apply_admin_list_filters($query)
+    {
+        if (!is_admin() || !$query->is_main_query()) {
+            return;
+        }
+
+        $screen = get_current_screen();
+        if (!$screen || $screen->post_type !== 'shelterapp_animals') {
+            return;
+        }
+
+        $meta_query = array('relation' => 'AND');
+
+        // Status (enum or string)
+        if (!empty($_GET['sa_meta_status'])) {
+            $meta_query[] = array(
+                'key'     => 'status',
+                'value'   => sanitize_text_field($_GET['sa_meta_status']),
+                'compare' => '='
+            );
+        }
+
+        // Sex (enum or string)
+        if (!empty($_GET['sa_meta_sex'])) {
+            $meta_query[] = array(
+                'key'     => 'sex',
+                'value'   => sanitize_text_field($_GET['sa_meta_sex']),
+                'compare' => '='
+            );
+        }
+
+        // Booleans: privateAdoption, wasFound, missing
+        $bool_filters = array(
+            'sa_meta_private_adoption' => 'privateAdoption',
+            'sa_meta_was_found'        => 'wasFound',
+            'sa_meta_missing'          => 'missing',
+        );
+        foreach ($bool_filters as $param => $meta_key) {
+            if (isset($_GET[$param]) && $_GET[$param] !== '') {
+                $is_true = $_GET[$param] === '1';
+                $meta_query[] = array(
+                    'key'     => $meta_key,
+                    'value'   => $is_true ? array('1','true') : array('', '0', 'false'),
+                    'compare' => 'IN',
+                );
+            }
+        }
+
+        if (count($meta_query) > 1) {
+            $query->set('meta_query', $meta_query);
+        }
+    }
+
+
 
     function sortable_columns($columns) {
         $columns['taxonomy-shelterapp_animal_type'] = 'taxonomy-shelterapp_animal_type';
