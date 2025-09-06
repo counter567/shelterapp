@@ -36,6 +36,12 @@ export interface AnimalSource {
      * @type {string}
      * @memberof Animal
      */
+    stateSince?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof Animal
+     */
     type?: string;
     /**
      *

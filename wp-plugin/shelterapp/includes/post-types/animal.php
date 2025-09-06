@@ -578,6 +578,7 @@ class ShelterappAnimals
 
         $this->get_custom_input_group('Shelter Interner', 30, [
             'dateOfAdmission',
+            'stateSince',
             'dateOfLeave',
             'dateOfDeath',
             'status',
@@ -847,6 +848,7 @@ $titleMappings = array(
     'lengthOfBack' => 'Rückenlänge',
     'circumferenceOfChest' => 'Brustumfang',
     'dateOfAdmission' => 'Aufnahmedatum',
+    'stateSince' => 'Status seit',
     'dateOfLeave' => 'Abgabedatum',
     'dateOfDeath' => 'Todesdatum',
     'status' => 'Status',

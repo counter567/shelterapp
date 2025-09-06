@@ -13,5 +13,8 @@
         "build:major": "npm run bump -- --major; zip -rq ./shelterapp.zip ./shelterapp",
         "build:minor": "npm run bump -- --minor; zip -rq ./shelterapp.zip ./shelterapp",
         "log": "docker compose logs wordpress -f -n 10 | sed -Enu 's/wp-plugin-wordpress-1  \\| \\[.*\\](.*)(, referer:.*)?/\\1/p' | awk '{ print strftime(\"%H:%M:%S\"), $0 }'"
+    },
+    "devDependencies": {
+        "openapi-generator": "^0.1.39"
     }
 }

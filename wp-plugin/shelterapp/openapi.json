@@ -1787,6 +1787,13 @@
           "createdAt" : {
             "$ref" : "#/components/schemas/LocalDateTime"
           },
+          "stateSince" : {
+            "type" : "string",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/LocalDate"
+            } ],
+            "nullable" : true
+          },
           "updatedAt" : {
             "$ref" : "#/components/schemas/LocalDateTime"
           },

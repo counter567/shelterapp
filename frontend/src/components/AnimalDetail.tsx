@@ -73,6 +73,7 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
     dateOfDeath,
     dateOfLeave,
     dateOfBirth,
+      stateSince,
     sex,
     type,
     status,
@@ -125,7 +126,7 @@ const AnimalDetail = observer(({ animalStoreContext }: AnimalDetailProps) => {
                   !animalStore.properties.hideAnimalDatesInList &&
                   dateOfAdmission && (
                       <>
-                seit {formatDate(dateOfAdmission)}
+                seit {formatDate(stateSince !== undefined ? stateSince : dateOfAdmission)}
               </>
                   )}
             </span>

@@ -39,6 +39,7 @@ export class Animal implements AnimalToFilterProps {
       missing: parseBoolean(props.missing!),
       privateAdoption: parseBoolean(props.privateAdoption!),
       isCastrated: parseBoolean(props.isCastrated!),
+      stateSince: parseDate(props.stateSince),
       notes: props.notes,
       supporters: props.supporters
     });
@@ -72,6 +73,7 @@ export class Animal implements AnimalToFilterProps {
   dateOfAdmission?: Date;
   dateOfLeave?: Date;
   dateOfDeath?: Date;
+  stateSince?: Date;
   type?: string;
   breedOne?: string;
   breedTwo?: string;
